@@ -882,8 +882,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crab: {fileID: 1897861583}
   camera: {fileID: 330585543}
+  clawRight: {fileID: 215910172}
+  clawLeft: {fileID: 1006207131}
   moveSpeed: 0.05
   camSpeed: 0.03
+  isLeft: 0
+  clawSpeed: 0
 --- !u!4 &1129599950
 Transform:
   m_ObjectHideFlags: 0

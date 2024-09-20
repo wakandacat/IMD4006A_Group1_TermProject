@@ -37,7 +37,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Look"",
+                    ""name"": ""Claw"",
                     ""type"": ""Value"",
                     ""id"": ""44953f5f-1f51-4462-b649-748179eb0343"",
                     ""expectedControlType"": ""Vector2"",
@@ -80,6 +80,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ca6414b-9edb-41f8-a0ee-ef61e644303b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""61fdb255-89db-44a4-b6cb-48aaf872fda8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -101,7 +119,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Look"",
+                    ""action"": ""Claw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -148,6 +166,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be2538f5-6e05-4b90-a635-1ac6386fc08b"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e24587f-6161-4bff-8d8d-0f8ae5d467d6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -157,11 +197,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // GamePlay
         m_GamePlay = asset.FindActionMap("GamePlay", throwIfNotFound: true);
         m_GamePlay_Walk = m_GamePlay.FindAction("Walk", throwIfNotFound: true);
-        m_GamePlay_Look = m_GamePlay.FindAction("Look", throwIfNotFound: true);
+        m_GamePlay_Claw = m_GamePlay.FindAction("Claw", throwIfNotFound: true);
         m_GamePlay_Break = m_GamePlay.FindAction("Break", throwIfNotFound: true);
         m_GamePlay_Dig = m_GamePlay.FindAction("Dig", throwIfNotFound: true);
         m_GamePlay_Grab = m_GamePlay.FindAction("Grab", throwIfNotFound: true);
         m_GamePlay_Drop = m_GamePlay.FindAction("Drop", throwIfNotFound: true);
+        m_GamePlay_Switch = m_GamePlay.FindAction("Switch", throwIfNotFound: true);
+        m_GamePlay_Throw = m_GamePlay.FindAction("Throw", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -224,21 +266,25 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_GamePlay;
     private List<IGamePlayActions> m_GamePlayActionsCallbackInterfaces = new List<IGamePlayActions>();
     private readonly InputAction m_GamePlay_Walk;
-    private readonly InputAction m_GamePlay_Look;
+    private readonly InputAction m_GamePlay_Claw;
     private readonly InputAction m_GamePlay_Break;
     private readonly InputAction m_GamePlay_Dig;
     private readonly InputAction m_GamePlay_Grab;
     private readonly InputAction m_GamePlay_Drop;
+    private readonly InputAction m_GamePlay_Switch;
+    private readonly InputAction m_GamePlay_Throw;
     public struct GamePlayActions
     {
         private @PlayerControls m_Wrapper;
         public GamePlayActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Walk => m_Wrapper.m_GamePlay_Walk;
-        public InputAction @Look => m_Wrapper.m_GamePlay_Look;
+        public InputAction @Claw => m_Wrapper.m_GamePlay_Claw;
         public InputAction @Break => m_Wrapper.m_GamePlay_Break;
         public InputAction @Dig => m_Wrapper.m_GamePlay_Dig;
         public InputAction @Grab => m_Wrapper.m_GamePlay_Grab;
         public InputAction @Drop => m_Wrapper.m_GamePlay_Drop;
+        public InputAction @Switch => m_Wrapper.m_GamePlay_Switch;
+        public InputAction @Throw => m_Wrapper.m_GamePlay_Throw;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -251,9 +297,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Walk.started += instance.OnWalk;
             @Walk.performed += instance.OnWalk;
             @Walk.canceled += instance.OnWalk;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
+            @Claw.started += instance.OnClaw;
+            @Claw.performed += instance.OnClaw;
+            @Claw.canceled += instance.OnClaw;
             @Break.started += instance.OnBreak;
             @Break.performed += instance.OnBreak;
             @Break.canceled += instance.OnBreak;
@@ -266,6 +312,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Drop.started += instance.OnDrop;
             @Drop.performed += instance.OnDrop;
             @Drop.canceled += instance.OnDrop;
+            @Switch.started += instance.OnSwitch;
+            @Switch.performed += instance.OnSwitch;
+            @Switch.canceled += instance.OnSwitch;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
         }
 
         private void UnregisterCallbacks(IGamePlayActions instance)
@@ -273,9 +325,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Walk.started -= instance.OnWalk;
             @Walk.performed -= instance.OnWalk;
             @Walk.canceled -= instance.OnWalk;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
+            @Claw.started -= instance.OnClaw;
+            @Claw.performed -= instance.OnClaw;
+            @Claw.canceled -= instance.OnClaw;
             @Break.started -= instance.OnBreak;
             @Break.performed -= instance.OnBreak;
             @Break.canceled -= instance.OnBreak;
@@ -288,6 +340,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Drop.started -= instance.OnDrop;
             @Drop.performed -= instance.OnDrop;
             @Drop.canceled -= instance.OnDrop;
+            @Switch.started -= instance.OnSwitch;
+            @Switch.performed -= instance.OnSwitch;
+            @Switch.canceled -= instance.OnSwitch;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
         }
 
         public void RemoveCallbacks(IGamePlayActions instance)
@@ -308,10 +366,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IGamePlayActions
     {
         void OnWalk(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
+        void OnClaw(InputAction.CallbackContext context);
         void OnBreak(InputAction.CallbackContext context);
         void OnDig(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
+        void OnSwitch(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
     }
 }
