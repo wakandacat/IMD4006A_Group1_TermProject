@@ -98,6 +98,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Focus"",
+                    ""type"": ""Button"",
+                    ""id"": ""95eeff89-052f-4e68-9ccb-6551805a5cf7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -188,6 +197,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Throw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7411212c-e98c-4bef-8230-f9e9cf7113e8"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Focus"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -204,6 +224,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GamePlay_Drop = m_GamePlay.FindAction("Drop", throwIfNotFound: true);
         m_GamePlay_Switch = m_GamePlay.FindAction("Switch", throwIfNotFound: true);
         m_GamePlay_Throw = m_GamePlay.FindAction("Throw", throwIfNotFound: true);
+        m_GamePlay_Focus = m_GamePlay.FindAction("Focus", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +294,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlay_Drop;
     private readonly InputAction m_GamePlay_Switch;
     private readonly InputAction m_GamePlay_Throw;
+    private readonly InputAction m_GamePlay_Focus;
     public struct GamePlayActions
     {
         private @PlayerControls m_Wrapper;
@@ -285,6 +307,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Drop => m_Wrapper.m_GamePlay_Drop;
         public InputAction @Switch => m_Wrapper.m_GamePlay_Switch;
         public InputAction @Throw => m_Wrapper.m_GamePlay_Throw;
+        public InputAction @Focus => m_Wrapper.m_GamePlay_Focus;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -318,6 +341,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
+            @Focus.started += instance.OnFocus;
+            @Focus.performed += instance.OnFocus;
+            @Focus.canceled += instance.OnFocus;
         }
 
         private void UnregisterCallbacks(IGamePlayActions instance)
@@ -346,6 +372,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
+            @Focus.started -= instance.OnFocus;
+            @Focus.performed -= instance.OnFocus;
+            @Focus.canceled -= instance.OnFocus;
         }
 
         public void RemoveCallbacks(IGamePlayActions instance)
@@ -373,5 +402,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnDrop(InputAction.CallbackContext context);
         void OnSwitch(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+        void OnFocus(InputAction.CallbackContext context);
     }
 }

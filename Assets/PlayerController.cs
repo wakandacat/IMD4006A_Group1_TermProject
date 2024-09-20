@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -12,16 +13,21 @@ public class PlayerController : MonoBehaviour
     public GameObject crab;
     public GameObject clawRight;
     public GameObject clawLeft;
+    public GameObject clawLeftBoundingBox;
+    public GameObject clawRightBoundingBox;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
 
-    //numbers to fiddle with
+    //global variables
     public float moveSpeed = 10f;
-    public bool isLeft = false; //right by default
-    public float clawSpeed;
-    public Vector3 camOffset;
     public float camSmooth = 0.2f;
+    public bool isLeft = false; //right by default
+    public Vector3 camOffset;
+    public Vector3 clawLeftStart;
+    public Vector3 clawRightStart;
+    private BoxCollider clawLeftBound;
+    private BoxCollider clawRightBound;
 
     // Start is called before the first frame update
     void Start()
@@ -33,19 +39,24 @@ public class PlayerController : MonoBehaviour
         //setup callback function to switch active claws
         //+= refers to adding a callback function
         controls.GamePlay.Switch.performed += OnSwitch;
+        controls.GamePlay.Focus.performed += OnFocus;
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
+
+        //grab starting positions
+        clawLeftStart = clawLeft.transform.localPosition;
+        clawRightStart = clawRight.transform.localPosition;
+
+        //get the claw colliders
+        clawLeftBound = clawLeftBoundingBox.GetComponent<BoxCollider>();
+        clawRightBound = clawRightBoundingBox.GetComponent<BoxCollider>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //grab main camera directions
-        Vector3 projectCamFront = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
-        Quaternion cameraRotate = Quaternion.LookRotation(projectCamFront, Vector3.up);
 
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
@@ -55,6 +66,7 @@ public class PlayerController : MonoBehaviour
         //ensure crab does not move when not reading inputs (including rotation)
         if (leftStick.magnitude > 0.1f)
         {
+            //input from controls move the crab in xz plane
             Vector3 moveDirection = new Vector3(-1 * (leftStick.y), 0f, leftStick.x);
 
             //rotate the crab with player motion
@@ -64,24 +76,39 @@ public class PlayerController : MonoBehaviour
             //move the crab
             Vector3 move = moveDirection * moveSpeed * Time.deltaTime;
             crab.transform.Translate(move, Space.World);
-            Debug.Log(move);
+
+            //main camera follows behind player when walking
+            Vector3 targetPos = crab.transform.position + camOffset;
+            Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, camSmooth);
+            Camera.main.transform.position = smoothPos;
         }
         else
         {
             //do nothing
         }
 
-        //camera movement when walking
-        Vector3 targetPos = crab.transform.position + camOffset;
-        Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, camSmooth);
-        Camera.main.transform.position = smoothPos;
-
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
         //claw movement controls
         Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
-        Vector3 look = new Vector3(-1 * (rightStick.y), rightStick.x, 0f);
-        //follow video of making them stay close to body
+        Vector3 clawMovement = new Vector3(-1 * (rightStick.y), 0f, rightStick.x);
+
+        if (isLeft && rightStick.magnitude > 0.1f)
+        {
+            Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
+            clawLeft.transform.Translate(move, Space.World);
+        }
+        else if (!isLeft && rightStick.magnitude > 0.1f)
+        {
+            Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
+            clawRight.transform.Translate(move, Space.World);
+        }
+        else
+        {
+            //move with the body when no direct input for claws
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, camSmooth);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, camSmooth);
+        }
 
         //---------------------------------------DIGGING-------------------------------------
 
@@ -125,5 +152,16 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
+    }
+
+    //recenter camera
+    public void OnFocus(InputAction.CallbackContext context)
+    {
+        //DOESNT WORK YET
+        //rotate camera to match crab
+       // Camera.main.transform.forward = crab.transform.forward;
+        //reposition camera behind crab
+       // Vector3 targetPos = crab.transform.position + camOffset;
+       // Camera.main.transform.position = targetPos;
     }
 }

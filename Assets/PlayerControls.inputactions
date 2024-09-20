@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Focus",
+                    "type": "Button",
+                    "id": "95eeff89-052f-4e68-9ccb-6551805a5cf7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -164,6 +173,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7411212c-e98c-4bef-8230-f9e9cf7113e8",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Focus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
