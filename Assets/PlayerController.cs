@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
     public GameObject crab;
     public GameObject clawRight;
     public GameObject clawLeft;
-    public GameObject clawLeftBoundingBox;
-    public GameObject clawRightBoundingBox;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -23,11 +21,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 10f;
     public float camSmooth = 0.2f;
     public bool isLeft = false; //right by default
-    public Vector3 camOffset;
-    public Vector3 clawLeftStart;
-    public Vector3 clawRightStart;
-    private BoxCollider clawLeftBound;
-    private BoxCollider clawRightBound;
+    private Vector3 camOffset;
+    private Vector3 clawLeftStart;
+    private Vector3 clawRightStart;
+    public float clawLeftBound;
+    public float clawRightBound;
 
     // Start is called before the first frame update
     void Start()
@@ -47,10 +45,6 @@ public class PlayerController : MonoBehaviour
         //grab starting positions
         clawLeftStart = clawLeft.transform.localPosition;
         clawRightStart = clawRight.transform.localPosition;
-
-        //get the claw colliders
-        clawLeftBound = clawLeftBoundingBox.GetComponent<BoxCollider>();
-        clawRightBound = clawRightBoundingBox.GetComponent<BoxCollider>();
 
     }
 
@@ -96,12 +90,22 @@ public class PlayerController : MonoBehaviour
         if (isLeft && rightStick.magnitude > 0.1f)
         {
             Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
-            clawLeft.transform.Translate(move, Space.World);
+
+            if (clawLeft.transform.localPosition.x <= (clawLeftStart.x + clawLeftBound) && clawLeft.transform.localPosition.z <= (clawLeftStart.z + clawLeftBound) && clawLeft.transform.localPosition.x >= (clawLeftStart.x - 0.1f) && clawLeft.transform.localPosition.z >= (clawLeftStart.z - 0.1f))
+            {
+                
+                clawLeft.transform.Translate(move, Space.World);
+            }
         }
         else if (!isLeft && rightStick.magnitude > 0.1f)
         {
             Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
-            clawRight.transform.Translate(move, Space.World);
+
+            if (clawRight.transform.localPosition.x <= (clawRightStart.x + clawRightBound) && clawRight.transform.localPosition.z >= (clawRightStart.z - clawRightBound) && clawRight.transform.localPosition.x >= (clawRightStart.x - 0.1f) && clawRight.transform.localPosition.z <= (clawRightStart.z + 0.1f))
+            {
+                Debug.Log(clawRight.transform.localPosition);
+                clawRight.transform.Translate(move, Space.World);
+            }
         }
         else
         {
