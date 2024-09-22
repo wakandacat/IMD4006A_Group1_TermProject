@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     //crab object being controlled by inputs
     public GameObject crab;
     public GameObject camera;
+    public ParticleSystem digPartSystem;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -26,6 +27,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            digPartSystem.Play();
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            digPartSystem.Stop();
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            digPartSystem.Play();
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            digPartSystem.Stop();
+        }
+
         //walking controls
         Vector2 leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
         Vector3 walk = new Vector3(leftStick.x, 0f, leftStick.y);
@@ -40,6 +61,10 @@ public class PlayerController : MonoBehaviour
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
         //Debug.Log(leftTrigger);
         //make the crab dig here
+        if (leftTrigger > 0f)
+        {
+
+        }
 
         //break controls
         float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
