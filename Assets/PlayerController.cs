@@ -12,9 +12,13 @@ public class PlayerController : MonoBehaviour
     //crab object being controlled by inputs
     public GameObject crab;
     public GameObject camera;
-    public ParticleSystem digPartSystem;
     public GameObject clawRight;
     public GameObject clawLeft;
+
+    //particle systems and particle control variables
+    public ParticleSystem movePartSystem;
+    public ParticleSystem digPartSystem;
+    private float digAnimTimer = 240.0f;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -48,30 +52,13 @@ public class PlayerController : MonoBehaviour
         clawLeftStart = clawLeft.transform.localPosition;
         clawRightStart = clawRight.transform.localPosition;
 
+        // Stopping the particle system by default
+        movePartSystem.Stop();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            digPartSystem.Play();
-        }
-
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            digPartSystem.Stop();
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            digPartSystem.Play();
-        }
-
-        if (Input.GetKeyUp(KeyCode.D))
-        {
-            digPartSystem.Stop();
-        }
 
         //walking controls
 
@@ -98,10 +85,20 @@ public class PlayerController : MonoBehaviour
             Vector3 targetPos = crab.transform.position + camOffset;
             Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, camSmooth);
             Camera.main.transform.position = smoothPos;
+
+            // Playing the particle system
+            if (movePartSystem.isPlaying == false)
+            {
+                movePartSystem.Play();
+            }
         }
         else
         {
-            //do nothing
+            // Stopping the particle system when the movement stops
+            if (movePartSystem.isPlaying == true)
+            {
+                movePartSystem.Stop();
+            }
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
@@ -143,9 +140,22 @@ public class PlayerController : MonoBehaviour
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
         //Debug.Log(leftTrigger);
         //make the crab dig here
-        if (leftTrigger > 0f)
+        if (!isLeft)
         {
-
+            if (leftTrigger > 0f)
+            {
+                digAnimTimer += leftTrigger;
+                if (digAnimTimer / 360.0f >= 1.0f)
+                {
+                    digPartSystem.Play();
+                    digAnimTimer = 0.0f;
+                }
+            }
+            else
+            {
+                digAnimTimer = 240.0f;
+                digPartSystem.Stop();
+            }
         }
 
         //---------------------------------------BREAKING-------------------------------------
