@@ -26,6 +26,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 clawRightStart;
     public float clawLeftBound;
     public float clawRightBound;
+    
+    //Booleans
+    bool canPickup;
+    bool ifpickedUp;
+
+    [SerializeField] public Rigidbody  _rb; 
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +52,7 @@ public class PlayerController : MonoBehaviour
         clawLeftStart = clawLeft.transform.localPosition;
         clawRightStart = clawRight.transform.localPosition;
 
+        _rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -133,7 +140,27 @@ public class PlayerController : MonoBehaviour
         //grab controls ---------> either claw
         float rightBumper = controls.GamePlay.Grab.ReadValue<float>();
         //Debug.Log(rightBumper);
-        //make the crab grab here
+        //make the crab grab here        
+        GameObject[] items;
+        items = GameObject.FindGameObjectsWithTag("item");
+        foreach (GameObject item in items)
+            {
+                if (rightBumper == 1)
+                {
+                    if (canPickup == true)
+                    {
+                        item.transform.parent = clawLeft.transform;
+                        ifpickedUp = true;
+                    }
+                    if (ifpickedUp == true)
+                    {
+                        item.transform.position = clawLeft.transform.position;
+                    }
+                }
+
+            }
+        
+
 
         //---------------------------------------DROPPING-------------------------------------
 
@@ -141,6 +168,18 @@ public class PlayerController : MonoBehaviour
         float leftBumper = controls.GamePlay.Drop.ReadValue<float>();
         //Debug.Log(leftBumper);
         //make the crab drop here
+        foreach (GameObject item in items)
+        {
+            if (leftBumper == 1)
+            {
+                if (ifpickedUp == true)
+                {
+                    item.transform.parent = null;
+                    ifpickedUp = false;
+                }
+            }
+
+        }
 
         //---------------------------------------THROWING-------------------------------------
 
@@ -167,5 +206,17 @@ public class PlayerController : MonoBehaviour
         //reposition camera behind crab
        // Vector3 targetPos = crab.transform.position + camOffset;
        // Camera.main.transform.position = targetPos;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isLeft == true)
+        {
+            if (other.gameObject.tag == "item")
+            {
+                canPickup = true;
+                Debug.Log("The bool is" + canPickup);
+            }
+        }
     }
 }
