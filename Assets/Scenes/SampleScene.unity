@@ -10936,7 +10936,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1129599950}
-  - component: {fileID: 1129599949}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10944,31 +10943,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1129599949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129599948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ef252b69cb25cc4b8379584238a68b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  crab: {fileID: 1897861583}
-  camera: {fileID: 330585543}
-  clawRight: {fileID: 215910172}
-  clawLeft: {fileID: 1006207131}
-  movePartSystem: {fileID: 410000508}
-  digPartSystem: {fileID: 824042363}
-  moveSpeed: 10
-  camSmooth: 0.5
-  isLeft: 0
-  camXRot: 25
-  clawLeftBound: 1
-  clawRightBound: 1
-  _rb: {fileID: 1897861588}
 --- !u!4 &1129599950
 Transform:
   m_ObjectHideFlags: 0
@@ -11100,7 +11074,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168257932}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -11316,7 +11290,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1733412528}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

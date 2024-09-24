@@ -205,13 +205,15 @@ public class PlayerController : MonoBehaviour
                 else
                 {
 
-                   pickedUpItem.transform.parent = clawRight.transform;
+                    pickedUpItem.transform.parent = clawRight.transform;
                     Debug.Log(pickedUpItem.name);
                     currentHoldingClaw = clawRight;
                     canPickup = false;
 
                 }
                 ifpickedUp = true;
+                //item weight affects movement speed of crab
+                moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
             }
 
         }
@@ -231,9 +233,10 @@ public class PlayerController : MonoBehaviour
         {
             if (ifpickedUp == true)
             {
-                pickedUpItem.transform.parent = null;
+                pickedUpItem.transform.parent = null;             
                 ifpickedUp = false;
                 canPickup = true;
+                moveSpeed = 10; //HARDCODED FOR NOW
             }
         }
         //---------------------------------------THROWING-------------------------------------
