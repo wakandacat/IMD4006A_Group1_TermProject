@@ -142,19 +142,26 @@ public class PlayerController : MonoBehaviour
             clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, camSmooth);
         }
 
+        //---------------------------------------BREAKING-------------------------------------
+
+        //breaking controls ---------> only if right claw (!isLeft)
+        float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
+        //Debug.Log(leftTrigger);
+        //make the crab break here
+
         //---------------------------------------DIGGING-------------------------------------
 
         //digging controls ---------> only if right claw (!isLeft)
-        float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
-        //Debug.Log(leftTrigger);
+        float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
+        //Debug.Log(rightTrigger);
         //make the crab dig here
-        if (leftTrigger > 0f)
+        if (rightTrigger > 0f)
         {
-            digAnimTimer += leftTrigger;
+            digAnimTimer += rightTrigger;
             if (digAnimTimer / 240.0f >= 1.0f)
             {
                 digPartSystem.Play();
-                terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, leftTrigger);
+                terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
                 digAnimTimer = 0.0f;
             }
         }
@@ -163,13 +170,6 @@ public class PlayerController : MonoBehaviour
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
         }
-
-        //---------------------------------------BREAKING-------------------------------------
-
-        //break controls ---------> only if right claw (!isLeft)
-        float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
-        //Debug.Log(rightTrigger);
-        //make the crab break here
 
         //---------------------------------------GRABBING-------------------------------------
 
