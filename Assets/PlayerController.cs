@@ -158,10 +158,11 @@ public class PlayerController : MonoBehaviour
         if (rightTrigger > 0f)
         {
             digAnimTimer += rightTrigger;
+            terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
             if (digAnimTimer / 240.0f >= 1.0f)
             {
                 digPartSystem.Play();
-                terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
                 digAnimTimer = 0.0f;
             }
         }

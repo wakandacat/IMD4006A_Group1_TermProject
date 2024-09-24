@@ -63,21 +63,21 @@ public class TerrainEditor : MonoBehaviour
                 int crabX = (int)(crabPos.x * 5.12f);
                 int crabY = (int)(crabPos.z * 5.12f);
 
-
+                triggerInput = triggerInput * 0.0001f;
 
                 Debug.Log("Digging at: " + crabX + ", " + crabY);
 
                 // Pre-determined hole size (could be adjusted to be more dynamic
                 // in later versions)
-                initialHeights[crabY, crabX] -= 0.0005f;
-                initialHeights[crabY + 1, crabX] -= 0.00025f;
-                initialHeights[crabY - 1, crabX] -= 0.00025f;
-                initialHeights[crabY, crabX -1] -= 0.00025f;
-                initialHeights[crabY + 1, crabX -1] -= 0.00015f;
-                initialHeights[crabY - 1, crabX - 1] -= 0.00015f;
-                initialHeights[crabY, crabX + 1] -= 0.00015f;
-                initialHeights[crabY + 1, crabX + 1] -= 0.00015f;
-                initialHeights[crabY - 1, crabX + 1] -= 0.00015f;
+                initialHeights[crabY, crabX] -= (triggerInput + 0.0001f);
+                initialHeights[crabY + 1, crabX] -= (triggerInput + 0.00005f);
+                initialHeights[crabY - 1, crabX] -= (triggerInput + 0.00005f);
+                initialHeights[crabY, crabX -1] -= (triggerInput + 0.00005f);
+                initialHeights[crabY + 1, crabX -1] -= (triggerInput + 0.000025f);
+                initialHeights[crabY - 1, crabX - 1] -= (triggerInput + 0.000025f);
+                initialHeights[crabY, crabX + 1] -= (triggerInput + 0.000025f);
+                initialHeights[crabY + 1, crabX + 1] -= (triggerInput + 0.000025f);
+                initialHeights[crabY - 1, crabX + 1] -= (triggerInput + 0.000025f);
 
                 sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
             }
