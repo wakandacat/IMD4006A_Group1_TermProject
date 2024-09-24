@@ -168,16 +168,22 @@ public class PlayerController : MonoBehaviour
             {
                 digPartSystem.Play();
                 digAnimTimer = 0.0f;
+                Debug.Log("triggering RT if if statement");
             }
-            AudioManager.instance.sfxPlayer(2); //play the digging sfx
+
+            //play the digging sfx
+            AudioManager.instance.sfxPlayer(2);
+            Debug.Log("triggering RT if statement");
         }
         else
         {
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
-            //AudioManager.instance.isLooping = false; //make it false on trigger up to stop the loop?,, didn't work
-            
+            Debug.Log("triggering RT else statement");
+            //make it false here?
         }
+
+        //make it false here? but this is in update so maybe another if(rightTrigger <= 0f)
 
         //---------------------------------------GRABBING-------------------------------------
 
