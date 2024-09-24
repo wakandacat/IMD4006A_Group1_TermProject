@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public GameObject clawRight;
     public GameObject clawLeft;
 
+    private TerrainEditor terrainScript;
+
     //particle systems and particle control variables
     public ParticleSystem movePartSystem;
     public ParticleSystem digPartSystem;
@@ -54,6 +56,9 @@ public class PlayerController : MonoBehaviour
 
         // Stopping the particle system by default
         movePartSystem.Stop();
+
+        // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
     }
 
     // Update is called once per frame
@@ -140,22 +145,20 @@ public class PlayerController : MonoBehaviour
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
         //Debug.Log(leftTrigger);
         //make the crab dig here
-        if (!isLeft)
+        if (leftTrigger > 0f)
         {
-            if (leftTrigger > 0f)
+            digAnimTimer += leftTrigger;
+            if (digAnimTimer / 240.0f >= 1.0f)
             {
-                digAnimTimer += leftTrigger;
-                if (digAnimTimer / 360.0f >= 1.0f)
-                {
-                    digPartSystem.Play();
-                    digAnimTimer = 0.0f;
-                }
+                digPartSystem.Play();
+                terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, leftTrigger);
+                digAnimTimer = 0.0f;
             }
-            else
-            {
-                digAnimTimer = 240.0f;
-                digPartSystem.Stop();
-            }
+        }
+        else
+        {
+            digAnimTimer = 240.0f;
+            digPartSystem.Stop();
         }
 
         //---------------------------------------BREAKING-------------------------------------
