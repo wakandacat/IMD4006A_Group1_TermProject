@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public Rigidbody _rb;
 
     GameObject pickedUpItem;
+    private GameObject currentHoldingClaw;
 
 
     // Start is called before the first frame update
@@ -197,8 +198,7 @@ public class PlayerController : MonoBehaviour
                 if (isLeft)
                 {
                     pickedUpItem.transform.parent = clawLeft.transform;
-                    //if left when picked up do not switch arm
-
+                    currentHoldingClaw = clawLeft;
                     canPickup = false;
 
                 }
@@ -207,7 +207,8 @@ public class PlayerController : MonoBehaviour
 
                    pickedUpItem.transform.parent = clawRight.transform;
                     Debug.Log(pickedUpItem.name);
-                   canPickup = false;
+                    currentHoldingClaw = clawRight;
+                    canPickup = false;
 
                 }
                 ifpickedUp = true;
@@ -216,15 +217,7 @@ public class PlayerController : MonoBehaviour
         }
         if (ifpickedUp == true && canPickup == false) 
         {
-            if (isLeft)
-            {
-                //pickedUpItem.transform.position = clawLeft.transform.position;
-                pickedUpItem.transform.position = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y, clawLeft.transform.position.z + 0.25f);
-            }
-            else
-            {
-                pickedUpItem.transform.position = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y, clawRight.transform.position.z + 0.25f);
-            }
+            pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
         }
 
         //---------------------------------------DROPPING-------------------------------------
