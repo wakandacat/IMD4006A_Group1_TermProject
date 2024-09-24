@@ -29,6 +29,15 @@ public class PlayerController : MonoBehaviour
     public float clawLeftBound;
     public float clawRightBound;
 
+    //Booleans
+    bool canPickup;
+    bool ifpickedUp;
+
+    [SerializeField] public Rigidbody _rb;
+
+    GameObject pickedUpItem;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +57,8 @@ public class PlayerController : MonoBehaviour
         //grab starting positions
         clawLeftStart = clawLeft.transform.localPosition;
         clawRightStart = clawRight.transform.localPosition;
+
+        _rb = GetComponent<Rigidbody>();
 
     }
 
@@ -138,6 +149,37 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(rightBumper);
         //make the crab grab here
 
+        if(rightBumper == 1)
+        {
+            if (canPickup == true)
+            {
+                if (isLeft)
+                {
+                    pickedUpItem.transform.parent = clawLeft.transform;
+
+                }
+                else
+                {
+
+                   pickedUpItem.transform.parent = clawRight.transform;
+
+                }
+                ifpickedUp = true;
+            }
+           if (ifpickedUp == true)
+            {
+                if (isLeft)
+                {
+                    //pickedUpItem.transform.position = clawLeft.transform.position;
+                    pickedUpItem.transform.position = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y, clawLeft.transform.position.z + 0.25f);
+                }
+                else
+                {
+                    pickedUpItem.transform.position = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y, clawRight.transform.position.z + 0.25f);
+                }
+            }
+        }
+
         //---------------------------------------DROPPING-------------------------------------
 
         //drop controls ---------> either claw
@@ -145,6 +187,14 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(leftBumper);
         //make the crab drop here
 
+        if (leftBumper == 1)
+        {
+            if (ifpickedUp == true)
+            {
+                pickedUpItem.transform.parent = null;
+                ifpickedUp = false;
+            }
+        }
         //---------------------------------------THROWING-------------------------------------
 
         //throw controls -----> only if holding item ---------> only if left claw (isLeft)
@@ -170,5 +220,20 @@ public class PlayerController : MonoBehaviour
         ////Vector3 targetPosition = crab.transform.rotation * camOffset;
         //camTransform.rotation = targetRotation;
         //camTransform.position = targetPos;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "item")
+        {
+            canPickup = true;
+            pickedUpItem = other.gameObject;
+            Debug.Log("the item can be picked up:" + canPickup);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        canPickup = false;
     }
 }
