@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public float clawRightBound;
 
     //Booleans
-    bool canPickup;
+    bool canPickup = true;
     bool ifpickedUp;
 
     [SerializeField] public Rigidbody _rb;
@@ -196,27 +196,33 @@ public class PlayerController : MonoBehaviour
                 if (isLeft)
                 {
                     pickedUpItem.transform.parent = clawLeft.transform;
+                    //if left when picked up do not switch arm
+
+                    canPickup = false;
 
                 }
                 else
                 {
 
                    pickedUpItem.transform.parent = clawRight.transform;
+                    Debug.Log(pickedUpItem.name);
+                   canPickup = false;
 
                 }
                 ifpickedUp = true;
             }
-           if (ifpickedUp == true)
+
+        }
+        if (ifpickedUp == true && canPickup == false) 
+        {
+            if (isLeft)
             {
-                if (isLeft)
-                {
-                    //pickedUpItem.transform.position = clawLeft.transform.position;
-                    pickedUpItem.transform.position = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y, clawLeft.transform.position.z + 0.25f);
-                }
-                else
-                {
-                    pickedUpItem.transform.position = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y, clawRight.transform.position.z + 0.25f);
-                }
+                //pickedUpItem.transform.position = clawLeft.transform.position;
+                pickedUpItem.transform.position = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y, clawLeft.transform.position.z + 0.25f);
+            }
+            else
+            {
+                pickedUpItem.transform.position = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y, clawRight.transform.position.z + 0.25f);
             }
         }
 
@@ -233,6 +239,7 @@ public class PlayerController : MonoBehaviour
             {
                 pickedUpItem.transform.parent = null;
                 ifpickedUp = false;
+                canPickup = true;
             }
         }
         //---------------------------------------THROWING-------------------------------------
@@ -264,9 +271,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "item")
+        if(other.gameObject.tag == "item" && canPickup == true)
         {
-            canPickup = true;
+            
             pickedUpItem = other.gameObject;
             Debug.Log("the item can be picked up:" + canPickup);
         }
@@ -274,6 +281,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        canPickup = false;
+        //canPickup = false;
+        //pickedUpItem = null;
     }
 }
+
+
