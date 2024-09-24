@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class AudioManager : MonoBehaviour
 {
+    //create instance of AudioManager for easier access
+    public static AudioManager instance;
+
     //array to hold all the sound effects
     public AudioClip[] sfxClips;
 
@@ -13,6 +16,21 @@ public class AudioManager : MonoBehaviour
     public AudioSource walkSource;  //used exclusively for the walking sound
     //public AudioSource digSource; //used exclusively for the digging sound
 
+    public bool isLooping = false;
+
+    private void Awake()
+    {
+        //if instance doesn't exist, fill with this one else destroy the existing version
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -29,16 +47,19 @@ public class AudioManager : MonoBehaviour
     //loads audio source based on the index and plays
     public void sfxPlayer(int i)
     {
-        if(i == 2)
-        {
-            //set walking
-            print("play digging sound");
-        }
-        else
-        {
-            //set normal sfx
-            sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
-            sfxSource.Play();               //play clip
-        }
+        ////determine if the clip should loop
+        //if (i == 2)
+        //{
+        //    isLooping = true;   //digging and walking should loop
+        //}
+        //else
+        //{
+        //    isLooping = false;  //pick up and put down should play once
+        //}
+
+        //set sfx
+        sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
+        //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
+        sfxSource.Play();               //play clip
     }
 }

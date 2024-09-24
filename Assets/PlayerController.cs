@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Play();
             }
+
         }
         else
         {
@@ -107,6 +108,9 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
+
+            //Play walking audio (when used in the previous if it plays only when the crab isn't moving?)
+            AudioManager.instance.walkSource.Play();    //find a way to alter the speed based on joystick value
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
@@ -165,11 +169,14 @@ public class PlayerController : MonoBehaviour
                 digPartSystem.Play();
                 digAnimTimer = 0.0f;
             }
+            AudioManager.instance.sfxPlayer(2); //play the digging sfx
         }
         else
         {
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
+            //AudioManager.instance.isLooping = false; //make it false on trigger up to stop the loop?,, didn't work
+            
         }
 
         //---------------------------------------GRABBING-------------------------------------
@@ -178,6 +185,10 @@ public class PlayerController : MonoBehaviour
         float rightBumper = controls.GamePlay.Grab.ReadValue<float>();
         //Debug.Log(rightBumper);
         //make the crab grab here
+        if(rightBumper > 0f)
+        {
+            AudioManager.instance.sfxPlayer(0); //play pick up sfx
+        }
 
         //---------------------------------------DROPPING-------------------------------------
 
@@ -185,6 +196,10 @@ public class PlayerController : MonoBehaviour
         float leftBumper = controls.GamePlay.Drop.ReadValue<float>();
         //Debug.Log(leftBumper);
         //make the crab drop here
+        if(leftBumper > 0f)
+        {
+            AudioManager.instance.sfxPlayer(1); //play put down sfx
+        }
 
         //---------------------------------------THROWING-------------------------------------
 
