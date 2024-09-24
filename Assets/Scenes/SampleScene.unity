@@ -743,7 +743,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15304591, y: -0.6903456, z: 0.15304591, w: 0.6903456}
-  m_LocalPosition: {x: 7, y: 5, z: 0}
+  m_LocalPosition: {x: 4, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1314,6 +1314,7 @@ MonoBehaviour:
   moveSpeed: 10
   camSmooth: 0.5
   isLeft: 0
+  camXRot: 25
   clawLeftBound: 1
   clawRightBound: 1
 --- !u!4 &1129599950
