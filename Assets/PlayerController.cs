@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public float camSmooth = 0.2f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
+    private Transform camTransform;
+    public float camXRot;
     private Vector3 clawLeftStart;
     private Vector3 clawRightStart;
     public float clawLeftBound;
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
+        camTransform = Camera.main.transform;  // Get the main camera's transform
 
         //grab starting positions
         clawLeftStart = clawLeft.transform.localPosition;
@@ -161,11 +164,11 @@ public class PlayerController : MonoBehaviour
     //recenter camera
     public void OnFocus(InputAction.CallbackContext context)
     {
-        //DOESNT WORK YET
-        //rotate camera to match crab
-       // Camera.main.transform.forward = crab.transform.forward;
-        //reposition camera behind crab
-       // Vector3 targetPos = crab.transform.position + camOffset;
-       // Camera.main.transform.position = targetPos;
+        ////DOESNT WORK YET
+        //Quaternion targetRotation = Quaternion.Euler(camXRot, crab.transform.eulerAngles.y, 0);
+        //Vector3 targetPos = new Vector3(crab.transform.position.x + camOffset.x, crab.transform.position.y + camOffset.y, crab.transform.position.z);
+        ////Vector3 targetPosition = crab.transform.rotation * camOffset;
+        //camTransform.rotation = targetRotation;
+        //camTransform.position = targetPos;
     }
 }
