@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     //Booleans
     bool canPickup = true;
     bool ifpickedUp;
+    bool closetoItem = false;
 
     [SerializeField] public Rigidbody _rb;
 
@@ -193,7 +194,7 @@ public class PlayerController : MonoBehaviour
 
         if(rightBumper == 1)
         {
-            if (canPickup == true)
+            if (canPickup == true && closetoItem == true)
             {
                 if (isLeft)
                 {
@@ -212,6 +213,7 @@ public class PlayerController : MonoBehaviour
 
                 }
                 ifpickedUp = true;
+                closetoItem = false;
             }
 
         }
@@ -234,6 +236,7 @@ public class PlayerController : MonoBehaviour
                 pickedUpItem.transform.parent = null;
                 ifpickedUp = false;
                 canPickup = true;
+
             }
         }
         //---------------------------------------THROWING-------------------------------------
@@ -267,9 +270,10 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.tag == "item" && canPickup == true)
         {
-            
             pickedUpItem = other.gameObject;
             Debug.Log("the item can be picked up:" + canPickup);
+            canPickup = true;
+            closetoItem = true;
         }
     }
 
@@ -277,6 +281,7 @@ public class PlayerController : MonoBehaviour
     {
         //canPickup = false;
         //pickedUpItem = null;
+        closetoItem = false;
     }
 }
 
