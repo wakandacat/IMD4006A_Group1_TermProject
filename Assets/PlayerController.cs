@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
         
+
         _rb = GetComponent<Rigidbody>();
     }
 
@@ -192,7 +193,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(rightBumper);
         //make the crab grab here
 
-        if(rightBumper == 1)
+        if (rightBumper == 1)
         {
             if (canPickup == true && closetoItem == true)
             {
@@ -207,6 +208,7 @@ public class PlayerController : MonoBehaviour
                 {
 
                     pickedUpItem.transform.parent = clawRight.transform;
+                    pickedUpItem.transform.parent = clawRight.transform;
                     Debug.Log(pickedUpItem.name);
                     currentHoldingClaw = clawRight;
                     canPickup = false;
@@ -219,7 +221,7 @@ public class PlayerController : MonoBehaviour
             }
 
         }
-        if (ifpickedUp == true && canPickup == false) 
+        if (ifpickedUp == true && canPickup == false)
         {
             pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
         }
@@ -235,11 +237,11 @@ public class PlayerController : MonoBehaviour
         {
             if (ifpickedUp == true)
             {
-                pickedUpItem.transform.parent = null;             
+                pickedUpItem.transform.parent = null;
+                pickedUpItem.transform.parent = null;
                 ifpickedUp = false;
                 canPickup = true;
-
-                moveSpeed = 10; //HARDCODED FOR NOW
+                moveSpeed = 0; //HARDCODED FOR NOW
             }
         }
         //---------------------------------------THROWING-------------------------------------
@@ -271,8 +273,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "item" && canPickup == true)
+        if (other.gameObject.tag == "item" && canPickup == true)
         {
+
             pickedUpItem = other.gameObject;
             Debug.Log("the item can be picked up:" + canPickup);
             canPickup = true;
@@ -287,5 +290,3 @@ public class PlayerController : MonoBehaviour
         closetoItem = false;
     }
 }
-
-
