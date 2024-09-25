@@ -159,8 +159,24 @@ public class PlayerController : MonoBehaviour
         float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
+
+        ////audio player for digging
+        //if (rightTrigger <= 0f)
+        //{
+        //    Debug.Log("RT released");
+        //    AudioManager.instance.isLooping = false;
+        //}
+        //else
+        //{
+        //    Debug.Log("RT held");
+        //    AudioManager.instance.isLooping = true;
+        //}
+
+
+
         if (rightTrigger > 0f)
         {
+        
             digAnimTimer += rightTrigger;
             terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
@@ -168,22 +184,17 @@ public class PlayerController : MonoBehaviour
             {
                 digPartSystem.Play();
                 digAnimTimer = 0.0f;
-                Debug.Log("triggering RT if if statement");
             }
-
-            //play the digging sfx
-            AudioManager.instance.sfxPlayer(2);
-            Debug.Log("triggering RT if statement");
         }
         else
         {
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
-            Debug.Log("triggering RT else statement");
-            //make it false here?
+
+            //play digging sfx
+            AudioManager.instance.digSource.Play();
         }
 
-        //make it false here? but this is in update so maybe another if(rightTrigger <= 0f)
 
         //---------------------------------------GRABBING-------------------------------------
 

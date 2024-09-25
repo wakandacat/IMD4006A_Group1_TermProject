@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
     //available Audio Sources
     public AudioSource sfxSource;   //used for sfx sounds
     public AudioSource walkSource;  //used exclusively for the walking sound
-    //public AudioSource digSource; //used exclusively for the digging sound
+    public AudioSource digSource;   //used exclusively for the digging sound
 
     public bool isLooping = false;
 
@@ -47,19 +47,19 @@ public class AudioManager : MonoBehaviour
     //loads audio source based on the index and plays
     public void sfxPlayer(int i)
     {
-        //determine if the clip should loop
-        if (i == 2)
-        {
-            isLooping = true;   //digging and walking should loop
-        }
-        else
-        {
-            isLooping = false;  //pick up and put down should play once
-        }
+        ////determine if the clip should loop
+        //if (i == 2)
+        //{
+        //    isLooping = true;   //digging and walking should loop
+        //}
+        //else
+        //{
+        //    isLooping = false;  //pick up and put down should play once
+        //}
 
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
-        sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
+        //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
         sfxSource.Play();               //play clip
     }
 }
