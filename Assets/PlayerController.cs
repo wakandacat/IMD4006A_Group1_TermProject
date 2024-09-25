@@ -37,6 +37,17 @@ public class PlayerController : MonoBehaviour
     public float clawLeftBound;
     public float clawRightBound;
 
+    //Booleans
+    bool canPickup = true;
+    bool ifpickedUp;
+    bool closetoItem = false;
+
+    [SerializeField] public Rigidbody _rb;
+
+    GameObject pickedUpItem;
+    private GameObject currentHoldingClaw;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +73,8 @@ public class PlayerController : MonoBehaviour
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+
+        _rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -99,7 +112,6 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Play();
             }
-
         }
         else
         {
@@ -108,9 +120,6 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
-
-            //Play walking audio (when used in the previous if it plays only when the crab isn't moving?)
-            AudioManager.instance.walkSource.Play();    //find a way to alter the speed based on joystick value
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
@@ -159,24 +168,8 @@ public class PlayerController : MonoBehaviour
         float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
-
-        ////audio player for digging
-        //if (rightTrigger <= 0f)
-        //{
-        //    Debug.Log("RT released");
-        //    AudioManager.instance.isLooping = false;
-        //}
-        //else
-        //{
-        //    Debug.Log("RT held");
-        //    AudioManager.instance.isLooping = true;
-        //}
-
-
-
         if (rightTrigger > 0f)
         {
-        
             digAnimTimer += rightTrigger;
             terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
@@ -190,11 +183,7 @@ public class PlayerController : MonoBehaviour
         {
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
-
-            //play digging sfx
-            AudioManager.instance.digSource.Play();
         }
-
 
         //---------------------------------------GRABBING-------------------------------------
 
@@ -202,9 +191,38 @@ public class PlayerController : MonoBehaviour
         float rightBumper = controls.GamePlay.Grab.ReadValue<float>();
         //Debug.Log(rightBumper);
         //make the crab grab here
-        if(rightBumper > 0f)
+
+        if (rightBumper == 1)
         {
-            AudioManager.instance.sfxPlayer(0); //play pick up sfx
+            if (canPickup == true && closetoItem == true)
+            {
+                if (isLeft)
+                {
+                    pickedUpItem.transform.parent = clawLeft.transform;
+                    currentHoldingClaw = clawLeft;
+                    canPickup = false;
+
+                }
+                else
+                {
+
+                    pickedUpItem.transform.parent = clawRight.transform;
+                    pickedUpItem.transform.parent = clawRight.transform;
+                    Debug.Log(pickedUpItem.name);
+                    currentHoldingClaw = clawRight;
+                    canPickup = false;
+
+                }
+                ifpickedUp = true;
+                closetoItem = false;
+                //item weight affects movement speed of crab
+                moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
+            }
+
+        }
+        if (ifpickedUp == true && canPickup == false)
+        {
+            pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
         }
 
         //---------------------------------------DROPPING-------------------------------------
@@ -213,11 +231,18 @@ public class PlayerController : MonoBehaviour
         float leftBumper = controls.GamePlay.Drop.ReadValue<float>();
         //Debug.Log(leftBumper);
         //make the crab drop here
-        if(leftBumper > 0f)
-        {
-            AudioManager.instance.sfxPlayer(1); //play put down sfx
-        }
 
+        if (leftBumper == 1)
+        {
+            if (ifpickedUp == true)
+            {
+                pickedUpItem.transform.parent = null;
+                pickedUpItem.transform.parent = null;
+                ifpickedUp = false;
+                canPickup = true;
+                moveSpeed = 0; //HARDCODED FOR NOW
+            }
+        }
         //---------------------------------------THROWING-------------------------------------
 
         //throw controls -----> only if holding item ---------> only if left claw (isLeft)
@@ -243,5 +268,24 @@ public class PlayerController : MonoBehaviour
         ////Vector3 targetPosition = crab.transform.rotation * camOffset;
         //camTransform.rotation = targetRotation;
         //camTransform.position = targetPos;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "item" && canPickup == true)
+        {
+
+            pickedUpItem = other.gameObject;
+            Debug.Log("the item can be picked up:" + canPickup);
+            canPickup = true;
+            closetoItem = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        //canPickup = false;
+        //pickedUpItem = null;
+        closetoItem = false;
     }
 }
