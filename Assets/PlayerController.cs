@@ -121,6 +121,8 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
+            //play walking audio --------- need to figure out why this works against the logic
+            AudioManager.instance.walkSource.Play();
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
@@ -184,6 +186,9 @@ public class PlayerController : MonoBehaviour
         {
             digAnimTimer = 240.0f;
             digPartSystem.Stop();
+
+            //play digging audio
+            AudioManager.instance.digSource.Play();
         }
 
         //---------------------------------------GRABBING-------------------------------------
@@ -208,7 +213,7 @@ public class PlayerController : MonoBehaviour
                 {
 
                     pickedUpItem.transform.parent = clawRight.transform;
-                    pickedUpItem.transform.parent = clawRight.transform;
+                    //pickedUpItem.transform.parent = clawRight.transform;
                     Debug.Log(pickedUpItem.name);
                     currentHoldingClaw = clawRight;
                     canPickup = false;
@@ -218,6 +223,9 @@ public class PlayerController : MonoBehaviour
                 closetoItem = false;
                 //item weight affects movement speed of crab
                 moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
+
+                //play pick up audio
+                AudioManager.instance.sfxPlayer(0);
             }
 
         }
@@ -238,10 +246,13 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUp == true)
             {
                 pickedUpItem.transform.parent = null;
-                pickedUpItem.transform.parent = null;
+                //pickedUpItem.transform.parent = null;
                 ifpickedUp = false;
                 canPickup = true;
                 moveSpeed = 0; //HARDCODED FOR NOW
+
+                //play put down audio
+                AudioManager.instance.sfxPlayer(1);
             }
         }
         //---------------------------------------THROWING-------------------------------------
