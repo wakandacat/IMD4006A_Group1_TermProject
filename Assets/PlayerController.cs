@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     PlayerControls controls;
 
     //global variables
-    public float moveSpeed = 10f;
+    public float moveSpeed = 7f;
     public float camSmooth = 0.2f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
@@ -34,8 +34,9 @@ public class PlayerController : MonoBehaviour
     public float camXRot;
     private Vector3 clawLeftStart;
     private Vector3 clawRightStart;
-    public float clawLeftBound;
-    public float clawRightBound;
+    public float clawSmooth;
+    public float clawAngle;
+    public float maxClawDistance;
 
     //Booleans
     bool canPickup = true;
@@ -129,33 +130,74 @@ public class PlayerController : MonoBehaviour
 
         //claw movement controls
         Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
-        Vector3 clawMovement = new Vector3(-1 * (rightStick.y), 0f, rightStick.x);
+        Vector3 clawMovement = new Vector3(-1*(rightStick.y), 0f, rightStick.x); //side to side movement
+        Vector3 clawMove = clawMovement * moveSpeed * Time.deltaTime;
+
 
         if (isLeft && rightStick.magnitude > 0.1f)
         {
-            Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
 
-            if (clawLeft.transform.localPosition.x <= (clawLeftStart.x + clawLeftBound) && clawLeft.transform.localPosition.z <= (clawLeftStart.z + clawLeftBound) && clawLeft.transform.localPosition.x >= (clawLeftStart.x - 0.1f) && clawLeft.transform.localPosition.z >= (clawLeftStart.z - 0.1f))
-            {
+            //Debug.Log("left claw move");
+            //Debug.Log("y" + -1 * (rightStick.y));
+            //Debug.Log("x" + rightStick.x);
+            clawLeft.transform.Translate(clawMove, Space.World);
 
-                clawLeft.transform.Translate(move, Space.World);
-            }
+            MoveClaw(clawLeft);
         }
         else if (!isLeft && rightStick.magnitude > 0.1f)
         {
-            Vector3 move = clawMovement * moveSpeed * Time.deltaTime;
 
-            if (clawRight.transform.localPosition.x <= (clawRightStart.x + clawRightBound) && clawRight.transform.localPosition.z >= (clawRightStart.z - clawRightBound) && clawRight.transform.localPosition.x >= (clawRightStart.x - 0.1f) && clawRight.transform.localPosition.z <= (clawRightStart.z + 0.1f))
-            {
-                Debug.Log(clawRight.transform.localPosition);
-                clawRight.transform.Translate(move, Space.World);
-            }
+            //Debug.Log("right claw move");
+            //Debug.Log("y" + -1 * (rightStick.y));
+            //Debug.Log("x" + rightStick.x);
+            clawRight.transform.Translate(clawMove, Space.World);
+
+            MoveClaw(clawRight);
+
         }
         else
         {
             //move with the body when no direct input for claws
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, camSmooth);
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, camSmooth);
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
+        }
+
+        // keep claws close to crab body
+        void MoveClaw(GameObject claw)
+        {
+            // Get the crab's position
+            Vector3 crabPosition = crab.transform.position;
+            Vector3 crabForward = crab.transform.right; //forward in this case being its actual face
+
+            // get distance between the claw and the crab
+            float distanceFromCrab = Vector3.Distance(claw.transform.position, crabPosition);
+
+            // clamp claw within max distance
+            if (distanceFromCrab > maxClawDistance)
+            {
+                // direction from the crab to the claw
+                Vector3 directionFromCrab = (claw.transform.position - crabPosition).normalized;
+
+                // set the claw's position to the maximum allowed distance from crab if it is further
+                //creates a radius around the crab for the claw to move
+                claw.transform.position = crabPosition + directionFromCrab * maxClawDistance;
+            }
+
+            //get the angle of the claw relative to the crab
+            Vector3 directionToClaw = (claw.transform.position - crabPosition).normalized;
+            float angle = Vector3.SignedAngle(crabForward, directionToClaw, Vector3.up);
+
+            //stay within an arc
+            if (angle > -clawAngle || angle < clawAngle)
+            {
+                //clamp again into the arc
+                float clampedAngle = Mathf.Clamp(angle, -clawAngle, clawAngle);
+                Quaternion rotation = Quaternion.AngleAxis(clampedAngle, Vector3.up);
+
+                // set the new position
+                claw.transform.position = crabPosition + rotation * (crabForward * maxClawDistance);
+            }
+
         }
 
         //---------------------------------------BREAKING-------------------------------------
@@ -222,7 +264,7 @@ public class PlayerController : MonoBehaviour
                 ifpickedUp = true;
                 closetoItem = false;
                 //item weight affects movement speed of crab
-                moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
+                //moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
 
                 //play pick up audio
                 AudioManager.instance.sfxPlayer(0);
@@ -249,7 +291,7 @@ public class PlayerController : MonoBehaviour
                 //pickedUpItem.transform.parent = null;
                 ifpickedUp = false;
                 canPickup = true;
-                moveSpeed = 0; //HARDCODED FOR NOW
+                //moveSpeed = 0; //HARDCODED FOR NOW
 
                 //play put down audio
                 AudioManager.instance.sfxPlayer(1);
