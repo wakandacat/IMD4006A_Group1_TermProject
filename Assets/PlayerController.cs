@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,7 +27,13 @@ public class PlayerController : MonoBehaviour
     PlayerControls controls;
 
     //global variables
+
+    //basic movement vars
     public float moveSpeed = 7f;
+    public float rotateSpeed = 0.8f;
+    public float accelRate = 1.5f;
+    private Vector3 crabVel = Vector3.zero;
+
     public float camSmooth = 0.2f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
@@ -68,7 +75,7 @@ public class PlayerController : MonoBehaviour
         //grab starting positions
         clawLeftStart = clawLeft.transform.localPosition;
         clawRightStart = clawRight.transform.localPosition;
-        
+
         // Stopping the particle system by default
         movePartSystem.Stop();
 
@@ -93,16 +100,45 @@ public class PlayerController : MonoBehaviour
         //ensure crab does not move when not reading inputs (including rotation)
         if (leftStick.magnitude > 0.1f)
         {
+
             //input from controls move the crab in xz plane
-            Vector3 moveDirection = new Vector3(-1 * (leftStick.y), 0f, leftStick.x);
+            Vector3 moveDirection = new Vector3(-1 * (leftStick.y), 0f, leftStick.x).normalized;
 
-            //rotate the crab with player motion
+            //rotate the crab with player motion to face the z-direction
             Quaternion targetRotate = Quaternion.LookRotation(moveDirection);
-            crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, moveSpeed * Time.deltaTime);
 
-            //move the crab
-            Vector3 move = moveDirection * moveSpeed * Time.deltaTime;
-            crab.transform.Translate(move, Space.World);
+            //get forward direction of crab (positive z-direction)
+            Vector3 currentForward = transform.forward;
+
+            //get angle between forward direction and target direction
+            float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
+
+            //determine if -z or +z direction is closest to target and make that the front of the crab
+            if (Mathf.Abs(angleToTarget) > 90)
+            {
+                targetRotate = Quaternion.LookRotation(-moveDirection);
+            }
+
+            float checkAngle = Quaternion.Angle(crab.transform.rotation, targetRotate);
+            Debug.Log(checkAngle);
+
+            ////if its a big turn, then rotate BEFORE moving
+            //if (checkAngle > 50f && checkAngle < 90f)
+            //{
+
+            //    crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
+
+            //}
+            ////otherwise move and rotate at same time
+            //else
+            //{
+                //rotate
+                crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
+
+                //move the crab
+                crabVel = Vector3.Lerp(crabVel, moveDirection * moveSpeed, accelRate * Time.deltaTime);
+                crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
+            //}
 
             //main camera follows behind player when walking
             Vector3 targetPos = crab.transform.position + camOffset;
@@ -117,6 +153,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+
             // Stopping the particle system when the movement stops
             if (movePartSystem.isPlaying == true)
             {
