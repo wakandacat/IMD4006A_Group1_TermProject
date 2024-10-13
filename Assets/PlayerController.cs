@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
 
         //ensure crab does not move when not reading inputs (including rotation)
         //but allow for some deceleration
-        if (leftStick.magnitude > 0.1f || crabVel.magnitude > 1.5)
+        if (leftStick.magnitude > 0.1f || crabVel.magnitude > 3.0f)
         {
 
             //input from controls move the crab in xz plane
