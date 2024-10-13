@@ -42,18 +42,9 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Grab",
+                    "name": "PickUpPutDown",
                     "type": "Button",
                     "id": "bb7f325a-71df-464e-ba30-4c3f23891a97",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Drop",
-                    "type": "Button",
-                    "id": "9990f281-8672-4a04-9304-50c00e9a053d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -63,24 +54,6 @@
                     "name": "Switch",
                     "type": "Button",
                     "id": "5ca6414b-9edb-41f8-a0ee-ef61e644303b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Throw",
-                    "type": "Button",
-                    "id": "61fdb255-89db-44a4-b6cb-48aaf872fda8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Focus",
-                    "type": "Button",
-                    "id": "95eeff89-052f-4e68-9ccb-6551805a5cf7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -139,51 +112,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Grab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4ddffbda-3d4f-4c9b-b16f-db978236285a",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Drop",
+                    "action": "PickUpPutDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "be2538f5-6e05-4b90-a635-1ac6386fc08b",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Switch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6e24587f-6161-4bff-8d8d-0f8ae5d467d6",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7411212c-e98c-4bef-8230-f9e9cf7113e8",
-                    "path": "<Gamepad>/leftStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Focus",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

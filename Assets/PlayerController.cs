@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
             //move the crab
             crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
             crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
-            Debug.Log(crabVel.magnitude);
+            //Debug.Log(crabVel.magnitude);
 
             //main camera follows behind crab when walking
             //Vector3 targetPos = crab.transform.position + crab.transform.forward * camOffset.z + crab.transform.up * camOffset.y + crab.transform.right * -camOffset.x;
@@ -257,14 +257,14 @@ public class PlayerController : MonoBehaviour
 
         //---------------------------------------BREAKING-------------------------------------
 
-        //breaking controls ---------> only if right claw (!isLeft)
+        //breaking controls ---------> only if a claw is available
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
         //Debug.Log(leftTrigger);
         //make the crab break here
 
         //---------------------------------------DIGGING-------------------------------------
 
-        //digging controls ---------> only if right claw (!isLeft)
+        //digging controls ---------> only if a claw is available
         float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
@@ -288,14 +288,28 @@ public class PlayerController : MonoBehaviour
             AudioManager.instance.digSource.Play();
         }
 
-        //---------------------------------------GRABBING-------------------------------------
+        //---------------------------------------PICK UP AND DROP-------------------------------------
 
         //grab controls ---------> either claw
-        float rightBumper = controls.GamePlay.Grab.ReadValue<float>();
+        float rightBumper = controls.GamePlay.PickUpPutDown.ReadValue<float>();
         //Debug.Log(rightBumper);
         //make the crab grab here
 
-        if (rightBumper == 1)
+        if (rightBumper == 1 && ifpickedUp == true && canPickup == false)
+        {
+            Debug.Log("Dropped");
+            //if (ifpickedUp == true)
+            //{
+            pickedUpItem.transform.parent = null;
+            //pickedUpItem.transform.parent = null;
+            ifpickedUp = false;
+            canPickup = true;
+
+            //play put down audio
+            AudioManager.instance.sfxPlayer(1);
+            //}
+        }
+        else if(rightBumper == 1 && ifpickedUp == false && canPickup == true)
         {
             if (canPickup == true && closetoItem == true)
             {
@@ -326,36 +340,9 @@ public class PlayerController : MonoBehaviour
         }
         if (ifpickedUp == true && canPickup == false)
         {
+            Debug.Log("Holding");
             pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
         }
-
-        //---------------------------------------DROPPING-------------------------------------
-
-        //drop controls ---------> either claw
-        float leftBumper = controls.GamePlay.Drop.ReadValue<float>();
-        //Debug.Log(leftBumper);
-        //make the crab drop here
-
-        if (leftBumper == 1)
-        {
-            if (ifpickedUp == true)
-            {
-                pickedUpItem.transform.parent = null;
-                //pickedUpItem.transform.parent = null;
-                ifpickedUp = false;
-                canPickup = true;
-                //moveSpeed = 0; //HARDCODED FOR NOW
-
-                //play put down audio
-                AudioManager.instance.sfxPlayer(1);
-            }
-        }
-        //---------------------------------------THROWING-------------------------------------
-
-        //throw controls -----> only if holding item ---------> only if left claw (isLeft)
-        float bottomButton = controls.GamePlay.Throw.ReadValue<float>();
-        //Debug.Log(bottomButton);
-        //make the crab throw item here
 
     }
 
