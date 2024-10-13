@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     //global variables
 
     //basic movement vars
-    public float moveSpeed = 7f;
+    public float baseMoveSpeed = 7f;
+    public float currMoveSpeed;
     public float rotateSpeed = 0.8f;
     public float accelRate = 1.5f;
     private Vector3 crabVel = Vector3.zero;
@@ -66,7 +67,6 @@ public class PlayerController : MonoBehaviour
         //setup callback function to switch active claws
         //+= refers to adding a callback function
         controls.GamePlay.Switch.performed += OnSwitch;
-        controls.GamePlay.Focus.performed += OnFocus;
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
@@ -138,10 +138,19 @@ public class PlayerController : MonoBehaviour
                 //Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
             }
 
+            //move the crab and take into account the weight of any held objects
+            if (ifpickedUp)
+            {
+                //item weight affects movement speed of crab
+                currMoveSpeed = baseMoveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
+            } else
+            {
+                currMoveSpeed = baseMoveSpeed;
+            }
             //move the crab
-            crabVel = Vector3.Lerp(crabVel, moveDirection * moveSpeed, accelRate * Time.deltaTime);
+            crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
             crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
-
+            Debug.Log(crabVel.magnitude);
 
             //main camera follows behind crab when walking
             //Vector3 targetPos = crab.transform.position + crab.transform.forward * camOffset.z + crab.transform.up * camOffset.y + crab.transform.right * -camOffset.x;
@@ -177,7 +186,7 @@ public class PlayerController : MonoBehaviour
         //claw movement controls
         Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
         Vector3 clawMovement = new Vector3(-1*(rightStick.y), 0f, rightStick.x); //side to side movement
-        Vector3 clawMove = clawMovement * moveSpeed * Time.deltaTime;
+        Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
 
         if (isLeft && rightStick.magnitude > 0.1f)
@@ -309,8 +318,6 @@ public class PlayerController : MonoBehaviour
                 }
                 ifpickedUp = true;
                 closetoItem = false;
-                //item weight affects movement speed of crab
-                //moveSpeed = moveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
 
                 //play pick up audio
                 AudioManager.instance.sfxPlayer(0);
@@ -357,17 +364,6 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
-    }
-
-    //recenter camera
-    public void OnFocus(InputAction.CallbackContext context)
-    {
-        ////DOESNT WORK YET
-        //Quaternion targetRotation = Quaternion.Euler(camXRot, crab.transform.eulerAngles.y, 0);
-        //Vector3 targetPos = new Vector3(crab.transform.position.x + camOffset.x, crab.transform.position.y + camOffset.y, crab.transform.position.z);
-        ////Vector3 targetPosition = crab.transform.rotation * camOffset;
-        //camTransform.rotation = targetRotation;
-        //camTransform.position = targetPos;
     }
 
     private void OnTriggerEnter(Collider other)
