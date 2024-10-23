@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
     public float accelRate = 1.5f;
     private Vector3 crabVel = Vector3.zero;
 
+    private float currTerrHeight;
+    public float crabY;
+
     public float camSmooth = 0.2f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
@@ -151,6 +154,19 @@ public class PlayerController : MonoBehaviour
             crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
             crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
             //Debug.Log(crabVel.magnitude);
+
+            // Figuring out the crab's Y position, relative to the terrain
+            currTerrHeight = terrainScript.getTerrainHeight(crab.gameObject.transform.position);
+
+            if (currTerrHeight != 0.005f)
+            {
+
+            }
+            else
+            {
+
+            }
+            
 
             //main camera follows behind crab when walking
             //Vector3 targetPos = crab.transform.position + crab.transform.forward * camOffset.z + crab.transform.up * camOffset.y + crab.transform.right * -camOffset.x;
@@ -271,7 +287,16 @@ public class PlayerController : MonoBehaviour
         if (rightTrigger > 0f)
         {
             digAnimTimer += rightTrigger;
-            terrainScript.digTerrain(crab.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
+            if (isLeft)
+            {
+                terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+            }
+            else
+            {
+                terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+            }
+            
 
             if (digAnimTimer / 240.0f >= 1.0f)
             {
