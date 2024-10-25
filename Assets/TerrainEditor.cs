@@ -35,11 +35,11 @@ public class TerrainEditor : MonoBehaviour
 
         sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
 
-        Vector3 testMound;
-        testMound.x = 50.0f;
-        testMound.y = 0.0f;
-        testMound.z = 40.0f;
-        createMound(testMound);
+        //Vector3 testMound;
+        //testMound.x = 50.0f;
+        //testMound.y = 0.0f;
+        //testMound.z = 40.0f;
+        //createMound(testMound);
     }
 
     // Update is called once per frame

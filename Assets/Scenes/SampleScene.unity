@@ -778,7 +778,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.09229593, y: -0.7010574, z: 0.09229593, w: 0.7010574}
-  m_LocalPosition: {x: 54, y: 3, z: 50}
+  m_LocalPosition: {x: 54, y: 5.5, z: 50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11526,6 +11526,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006207131}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1128714350
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 837b6a3f9951f38438cd5199f650e84e,
+        type: 3}
+      propertyPath: m_Name
+      value: crabCove_ver1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 837b6a3f9951f38438cd5199f650e84e, type: 3}
 --- !u!1 &1168257932
 GameObject:
   m_ObjectHideFlags: 0
@@ -12590,7 +12658,7 @@ Transform:
   m_GameObject: {fileID: 1897861583}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 50, y: 1, z: 50}
+  m_LocalPosition: {x: 50, y: 3.5, z: 50}
   m_LocalScale: {x: 1, y: 1, z: 1.7578}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12626,6 +12694,7 @@ MonoBehaviour:
   currMoveSpeed: 0
   rotateSpeed: 0.8
   accelRate: 1.1
+  crabY: 0
   camSmooth: 0.2
   isLeft: 0
   camXRot: 0
@@ -13234,3 +13303,4 @@ SceneRoots:
   - {fileID: 697596156}
   - {fileID: 436012133}
   - {fileID: 691477996}
+  - {fileID: 1128714350}
