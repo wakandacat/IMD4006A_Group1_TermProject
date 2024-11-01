@@ -117,9 +117,6 @@ public class PlayerController : MonoBehaviour
             //get angle between forward direction and target direction
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
 
-            float checkAngle = Quaternion.Angle(crab.transform.rotation, targetRotate);
-            //Debug.Log(checkAngle);
-
 
            //for camera rotation 
             //Vector3 eulerAngles = targetRotate.eulerAngles; // Convert Quaternion to Euler angles
@@ -130,7 +127,14 @@ public class PlayerController : MonoBehaviour
             if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f)
             {
                 targetRotate = Quaternion.LookRotation(-moveDirection);
-               // lookRotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y - 90, eulerAngles.z);
+            }
+
+            if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 60)
+            {
+                Debug.Log(Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)));
+                //move the crab
+                crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
+                crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
             }
 
             //rotate the crab but not on deceleration
@@ -150,10 +154,6 @@ public class PlayerController : MonoBehaviour
             {
                 currMoveSpeed = baseMoveSpeed;
             }
-            //move the crab
-            crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
-            crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
-            //Debug.Log(crabVel.magnitude);
 
             // Figuring out the crab's Y position, relative to the terrain
             currTerrHeight = terrainScript.getTerrainHeight(crab.gameObject.transform.position);
@@ -166,12 +166,6 @@ public class PlayerController : MonoBehaviour
             {
 
             }
-            
-
-            //main camera follows behind crab when walking
-            //Vector3 targetPos = crab.transform.position + crab.transform.forward * camOffset.z + crab.transform.up * camOffset.y + crab.transform.right * -camOffset.x;
-            //Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, rotateSpeed);
-            //Camera.main.transform.position = smoothPos;
 
             //TEMPORARY CAMERA UNTIL PROPER CAM MOEVMENT FIGURED OUT main camera follows behind player when walking
             Vector3 targetPos = crab.transform.position + camOffset;

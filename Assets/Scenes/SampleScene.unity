@@ -6038,6 +6038,7 @@ MonoBehaviour:
   outOfBounds: {fileID: 909816512}
   homeArea: {fileID: 1777476355}
   crabStartPos: {x: 5, y: 3.5, z: 70}
+  cameraStartPos: {x: 10, y: 5, z: 70}
   crab: {fileID: 1897861583}
   enterFlag: 0
   toDelete: 0
