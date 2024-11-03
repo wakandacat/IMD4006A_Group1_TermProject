@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -58,6 +59,17 @@ public class PlayerController : MonoBehaviour
 
     GameObject pickedUpItem;
     private GameObject currentHoldingClaw;
+
+
+
+    //track if crab is free spinning
+    float angleChange = 0f;
+    float[] lastTenAngles = new float [10];
+    int temp = 0; //counter
+    bool isSpinning = false;
+    bool isTurning = false;
+    float max;
+    float min;
 
 
     // Start is called before the first frame update
@@ -118,31 +130,74 @@ public class PlayerController : MonoBehaviour
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
 
 
-           //for camera rotation 
+            //for camera rotation 
             //Vector3 eulerAngles = targetRotate.eulerAngles; // Convert Quaternion to Euler angles
             //Quaternion lookRotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y + 90, eulerAngles.z);
-
+           
             //determine if -z or +z direction is closest to target and make that the front of the crab
             //try to only adjust forward direction when not holding continuously and rotating
-            if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f)
+            //dont swap forward when free spinning
+            if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f && isSpinning == false)
             {
                 targetRotate = Quaternion.LookRotation(-moveDirection);
             }
+            if (temp < 10 && leftStick.magnitude > 0.1f)
+            {
+                lastTenAngles[temp] = angleToTarget; //add the new angle to the array
 
+                temp++;
+            }
+            else if (temp == 10 && leftStick.magnitude > 0.1f) //once we've collected 10 angles
+            {
+                //Debug.Log("Last Ten Angles: " + string.Join(", ", lastTenAngles.Select(angle => angle.ToString("F2"))));
+                max = lastTenAngles.Max();
+                min = lastTenAngles.Min();
+
+                angleChange = max - min; //get the range of the angles
+
+
+                Debug.Log(angleChange);
+                if (angleChange > 10 && angleChange < 100) //if it is between 10 and 100, we are free spinning
+                {
+                    Debug.Log("Player is spinning in circles!");
+                    isSpinning = true;
+
+                } else
+                {
+                    isSpinning = false;
+                }
+
+                //reset everything for next 10 angles
+                angleChange = 0f;
+                temp = 0;
+            }
+
+            //ensure the crab rotates to input direction first, then moves when the distance in angles is large enough
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 60)
             {
-                Debug.Log(Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)));
                 //move the crab
                 crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
                 crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
+                isTurning = true;
+            } else
+            {
+                isTurning = false;
             }
 
-            //rotate the crab but not on deceleration
-            if (leftStick.magnitude > 0.1f)
+            //rotate the crab but not if its freespinning
+            if (leftStick.magnitude > 0.1f && isSpinning == false)
             {
                 crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
                 // Rotate the camera to look at the crab          
                 //Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
+            } 
+            else if (leftStick.magnitude > 0.1f && isSpinning == true && isTurning == false) //spin much faster when free spinning
+            {
+                crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, 5 * Time.deltaTime);
+            } 
+            else if (leftStick.magnitude > 0.1f)
+            {
+                crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
             }
 
             //move the crab and take into account the weight of any held objects
