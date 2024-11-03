@@ -71,6 +71,10 @@ public class PlayerController : MonoBehaviour
     float max;
     float min;
 
+    //break vars
+    public float shakeAmount = 1f;
+    public float shakeSpeed = 5f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -159,7 +163,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log(angleChange);
                 if (angleChange > 10 && angleChange < 100) //if it is between 10 and 100, we are free spinning
                 {
-                    Debug.Log("Player is spinning in circles!");
+                    Debug.Log("Player is spinning");
                     isSpinning = true;
 
                 } else
@@ -324,8 +328,32 @@ public class PlayerController : MonoBehaviour
 
         //breaking controls ---------> only if a claw is available
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
-        //Debug.Log(leftTrigger);
-        //make the crab break here
+
+        //if crab is holding something breakable in active claw
+        if (leftTrigger > 0.1f)
+        {
+            //get some random jitter
+            float xOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+            float yOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+            float zOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+
+            if (isLeft)
+            {
+                Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
+                clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+            }
+            else
+            {
+                Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
+                clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+            }
+        }
+
+       
+
+
+
+
 
         //---------------------------------------DIGGING-------------------------------------
 
