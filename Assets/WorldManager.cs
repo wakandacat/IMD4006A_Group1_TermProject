@@ -8,6 +8,14 @@ using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
     public static WorldManager instance;
+    private SpawnItems itemSpawnScript;
+    public GameObject outOfBounds;
+    public GameObject homeArea;
+    public Vector3 crabStartPos;
+    public GameObject crab;
+    public bool enterFlag = false; //flag for checking if the crab only just entered the home area
+    public bool toDelete = false;
+    public bool gameStart = true; //dont perform some actions at the very beginning of the game
 
     //may be unnecessary but idk
     private void Awake()
@@ -27,12 +35,68 @@ public class WorldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //on start of game, spawn items
+        itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
+        itemSpawnScript.spawnItemsFunc();
+
+        //start the crab at the default position
+        crab.transform.position = crabStartPos;
+
+        enterFlag = false;
+        toDelete = false;
+        gameStart = true;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //THESE CAN BE DONE MORE EFFICIENTLY WITH TRIGGER AREAS BUT THE CRAB WILL NEED A RIGIDBODY FOR THAT
+
+        //---------------------------------OUT OF BOUNDS AREA-----------------------------------------
+        //always check if the crab goes out of bounds
+        //if it does, do a fade to black thing and then move the crab back home
+        if (crab.transform.position.x <= outOfBounds.transform.position.x + outOfBounds.transform.localScale.x / 2 && crab.transform.position.x >= outOfBounds.transform.position.x - outOfBounds.transform.localScale.x / 2 && crab.transform.position.z <= outOfBounds.transform.position.z + outOfBounds.transform.localScale.z / 2 && crab.transform.position.z >= outOfBounds.transform.position.z - outOfBounds.transform.localScale.z / 2)
+        {
+            Debug.Log("Out of bounds");
+            crab.transform.position = crabStartPos;
+        }
+
+        //---------------------------------HOME AREA-----------------------------------------
+        //if the crab enters the home area, then destroy all items in playable area and spawn new ones
+        if (crab.transform.position.x <= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 && crab.transform.position.x >= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z <= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 && crab.transform.position.z >= homeArea.transform.position.z - homeArea.transform.localScale.z / 2 && enterFlag == false && gameStart == false)
+        {
+            Debug.Log("Entered");
+            enterFlag = true;
+            toDelete = true;
+        }
+
+
+        //when crab leaves home area, set flags back
+        // if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2 && enterFlag == true)
+        if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2)
+        {
+            Debug.Log("Left");
+            enterFlag = false;
+            gameStart = false; //its no longer the beginnning of the game so begin functions as usual
+        }
+
+        //only destroy items once
+        if (enterFlag && toDelete && gameStart == false)
+        {
+            Debug.Log("Destroyed");
+            //destory current items
+            itemSpawnScript.destroyItemsFunc();
+            //spawn new items
+            Debug.Log("Created");
+            itemSpawnScript.spawnItemsFunc();
+
+            //RESET TERRAIN HERE
+
+
+
+            toDelete = false;
+        }
+
     }
 }

@@ -17,74 +17,16 @@ public class SpawnItems : MonoBehaviour
     public GameObject[] areas;
     private int currArea = -1;
 
+    //existing items in world
+    public GameObject[] itemList;
+
+    //home area
+    public GameObject home;
 
     // Start is called before the first frame update
     void Start()
     {
 
-        //cycle through all of the spawn points
-        for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            //check each spawn point against each area collider to determine which it is inside
-            for (int x = 0; x < areas.Length; x++)
-            {
-                //if inside x
-                if (spawnPoints[i].x <= areas[x].transform.position.x + areas[x].transform.localScale.x/2 && spawnPoints[i].x >= areas[x].transform.position.x - areas[x].transform.localScale.x / 2)
-                {
-                    currArea = -1;
-                    //if inside y
-                    if (spawnPoints[i].y <= areas[x].transform.position.y + areas[x].transform.localScale.y / 2 && spawnPoints[i].y >= areas[x].transform.position.y - areas[x].transform.localScale.y / 2)
-                    {
-                        currArea = -1;
-                        //if inside z
-                        if (spawnPoints[i].z <= areas[x].transform.position.z + areas[x].transform.localScale.z / 2 && spawnPoints[i].z >= areas[x].transform.position.z - areas[x].transform.localScale.z / 2)
-                        {
-                            //yass gamers we here
-                            currArea = x;
-                        }
-                    }
-                }
-            }
-
-            int tempNum = -1;
-
-            //catch for any items outside range
-            bool itemInArea = false;
-
-            //make a case for every area
-            switch (currArea)
-            {
-                case 0:
-                    //Debug.Log("area0");
-                    itemInArea = true;
-                    //choose between the possible prefabs for this area
-                    tempNum = getItem(currArea);
-                    break;
-                case 1:
-                    Debug.Log("area1");
-                    itemInArea = true;
-                    //choose between the possible prefabs for this area
-                    tempNum = getItem(currArea);
-                    break;
-                case 2:
-                    //Debug.Log("area2");
-                    itemInArea = true;
-                    //choose between the possible prefabs for this area
-                    tempNum = getItem(currArea);
-                    break;
-                default:
-                    //Debug.Log("nah");
-                    break;
-            }
-
-            if (itemInArea == true)
-            {
-                setPosition(tempNum, spawnPoints[i], currArea);
-                Instantiate(prefabList[tempNum]);     //instantiate instance of item to scene
-                itemInArea = false;
-            }
-
-        }
     }
 
     //set the current spawnPosition to be the position of the prefab at the random num index
@@ -156,6 +98,91 @@ public class SpawnItems : MonoBehaviour
 
         return chosenItem;
 
+    }
+
+    public void spawnItemsFunc()
+    {
+        //cycle through all of the spawn points
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            //check each spawn point against each area collider to determine which it is inside
+            for (int x = 0; x < areas.Length; x++)
+            {
+                //if inside x
+                if (spawnPoints[i].x <= areas[x].transform.position.x + areas[x].transform.localScale.x / 2 && spawnPoints[i].x >= areas[x].transform.position.x - areas[x].transform.localScale.x / 2)
+                {
+                    currArea = -1;
+                    //if inside y
+                    if (spawnPoints[i].y <= areas[x].transform.position.y + areas[x].transform.localScale.y / 2 && spawnPoints[i].y >= areas[x].transform.position.y - areas[x].transform.localScale.y / 2)
+                    {
+                        currArea = -1;
+                        //if inside z
+                        if (spawnPoints[i].z <= areas[x].transform.position.z + areas[x].transform.localScale.z / 2 && spawnPoints[i].z >= areas[x].transform.position.z - areas[x].transform.localScale.z / 2)
+                        {
+                            //yass gamers we here
+                            currArea = x;
+                        }
+                    }
+                }
+            }
+
+            int tempNum = -1;
+
+            //catch for any items outside range
+            bool itemInArea = false;
+
+            //make a case for every area
+            switch (currArea)
+            {
+                case 0:
+                    //Debug.Log("area0");
+                    itemInArea = true;
+                    //choose between the possible prefabs for this area
+                    tempNum = getItem(currArea);
+                    break;
+                case 1:
+                    //Debug.Log("area1");
+                    itemInArea = true;
+                    //choose between the possible prefabs for this area
+                    tempNum = getItem(currArea);
+                    break;
+                case 2:
+                    //Debug.Log("area2");
+                    itemInArea = true;
+                    //choose between the possible prefabs for this area
+                    tempNum = getItem(currArea);
+                    break;
+                default:
+                    //Debug.Log("nah");
+                    break;
+            }
+
+            if (itemInArea == true)
+            {
+                setPosition(tempNum, spawnPoints[i], currArea);
+                Instantiate(prefabList[tempNum]);     //instantiate instance of item to scene
+                itemInArea = false;
+            }
+
+        }
+    }
+
+    public void destroyItemsFunc()
+    {
+        //find all the existing items in the playable area
+        itemList = GameObject.FindGameObjectsWithTag("item");
+        //Debug.Log("Item List: " + string.Join(", ", itemList.Select(item => item.name)));
+
+        //only delete those that are not within the home area
+        for (int x = 0; x < itemList.Length; x++)
+        {
+            //if the item is outside the house area then destroy it
+            if (itemList[x].transform.position.x >= home.transform.position.x + home.transform.localScale.x / 2 || itemList[x].transform.position.x <= home.transform.position.x - home.transform.localScale.x / 2 && itemList[x].transform.position.z >= home.transform.position.z + home.transform.localScale.z / 2 || itemList[x].transform.position.z <= home.transform.position.z - home.transform.localScale.z / 2)
+            {
+                //Debug.Log("Destroyed");
+                Destroy(itemList[x]);
+            }
+        }
     }
 
 }
