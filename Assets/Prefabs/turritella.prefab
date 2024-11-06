@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: d72c2fdfc9f74174fa66b1e5e3597df4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.202187
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d72c2fdfc9f74174fa66b1e5e3597df4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.003112
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d72c2fdfc9f74174fa66b1e5e3597df4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 52.08116
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d72c2fdfc9f74174fa66b1e5e3597df4,
         type: 3}
@@ -62,6 +62,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: turritella
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d72c2fdfc9f74174fa66b1e5e3597df4,
+        type: 3}
+      propertyPath: m_TagString
+      value: item
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
