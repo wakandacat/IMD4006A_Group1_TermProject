@@ -6187,9 +6187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabList:
-  - {fileID: -4000662679717934721, guid: 73ef87f2bfe97a943bc57e677b7199c2, type: 3}
-  - {fileID: 8988123040543616355, guid: 8c3942a440875ec47bcaff427da74245, type: 3}
-  - {fileID: 6136049865030577723, guid: f5e543df0d6ce6543ba97f5faaf22062, type: 3}
+  - {fileID: 7744470194504227064, guid: 8daddb3e660398f4981a6b3cd43b7da4, type: 3}
+  - {fileID: 5680698653355040475, guid: d5dc83eca06e14840b73f267349dae70, type: 3}
+  - {fileID: -6629384662596451860, guid: 9f906535ea3969e4c8c357e6aefc16ff, type: 3}
   spawnPoints:
   - {x: 20, y: 0, z: 20}
   - {x: 35, y: 0, z: 55}
