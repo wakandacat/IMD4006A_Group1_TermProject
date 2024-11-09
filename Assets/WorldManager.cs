@@ -36,11 +36,11 @@ public class WorldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+
         //on start of game, spawn items
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
         itemSpawnScript.spawnItemsFunc();
-
-        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
 
         //start the crab at the default position
         crab.transform.position = crabStartPos;
@@ -82,7 +82,7 @@ public class WorldManager : MonoBehaviour
         // if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2 && enterFlag == true)
         if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2)
         {
-            Debug.Log("Left");
+            //Debug.Log("Left");
             enterFlag = false;
             gameStart = false; //its no longer the beginnning of the game so begin functions as usual
         }

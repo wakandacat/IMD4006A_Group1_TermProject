@@ -29,9 +29,9 @@ public class TerrainEditor : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                // initialHeights[i, j] = 0.005f;
-                initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
-                Debug.Log(initialHeights[i, j]);
+                initialHeights[i, j] = 0.005f;
+                //initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
+                //Debug.Log(initialHeights[i, j]);
             }
         }
 
@@ -271,6 +271,7 @@ public class TerrainEditor : MonoBehaviour
     // item has been spawned underground.
     public void createMound(Vector3 itemPos)
     {
+        Debug.Log("hi");
         int itemX = (int)(itemPos.x * 5.12f);
         int itemY = (int)(itemPos.z * 5.12f);
         float itemHeight = itemPos.y;
