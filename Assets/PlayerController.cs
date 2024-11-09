@@ -396,4 +396,5 @@ public class PlayerController : MonoBehaviour
         //pickedUpItem = null;
         closetoItem = false;
     }
+
 }
