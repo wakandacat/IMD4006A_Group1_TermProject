@@ -9,6 +9,7 @@ public class WorldManager : MonoBehaviour
 {
     public static WorldManager instance;
     private SpawnItems itemSpawnScript;
+    private TerrainEditor terrainScript;
     public GameObject outOfBounds;
     public GameObject homeArea;
     public Vector3 crabStartPos;
@@ -38,6 +39,8 @@ public class WorldManager : MonoBehaviour
         //on start of game, spawn items
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
         itemSpawnScript.spawnItemsFunc();
+
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
 
         //start the crab at the default position
         crab.transform.position = crabStartPos;
@@ -69,6 +72,9 @@ public class WorldManager : MonoBehaviour
             Debug.Log("Entered");
             enterFlag = true;
             toDelete = true;
+
+            // Resetting terrain upon entering the home area.
+            terrainScript.resetTerrainHeight();
         }
 
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -7,6 +8,8 @@ public class TerrainEditor : MonoBehaviour
 {
     private Terrain sandTerrain;
     private float[,] initialHeights;
+
+    public float perlinStep;
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +29,12 @@ public class TerrainEditor : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                initialHeights[i, j] = 0.005f;
+                // initialHeights[i, j] = 0.005f;
+                initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
+                Debug.Log(initialHeights[i, j]);
             }
         }
 
-        int testX = 50;
-        int testY = 40;
 
         sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
 
@@ -188,6 +191,55 @@ public class TerrainEditor : MonoBehaviour
                     initialHeights[crabY - 2, crabX - 5] -= (triggerInput + 0.0000125f);
                 }
 
+                if (initialHeights[crabY, crabX] < 0.0025f)
+                {
+                    initialHeights[crabY + 6, crabX] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 6, crabX] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY, crabX + 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 6, crabX + 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 6, crabX - 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 6, crabX + 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 6, crabX - 1] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 6, crabX + 2] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 6, crabX - 2] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 6, crabX + 2] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 6, crabX - 2] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 1, crabX + 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 1, crabX + 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 1, crabX - 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 1, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 2, crabX + 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 2, crabX + 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 2, crabX - 6] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 2, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 4, crabX + 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 4, crabX - 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 4, crabX + 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 4, crabX - 4] -= (triggerInput + 0.0000125f);
+
+                    initialHeights[crabY + 4, crabX + 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 5, crabX + 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 3, crabX + 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 5, crabX + 3] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 4, crabX - 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 5, crabX - 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 3, crabX - 3] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 5, crabX - 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 4, crabX + 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 5, crabX + 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 3, crabX + 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 5, crabX + 3] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 4, crabX - 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 5, crabX - 4] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 3, crabX - 5] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 5, crabX - 3] -= (triggerInput + 0.0000125f);
+                }
 
                 sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
             }
@@ -201,55 +253,73 @@ public class TerrainEditor : MonoBehaviour
         return initialHeights[crabY, crabX];
     }
 
+    public void resetTerrainHeight()
+    {
+        int width = sandTerrain.terrainData.heightmapResolution;
+        int height = sandTerrain.terrainData.heightmapResolution;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                initialHeights[i, j] = 0.005f;
+            }
+        }
+    }
+
     // createMound is used to push the terrain up at any position where an
     // item has been spawned underground.
     public void createMound(Vector3 itemPos)
     {
         int itemX = (int)(itemPos.x * 5.12f);
         int itemY = (int)(itemPos.z * 5.12f);
+        float itemHeight = itemPos.y;
 
-        initialHeights[itemY, itemX] += 0.001f;
-        initialHeights[itemY, itemX + 1] += 0.0009f;
-        initialHeights[itemY, itemX - 1] += 0.0009f;
-        initialHeights[itemY + 1, itemX] += 0.0009f;
-        initialHeights[itemY - 1, itemX] += 0.0009f;
-        initialHeights[itemY + 1, itemX + 1] += 0.0009f;
-        initialHeights[itemY + 1, itemX - 1] += 0.00009f;
-        initialHeights[itemY - 1, itemX + 1] += 0.00009f;
-        initialHeights[itemY - 1, itemX - 1] += 0.00009f;
+        if (itemHeight < 3.0f)
+        {
+            initialHeights[itemY, itemX] += 0.001f;
+            initialHeights[itemY, itemX + 1] += 0.0009f;
+            initialHeights[itemY, itemX - 1] += 0.0009f;
+            initialHeights[itemY + 1, itemX] += 0.0009f;
+            initialHeights[itemY - 1, itemX] += 0.0009f;
+            initialHeights[itemY + 1, itemX + 1] += 0.0009f;
+            initialHeights[itemY + 1, itemX - 1] += 0.00009f;
+            initialHeights[itemY - 1, itemX + 1] += 0.00009f;
+            initialHeights[itemY - 1, itemX - 1] += 0.00009f;
 
-        initialHeights[itemY + 2, itemX - 1] += 0.0007f;
-        initialHeights[itemY + 2, itemX] += 0.0007f;
-        initialHeights[itemY + 2, itemX + 1] += 0.0007f;
-        initialHeights[itemY - 1, itemX + 2] += 0.0007f;
-        initialHeights[itemY, itemX + 2] += 0.0007f;
-        initialHeights[itemY + 1, itemX + 2] += 0.0007f;
-        initialHeights[itemY - 2, itemX - 1] += 0.0007f;
-        initialHeights[itemY - 2, itemX] += 0.0007f;
-        initialHeights[itemY - 2, itemX + 1] += 0.0007f;
-        initialHeights[itemY - 1, itemX - 2] += 0.0007f;
-        initialHeights[itemY, itemX - 2] += 0.0007f;
-        initialHeights[itemY + 1, itemX - 2] += 0.0007f;
+            initialHeights[itemY + 2, itemX - 1] += 0.0007f;
+            initialHeights[itemY + 2, itemX] += 0.0007f;
+            initialHeights[itemY + 2, itemX + 1] += 0.0007f;
+            initialHeights[itemY - 1, itemX + 2] += 0.0007f;
+            initialHeights[itemY, itemX + 2] += 0.0007f;
+            initialHeights[itemY + 1, itemX + 2] += 0.0007f;
+            initialHeights[itemY - 2, itemX - 1] += 0.0007f;
+            initialHeights[itemY - 2, itemX] += 0.0007f;
+            initialHeights[itemY - 2, itemX + 1] += 0.0007f;
+            initialHeights[itemY - 1, itemX - 2] += 0.0007f;
+            initialHeights[itemY, itemX - 2] += 0.0007f;
+            initialHeights[itemY + 1, itemX - 2] += 0.0007f;
 
-        initialHeights[itemY + 2, itemX + 2] += 0.0005f;
-        initialHeights[itemY - 2, itemX + 2] += 0.0005f;
-        initialHeights[itemY + 2, itemX - 2] += 0.0005f;
-        initialHeights[itemY - 2, itemX - 2] += 0.0005f;
-        initialHeights[itemY + 3, itemX] += 0.0005f;
-        initialHeights[itemY - 3, itemX] += 0.0005f;
-        initialHeights[itemY, itemX + 3] += 0.0005f;
-        initialHeights[itemY, itemX - 3] += 0.0005f;
-        initialHeights[itemY + 3, itemX + 1] += 0.0005f;
-        initialHeights[itemY + 3, itemX - 1] += 0.0005f;
-        initialHeights[itemY - 3, itemX + 1] += 0.0005f;
-        initialHeights[itemY - 3, itemX - 1] += 0.0005f;
-        initialHeights[itemY + 1, itemX + 3] += 0.0005f;
-        initialHeights[itemY - 1, itemX + 3] += 0.0005f;
-        initialHeights[itemY + 1, itemX - 3] += 0.0005f;
-        initialHeights[itemY - 1, itemX - 3] += 0.0005f;
+            initialHeights[itemY + 2, itemX + 2] += 0.0005f;
+            initialHeights[itemY - 2, itemX + 2] += 0.0005f;
+            initialHeights[itemY + 2, itemX - 2] += 0.0005f;
+            initialHeights[itemY - 2, itemX - 2] += 0.0005f;
+            initialHeights[itemY + 3, itemX] += 0.0005f;
+            initialHeights[itemY - 3, itemX] += 0.0005f;
+            initialHeights[itemY, itemX + 3] += 0.0005f;
+            initialHeights[itemY, itemX - 3] += 0.0005f;
+            initialHeights[itemY + 3, itemX + 1] += 0.0005f;
+            initialHeights[itemY + 3, itemX - 1] += 0.0005f;
+            initialHeights[itemY - 3, itemX + 1] += 0.0005f;
+            initialHeights[itemY - 3, itemX - 1] += 0.0005f;
+            initialHeights[itemY + 1, itemX + 3] += 0.0005f;
+            initialHeights[itemY - 1, itemX + 3] += 0.0005f;
+            initialHeights[itemY + 1, itemX - 3] += 0.0005f;
+            initialHeights[itemY - 1, itemX - 3] += 0.0005f;
 
-        Debug.Log("Mound Created.");
+            Debug.Log("Mound Created.");
 
-        sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
+            sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
+        }
     }
 }

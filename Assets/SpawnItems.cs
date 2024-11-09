@@ -12,7 +12,9 @@ public class SpawnItems : MonoBehaviour
 {
     public item[] prefabList;     //array of gameObjects of class 'item', these should be prefabs
     public Vector3[] spawnPoints = new[] { new Vector3(20f, 0f, 25f), new Vector3(35f, 0f, 55f), new Vector3(20f, 0f, 25f), new Vector3(51f, 0f, 53f), new Vector3(74f, 0f, 70f), new Vector3(72f, 0f, 68f) };
-    
+
+    private TerrainEditor terrainScript;
+
     //bucket areas
     public GameObject[] areas;
     private int currArea = -1;
@@ -26,7 +28,7 @@ public class SpawnItems : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
     }
 
     //set the current spawnPosition to be the position of the prefab at the random num index
@@ -34,8 +36,9 @@ public class SpawnItems : MonoBehaviour
     {
         //vary the height by the point value, so higher point value items are deeper in the terrain
         float yPos = areas[areaIndex].transform.localScale.y - (areas[areaIndex].transform.localScale.y / prefabList[num].itemPtValue);
+        yPos = -yPos + areas[areaIndex].transform.position.y + areas[areaIndex].transform.localScale.y/2;
 
-        prefabList[num].transform.position = new Vector3(pos.x, -yPos, pos.z);
+        prefabList[num].transform.position = new Vector3(pos.x, yPos, pos.z);
     }
 
     //get all the items that can spawn in an area, and pick one
@@ -161,6 +164,7 @@ public class SpawnItems : MonoBehaviour
             {
                 setPosition(tempNum, spawnPoints[i], currArea);
                 Instantiate(prefabList[tempNum]);     //instantiate instance of item to scene
+                //terrainScript.createMound(prefabList[tempNum].transform.position);
                 itemInArea = false;
             }
 
