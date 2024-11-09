@@ -271,7 +271,6 @@ public class TerrainEditor : MonoBehaviour
     // item has been spawned underground.
     public void createMound(Vector3 itemPos)
     {
-        Debug.Log("hi");
         int itemX = (int)(itemPos.x * 5.12f);
         int itemY = (int)(itemPos.z * 5.12f);
         float itemHeight = itemPos.y;
