@@ -29,9 +29,9 @@ public class TerrainEditor : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                // initialHeights[i, j] = 0.005f;
-                initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
-                Debug.Log(initialHeights[i, j]);
+                initialHeights[i, j] = 0.005f;
+                //initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
+                //Debug.Log(initialHeights[i, j]);
             }
         }
 
