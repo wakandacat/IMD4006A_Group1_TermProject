@@ -11,7 +11,7 @@ using UnityEngine.Windows;
 public class SpawnItems : MonoBehaviour
 {
     public item[] prefabList;     //array of gameObjects of class 'item', these should be prefabs
-    public Vector3[] spawnPoints = new[] { new Vector3(20f, 0f, 25f), new Vector3(35f, 0f, 55f), new Vector3(20f, 0f, 25f), new Vector3(51f, 0f, 53f), new Vector3(74f, 0f, 70f), new Vector3(72f, 0f, 68f) };
+    public Vector3[] spawnPoints = new[] { new Vector3(30f, 0f, 25f), new Vector3(35f, 0f, 55f), new Vector3(20f, 0f, 25f), new Vector3(51f, 0f, 53f), new Vector3(74f, 0f, 70f), new Vector3(72f, 0f, 68f) };
 
     private TerrainEditor terrainScript;
 
@@ -25,10 +25,15 @@ public class SpawnItems : MonoBehaviour
     //home area
     public GameObject home;
 
+    private void Awake()
+    {
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+        
     }
 
     //set the current spawnPosition to be the position of the prefab at the random num index
@@ -164,7 +169,10 @@ public class SpawnItems : MonoBehaviour
             {
                 setPosition(tempNum, spawnPoints[i], currArea);
                 Instantiate(prefabList[tempNum]);     //instantiate instance of item to scene
-                //terrainScript.createMound(prefabList[tempNum].transform.position);
+
+                //Vector3 testVal = new Vector3(20.0f, 2.0f, 25.0f);
+                terrainScript.createMound(prefabList[tempNum].transform.position);
+                
                 itemInArea = false;
             }
 

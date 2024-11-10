@@ -61,7 +61,7 @@ public class WorldManager : MonoBehaviour
         //if it does, do a fade to black thing and then move the crab back home
         if (crab.transform.position.x <= outOfBounds.transform.position.x + outOfBounds.transform.localScale.x / 2 && crab.transform.position.x >= outOfBounds.transform.position.x - outOfBounds.transform.localScale.x / 2 && crab.transform.position.z <= outOfBounds.transform.position.z + outOfBounds.transform.localScale.z / 2 && crab.transform.position.z >= outOfBounds.transform.position.z - outOfBounds.transform.localScale.z / 2)
         {
-            Debug.Log("Out of bounds");
+            //Debug.Log("Out of bounds");
             crab.transform.position = crabStartPos;
         }
 
@@ -69,7 +69,7 @@ public class WorldManager : MonoBehaviour
         //if the crab enters the home area, then destroy all items in playable area and spawn new ones
         if (crab.transform.position.x <= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 && crab.transform.position.x >= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z <= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 && crab.transform.position.z >= homeArea.transform.position.z - homeArea.transform.localScale.z / 2 && enterFlag == false && gameStart == false)
         {
-            Debug.Log("Entered");
+            //Debug.Log("Entered");
             enterFlag = true;
             toDelete = true;
 
@@ -82,7 +82,7 @@ public class WorldManager : MonoBehaviour
         // if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2 && enterFlag == true)
         if (crab.transform.position.x >= homeArea.transform.position.x + homeArea.transform.localScale.x / 2 || crab.transform.position.x <= homeArea.transform.position.x - homeArea.transform.localScale.x / 2 && crab.transform.position.z >= homeArea.transform.position.z + homeArea.transform.localScale.z / 2 || crab.transform.position.z <= homeArea.transform.position.z - homeArea.transform.localScale.z / 2)
         {
-            Debug.Log("Left");
+            //Debug.Log("Left");
             enterFlag = false;
             gameStart = false; //its no longer the beginnning of the game so begin functions as usual
         }
@@ -90,11 +90,11 @@ public class WorldManager : MonoBehaviour
         //only destroy items once
         if (enterFlag && toDelete && gameStart == false)
         {
-            Debug.Log("Destroyed");
+            //Debug.Log("Destroyed");
             //destory current items
             itemSpawnScript.destroyItemsFunc();
             //spawn new items
-            Debug.Log("Created");
+            //Debug.Log("Created");
             itemSpawnScript.spawnItemsFunc();
 
             //RESET TERRAIN HERE
