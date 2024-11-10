@@ -811,8 +811,8 @@ Transform:
   m_GameObject: {fileID: 410000505}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.07798445, y: -0.24000001, z: -0.66999996}
-  m_LocalScale: {x: 0.40234998, y: 0.43211973, z: 0.75958}
+  m_LocalPosition: {x: -0.07798445, y: -0.24000001, z: 0.016}
+  m_LocalScale: {x: 0.40234998, y: 0.74138784, z: 0.75958}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1897861587}
@@ -838,7 +838,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
+  - {fileID: 2100000, guid: bb89ad7032bc24c4fb5d68c4dfd856b0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1145,7 +1145,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 0.7
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1728,7 +1728,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -6248,7 +6248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd9e0be94d4f5dd4c97fc05f12b91cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perlinStep: 1
+  perlinStep: 0.05
 --- !u!4 &697596156
 Transform:
   m_ObjectHideFlags: 0
@@ -6372,7 +6372,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
+  - {fileID: 2100000, guid: bb89ad7032bc24c4fb5d68c4dfd856b0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6416,7 +6416,7 @@ ParticleSystemRenderer:
   m_VertexStreams: 00010304
   m_UseCustomTrailVertexStreams: 0
   m_TrailVertexStreams: 00010304
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -6679,7 +6679,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 0.6
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -11461,6 +11461,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1172448365
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 55.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.93
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 64.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      propertyPath: m_Name
+      value: alphaRocks
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1930399890}
+  m_SourcePrefab: {fileID: 100100000, guid: 448f18d5c2ef3d74c8ab58f2041034a7, type: 3}
 --- !u!1 &1768954987
 GameObject:
   m_ObjectHideFlags: 0
@@ -11860,6 +11932,7 @@ MonoBehaviour:
   clawLeft: {fileID: 1006207131}
   movePartSystem: {fileID: 410000508}
   digPartSystem: {fileID: 824042363}
+  digAnimTimer: 240
   baseMoveSpeed: 7
   currMoveSpeed: 0
   rotateSpeed: 0.8
@@ -11899,6 +11972,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!1 &1930399889 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1172448365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1930399890
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930399889}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4, y: 15, z: 16}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1969242307
 GameObject:
   m_ObjectHideFlags: 0
@@ -12025,3 +12125,4 @@ SceneRoots:
   - {fileID: 1777476357}
   - {fileID: 909816514}
   - {fileID: 32808051}
+  - {fileID: 1172448365}

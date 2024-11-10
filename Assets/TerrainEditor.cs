@@ -8,30 +8,36 @@ public class TerrainEditor : MonoBehaviour
 {
     private Terrain sandTerrain;
     private float[,] initialHeights;
+    private float[,] savedHeights;
 
     public float perlinStep;
+    float perlinNoise;
 
-    // Start is called before the first frame update
-    void Start()
+    int width;
+    int height;
+
+    private void Awake()
     {
-        // Thank you Dr. Thue for the help with figuring out Unity Terrain!
-        // ================================================================
-
         sandTerrain = GetComponent<Terrain>();
 
-        int width = sandTerrain.terrainData.heightmapResolution;
-        int height = sandTerrain.terrainData.heightmapResolution;
+        width = sandTerrain.terrainData.heightmapResolution;
+        height = sandTerrain.terrainData.heightmapResolution;
 
         initialHeights = sandTerrain.terrainData.GetHeights(0, 0, width, height);
+        savedHeights = sandTerrain.terrainData.GetHeights(0, 0, width, height);
+
+        // Thank you Dr. Thue for the help with figuring out Unity Terrain!
+        // ================================================================
 
         // Resetting the terrain back to the default height upon start
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                initialHeights[i, j] = 0.005f;
-                //initialHeights[i, j] = 0.005f * Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
-                //Debug.Log(initialHeights[i, j]);
+                // initialHeights[i, j] = 0.005f;
+                perlinNoise = Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
+                initialHeights[i, j] = (perlinNoise * 0.00075f) + 0.0045f;
+                savedHeights[i, j] = initialHeights[i, j];
             }
         }
 
@@ -39,9 +45,36 @@ public class TerrainEditor : MonoBehaviour
         sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
 
         //Vector3 testMound;
-        //testMound.x = 50.0f;
+        //testMound.x = 10.0f;
         //testMound.y = 0.0f;
-        //testMound.z = 40.0f;
+        //testMound.z = 46.0f;
+        //createMound(testMound);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Thank you Dr. Thue for the help with figuring out Unity Terrain!
+        // ================================================================
+
+        // Resetting the terrain back to the default height upon start
+        //for (int i = 0; i < width; i++)
+        //{
+        //    for (int j = 0; j < height; j++)
+        //    {
+        //        // initialHeights[i, j] = 0.005f;
+        //        perlinNoise = Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
+        //        initialHeights[i, j] = (perlinNoise * 0.00075f) + 0.0045f;
+        //    }
+        //}
+
+
+        //sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
+
+        //Vector3 testMound;
+        //testMound.x = 10.0f;
+        //testMound.y = 0.0f;
+        //testMound.z = 46.0f;
         //createMound(testMound);
     }
 
@@ -255,14 +288,11 @@ public class TerrainEditor : MonoBehaviour
 
     public void resetTerrainHeight()
     {
-        int width = sandTerrain.terrainData.heightmapResolution;
-        int height = sandTerrain.terrainData.heightmapResolution;
-
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                initialHeights[i, j] = 0.005f;
+                initialHeights[i, j] = savedHeights[i, j];
             }
         }
     }
@@ -275,30 +305,30 @@ public class TerrainEditor : MonoBehaviour
         int itemY = (int)(itemPos.z * 5.12f);
         float itemHeight = itemPos.y;
 
-        if (itemHeight < 3.0f)
+        if (itemHeight < 2.6f)
         {
-            initialHeights[itemY, itemX] += 0.001f;
-            initialHeights[itemY, itemX + 1] += 0.0009f;
-            initialHeights[itemY, itemX - 1] += 0.0009f;
-            initialHeights[itemY + 1, itemX] += 0.0009f;
-            initialHeights[itemY - 1, itemX] += 0.0009f;
-            initialHeights[itemY + 1, itemX + 1] += 0.0009f;
-            initialHeights[itemY + 1, itemX - 1] += 0.00009f;
-            initialHeights[itemY - 1, itemX + 1] += 0.00009f;
-            initialHeights[itemY - 1, itemX - 1] += 0.00009f;
+            initialHeights[itemY, itemX] += 0.0007f;
+            initialHeights[itemY, itemX + 1] += 0.0007f;
+            initialHeights[itemY, itemX - 1] += 0.0007f;
+            initialHeights[itemY + 1, itemX] += 0.0007f;
+            initialHeights[itemY - 1, itemX] += 0.0007f;
+            initialHeights[itemY + 1, itemX + 1] += 0.0007f;
+            initialHeights[itemY + 1, itemX - 1] += 0.00007f;
+            initialHeights[itemY - 1, itemX + 1] += 0.00007f;
+            initialHeights[itemY - 1, itemX - 1] += 0.00007f;
 
-            initialHeights[itemY + 2, itemX - 1] += 0.0007f;
-            initialHeights[itemY + 2, itemX] += 0.0007f;
-            initialHeights[itemY + 2, itemX + 1] += 0.0007f;
-            initialHeights[itemY - 1, itemX + 2] += 0.0007f;
-            initialHeights[itemY, itemX + 2] += 0.0007f;
-            initialHeights[itemY + 1, itemX + 2] += 0.0007f;
-            initialHeights[itemY - 2, itemX - 1] += 0.0007f;
-            initialHeights[itemY - 2, itemX] += 0.0007f;
-            initialHeights[itemY - 2, itemX + 1] += 0.0007f;
-            initialHeights[itemY - 1, itemX - 2] += 0.0007f;
-            initialHeights[itemY, itemX - 2] += 0.0007f;
-            initialHeights[itemY + 1, itemX - 2] += 0.0007f;
+            initialHeights[itemY + 2, itemX - 1] += 0.0006f;
+            initialHeights[itemY + 2, itemX] += 0.0006f;
+            initialHeights[itemY + 2, itemX + 1] += 0.0006f;
+            initialHeights[itemY - 1, itemX + 2] += 0.0006f;
+            initialHeights[itemY, itemX + 2] += 0.0006f;
+            initialHeights[itemY + 1, itemX + 2] += 0.0006f;
+            initialHeights[itemY - 2, itemX - 1] += 0.0006f;
+            initialHeights[itemY - 2, itemX] += 0.0006f;
+            initialHeights[itemY - 2, itemX + 1] += 0.0006f;
+            initialHeights[itemY - 1, itemX - 2] += 0.0006f;
+            initialHeights[itemY, itemX - 2] += 0.0006f;
+            initialHeights[itemY + 1, itemX - 2] += 0.0006f;
 
             initialHeights[itemY + 2, itemX + 2] += 0.0005f;
             initialHeights[itemY - 2, itemX + 2] += 0.0005f;

@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     //particle systems and particle control variables
     public ParticleSystem movePartSystem;
     public ParticleSystem digPartSystem;
-    private float digAnimTimer = 240.0f;
+    public float digAnimTimer = 20.0f;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -298,15 +298,16 @@ public class PlayerController : MonoBehaviour
             }
             
 
-            if (digAnimTimer / 240.0f >= 1.0f)
+            if (digAnimTimer / 20.0f >= 1.0f)
             {
+                Debug.Log("Dig Particles Deployed");
                 digPartSystem.Play();
                 digAnimTimer = 0.0f;
             }
         }
         else
         {
-            digAnimTimer = 240.0f;
+            digAnimTimer = 20.0f;
             digPartSystem.Stop();
 
             //play digging audio
