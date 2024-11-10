@@ -67,18 +67,7 @@ public class PickUpDrop : MonoBehaviour
         return Lpickedup;
     }
 
-    /* public void dropItemR(GameObject claws)
-     {
-         if(empty == false)
-         {
-             itemToPickup.transform.parent = null;
-             empty = true;
-             itemToPickup = null;
-             Lpickedup = false;
-             Rpickedup=false;
-             Debug.Log("dropped");
-         }
-     }
+ 
 
      public void dropItemL()
      {
@@ -91,7 +80,6 @@ public class PickUpDrop : MonoBehaviour
              Rpickedup = false;
              Debug.Log("dropped");
          }
-     }*/
 
     public void changeMovementSpeed()
     {

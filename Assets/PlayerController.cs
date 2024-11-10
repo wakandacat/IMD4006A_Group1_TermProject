@@ -52,12 +52,16 @@ public class PlayerController : MonoBehaviour
     //Booleans
     bool canPickup = true;
     bool ifpickedUp;
-    bool closetoItem = false;
+    bool ifpickedUpR = false;
+    bool ifpickedUpL = false;
 
     [SerializeField] public Rigidbody _rb;
 
     GameObject pickedUpItem;
     private GameObject currentHoldingClaw;
+
+    PickUpDrop pick_drop;
+    PickUpDrop pick_drop1;
 
 
     // Start is called before the first frame update
@@ -84,7 +88,10 @@ public class PlayerController : MonoBehaviour
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
-        
+
+        //setting up pick up drop
+        pick_drop = clawRight.AddComponent<PickUpDrop>();
+        pick_drop1 = clawLeft.AddComponent<PickUpDrop>();
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -323,52 +330,23 @@ public class PlayerController : MonoBehaviour
 
         if (rightBumper == 1 && ifpickedUp == true && canPickup == false)
         {
-            Debug.Log("Dropped");
-            //if (ifpickedUp == true)
-            //{
-            pickedUpItem.transform.parent = null;
-            //pickedUpItem.transform.parent = null;
-            ifpickedUp = false;
-            canPickup = true;
-
-            //play put down audio
-            AudioManager.instance.sfxPlayer(1);
-            //}
+            if (!isLeft)
+            {
+                ifpickedUpR = pick_drop.pickUpItemRight(clawRight);
+            }
+            else
+            {
+                ifpickedUpL = pick_drop1.pickUpItemLeft(clawLeft);
+            }
         }
         else if(rightBumper == 1 && ifpickedUp == false && canPickup == true)
         {
-            if (canPickup == true && closetoItem == true)
-            {
-                if (isLeft)
-                {
-                    pickedUpItem.transform.parent = clawLeft.transform;
-                    currentHoldingClaw = clawLeft;
-                    canPickup = false;
-
-                }
-                else
-                {
-
-                    pickedUpItem.transform.parent = clawRight.transform;
-                    //pickedUpItem.transform.parent = clawRight.transform;
-                    Debug.Log(pickedUpItem.name);
-                    currentHoldingClaw = clawRight;
-                    canPickup = false;
-
-                }
-                ifpickedUp = true;
-                closetoItem = false;
 
                 //play pick up audio
                 AudioManager.instance.sfxPlayer(0);
             }
 
-        }
-        if (ifpickedUp == true && canPickup == false)
-        {
-            Debug.Log("Holding");
-            pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
-        }
+        
 
     }
 
@@ -377,24 +355,5 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "item" && canPickup == true)
-        {
-
-            pickedUpItem = other.gameObject;
-            Debug.Log("the item can be picked up:" + canPickup);
-            canPickup = true;
-            closetoItem = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //canPickup = false;
-        //pickedUpItem = null;
-        closetoItem = false;
     }
 }
