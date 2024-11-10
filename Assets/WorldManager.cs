@@ -36,6 +36,8 @@ public class WorldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+
         //on start of game, spawn items
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
         itemSpawnScript.spawnItemsFunc();

@@ -9,8 +9,7 @@ public class TerrainEditor : MonoBehaviour
     private Terrain sandTerrain;
     private float[,] initialHeights;
 
-    int width;
-    int height;
+    public float perlinStep;
 
     public float perlinStep;
     float perlinNoise;
