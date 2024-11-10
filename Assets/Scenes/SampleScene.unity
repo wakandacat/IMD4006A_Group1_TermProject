@@ -11939,6 +11939,7 @@ MonoBehaviour:
   rotateSpeed: 0.8
   accelRate: 1.1
   crabY: 0
+  crabSmooth: 0.2
   camSmooth: 0.2
   isLeft: 0
   camXRot: 0
