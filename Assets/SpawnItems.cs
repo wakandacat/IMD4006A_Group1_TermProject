@@ -25,6 +25,11 @@ public class SpawnItems : MonoBehaviour
     //home area
     public GameObject home;
 
+    private void Awake()
+    {
+        terrainScript = GameObject.Find("TerrainManager").GetComponent<TerrainEditor>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -162,8 +167,7 @@ public class SpawnItems : MonoBehaviour
             {
                 Vector3 itemPos = setPosition(tempNum, spawnPoints[i], currArea);
                 Instantiate(prefabList[tempNum].gameObject, itemPos, Quaternion.identity); //instantiate instance of item to scene
-                //Debug.Log(terrainScript);
-                //terrainScript.createMound(itemPos);
+                terrainScript.createMound(itemPos);
                 itemInArea = false;
             }
 
