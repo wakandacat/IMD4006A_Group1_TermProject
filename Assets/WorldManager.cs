@@ -13,6 +13,7 @@ public class WorldManager : MonoBehaviour
     public GameObject outOfBounds;
     public GameObject homeArea;
     public Vector3 crabStartPos;
+    public Vector3 cameraStartPos;
     public GameObject crab;
     public bool enterFlag = false; //flag for checking if the crab only just entered the home area
     public bool toDelete = false;
@@ -46,6 +47,7 @@ public class WorldManager : MonoBehaviour
 
         //start the crab at the default position
         crab.transform.position = crabStartPos;
+        Camera.main.transform.position = cameraStartPos;
 
         enterFlag = false;
         toDelete = false;
@@ -65,6 +67,7 @@ public class WorldManager : MonoBehaviour
         {
             //Debug.Log("Out of bounds");
             crab.transform.position = crabStartPos;
+            Camera.main.transform.position = cameraStartPos;
         }
 
         //---------------------------------HOME AREA-----------------------------------------

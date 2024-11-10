@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
     private float currTerrHeight;
     public float crabY;
 
-    public float camSmooth = 0.2f;
+    public float crabSmooth = 0.2f;
+    public float camSmooth = 0.05f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
     private Transform camTransform;
@@ -48,16 +49,25 @@ public class PlayerController : MonoBehaviour
     public float clawSmooth;
     public float clawAngle;
     public float maxClawDistance;
+    private bool dirChange = false;
+
+    //break vars
+    public float shakeAmount = 1f;
+    public float shakeSpeed = 5f;
 
     //Booleans
     bool canPickup = true;
     bool ifpickedUp;
-    bool closetoItem = false;
+    bool ifpickedUpR = false;
+    bool ifpickedUpL = false;
 
     [SerializeField] public Rigidbody _rb;
 
     GameObject pickedUpItem;
     private GameObject currentHoldingClaw;
+
+    PickUpDrop pick_drop;
+    PickUpDrop pick_drop1;
 
 
     // Start is called before the first frame update
@@ -84,7 +94,10 @@ public class PlayerController : MonoBehaviour
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
-        
+
+        //setting up pick up drop
+        pick_drop = clawRight.AddComponent<PickUpDrop>();
+        pick_drop1 = clawLeft.AddComponent<PickUpDrop>();
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -107,6 +120,9 @@ public class PlayerController : MonoBehaviour
 
             //input from controls move the crab in xz plane
             Vector3 moveDirection = new Vector3(-1 * (leftStick.y), 0f, leftStick.x).normalized;
+            //Vector3 crabForward = crab.transform.forward;
+            //Vector3 crabRight = crab.transform.right;
+            //Vector3 moveDirection = (crabForward * leftStick.y + crabRight * leftStick.x).normalized;
 
             //rotate the crab with player motion to face the z-direction
             Quaternion targetRotate = Quaternion.LookRotation(moveDirection);
@@ -117,28 +133,35 @@ public class PlayerController : MonoBehaviour
             //get angle between forward direction and target direction
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
 
-            float checkAngle = Quaternion.Angle(crab.transform.rotation, targetRotate);
-            //Debug.Log(checkAngle);
-
-
-           //for camera rotation 
-            //Vector3 eulerAngles = targetRotate.eulerAngles; // Convert Quaternion to Euler angles
-            //Quaternion lookRotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y + 90, eulerAngles.z);
-
             //determine if -z or +z direction is closest to target and make that the front of the crab
             //try to only adjust forward direction when not holding continuously and rotating
             if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f)
             {
+                if (dirChange == false)
+                {
+                    crabVel = Vector3.zero; //reset velocity to zero on direction change
+                    dirChange = true;
+                }
+                
                 targetRotate = Quaternion.LookRotation(-moveDirection);
-               // lookRotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y - 90, eulerAngles.z);
+            } else
+            {
+                dirChange = false;
+            }
+
+            //for large rotations, rotate first, then move
+            if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
+            {
+                //Debug.Log(Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)));
+                //move the crab
+                crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
+                crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
             }
 
             //rotate the crab but not on deceleration
             if (leftStick.magnitude > 0.1f)
             {
                 crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
-                // Rotate the camera to look at the crab          
-                //Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
             }
 
             //move the crab and take into account the weight of any held objects
@@ -150,10 +173,6 @@ public class PlayerController : MonoBehaviour
             {
                 currMoveSpeed = baseMoveSpeed;
             }
-            //move the crab
-            crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
-            crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
-            //Debug.Log(crabVel.magnitude);
 
             // Figuring out the crab's Y position, relative to the terrain
             currTerrHeight = terrainScript.getTerrainHeight(crab.gameObject.transform.position);
@@ -166,17 +185,17 @@ public class PlayerController : MonoBehaviour
             {
 
             }
-            
 
-            //main camera follows behind crab when walking
-            //Vector3 targetPos = crab.transform.position + crab.transform.forward * camOffset.z + crab.transform.up * camOffset.y + crab.transform.right * -camOffset.x;
-            //Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, rotateSpeed);
-            //Camera.main.transform.position = smoothPos;
-
-            //TEMPORARY CAMERA UNTIL PROPER CAM MOEVMENT FIGURED OUT main camera follows behind player when walking
+            //main camera follows behind player when walking
+            //Vector3 rotatedOffset = crab.transform.rotation * new Vector3(-camOffset.x, camOffset.y, -camOffset.z); //adjust offset direction based on crabs rotation
+            // Vector3 targetPos = crab.transform.position + rotatedOffset;
             Vector3 targetPos = crab.transform.position + camOffset;
-            Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, camSmooth);
+
+            Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, crabSmooth);
             Camera.main.transform.position = smoothPos;
+
+           // float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, crabSmooth);
+           // Camera.main.transform.rotation = Quaternion.Euler(15, smoothRot, 0);
 
 
             // Playing the particle system
@@ -275,8 +294,25 @@ public class PlayerController : MonoBehaviour
 
         //breaking controls ---------> only if a claw is available
         float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
-        //Debug.Log(leftTrigger);
-        //make the crab break here
+
+        //if crab is holding something breakable in active claw
+        if (leftTrigger > 0.1f)
+        {
+            //get some random jitter
+            float xOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+            float yOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+            float zOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
+            if (isLeft)
+            {
+                Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
+                clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+            }
+            else
+            {
+                Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
+                clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+            }
+        }
 
         //---------------------------------------DIGGING-------------------------------------
 
@@ -323,52 +359,23 @@ public class PlayerController : MonoBehaviour
 
         if (rightBumper == 1 && ifpickedUp == true && canPickup == false)
         {
-            Debug.Log("Dropped");
-            //if (ifpickedUp == true)
-            //{
-            pickedUpItem.transform.parent = null;
-            //pickedUpItem.transform.parent = null;
-            ifpickedUp = false;
-            canPickup = true;
-
-            //play put down audio
-            AudioManager.instance.sfxPlayer(1);
-            //}
+            if (!isLeft)
+            {
+                ifpickedUpR = pick_drop.pickUpItemRight(clawRight);
+            }
+            else
+            {
+                ifpickedUpL = pick_drop1.pickUpItemLeft(clawLeft);
+            }
         }
         else if(rightBumper == 1 && ifpickedUp == false && canPickup == true)
         {
-            if (canPickup == true && closetoItem == true)
-            {
-                if (isLeft)
-                {
-                    pickedUpItem.transform.parent = clawLeft.transform;
-                    currentHoldingClaw = clawLeft;
-                    canPickup = false;
-
-                }
-                else
-                {
-
-                    pickedUpItem.transform.parent = clawRight.transform;
-                    //pickedUpItem.transform.parent = clawRight.transform;
-                    Debug.Log(pickedUpItem.name);
-                    currentHoldingClaw = clawRight;
-                    canPickup = false;
-
-                }
-                ifpickedUp = true;
-                closetoItem = false;
 
                 //play pick up audio
                 AudioManager.instance.sfxPlayer(0);
             }
 
-        }
-        if (ifpickedUp == true && canPickup == false)
-        {
-            Debug.Log("Holding");
-            pickedUpItem.transform.position = new Vector3(currentHoldingClaw.transform.position.x, currentHoldingClaw.transform.position.y, currentHoldingClaw.transform.position.z + 0.25f);
-        }
+        
 
     }
 
@@ -377,24 +384,5 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "item" && canPickup == true)
-        {
-
-            pickedUpItem = other.gameObject;
-            Debug.Log("the item can be picked up:" + canPickup);
-            canPickup = true;
-            closetoItem = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //canPickup = false;
-        //pickedUpItem = null;
-        closetoItem = false;
     }
 }
