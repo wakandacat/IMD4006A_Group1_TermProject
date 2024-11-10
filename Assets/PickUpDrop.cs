@@ -67,19 +67,20 @@ public class PickUpDrop : MonoBehaviour
         return Lpickedup;
     }
 
- 
 
-     public void dropItemL()
-     {
-         if (empty == false)
-         {
-             itemToPickup.transform.parent = null;
-             empty = true;
-             itemToPickup = null;
-             Lpickedup = false;
-             Rpickedup = false;
-             Debug.Log("dropped");
-         }
+
+    public void dropItemL()
+    {
+        if (empty == false)
+        {
+            itemToPickup.transform.parent = null;
+            empty = true;
+            itemToPickup = null;
+            Lpickedup = false;
+            Rpickedup = false;
+            Debug.Log("dropped");
+        }
+    }
 
     public void changeMovementSpeed()
     {
