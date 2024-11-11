@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class HomeScript : MonoBehaviour
 {
     //an array to store all items within home area
-    item[] homeItems;     //array of gameObjects of class 'item', these should be prefabs
+    GameObject[] homeItems;     //array of gameObjects of class 'item', these should be prefabs
+
+    //home area
+    public GameObject home;
 
     //total point value
     int totalPts = 0;
@@ -29,11 +33,24 @@ public class HomeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //check if item is brought into homeArea and if the crab has dropped it
+        //check for items in homeArea that are not being held
+       // homeItems = GameObject.FindGameObjectsWithTag("item");
+
+        //cycle through all of them
+        //for (int x = 0; x < homeItems.Length; x++)
+        //{
+        //    //if the item is inside the house area and not being held then add to the array
+        //    if (homeItems[x].transform.position.x <= home.transform.position.x + home.transform.localScale.x / 2 && homeItems[x].transform.position.x >= home.transform.position.x - home.transform.localScale.x / 2 && homeItems[x].transform.position.z <= home.transform.position.z + home.transform.localScale.z / 2 && homeItems[x].transform.position.z >= home.transform.position.z - home.transform.localScale.z / 2)
+        //    {
+        //        //totalPts = totalPts + homeItems[x].GetComponent<item>().itemPtValue;
+        //    }
+        //}
+
 
         //then set its position to one of the decorate positions
 
 
+        //Debug.Log(totalPts);
         //check if the total point value is enought to spawn NPC
         if (totalPts >= spawnNPC && NPCSpawned == false)
         {

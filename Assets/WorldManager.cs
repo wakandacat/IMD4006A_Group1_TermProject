@@ -56,7 +56,6 @@ public class WorldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //THESE CAN BE DONE MORE EFFICIENTLY WITH TRIGGER AREAS BUT THE CRAB WILL NEED A RIGIDBODY FOR THAT
 
         //---------------------------------OUT OF BOUNDS AREA-----------------------------------------
         //always check if the crab goes out of bounds
@@ -99,10 +98,6 @@ public class WorldManager : MonoBehaviour
             //spawn new items
             //Debug.Log("Created");
             itemSpawnScript.spawnItemsFunc();
-
-            //RESET TERRAIN HERE
-
-
 
             toDelete = false;
         }
