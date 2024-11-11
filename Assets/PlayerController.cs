@@ -42,8 +42,6 @@ public class PlayerController : MonoBehaviour
     public float camSmooth = 0.05f;
     public bool isLeft = false; //right by default
     private Vector3 camOffset;
-    private Transform camTransform;
-    public float camXRot;
     private Vector3 clawLeftStart;
     private Vector3 clawRightStart;
     public float clawSmooth;
@@ -83,7 +81,6 @@ public class PlayerController : MonoBehaviour
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
-        camTransform = Camera.main.transform;  // Get the main camera's transform
 
         //grab starting positions
         clawLeftStart = clawLeft.transform.localPosition;
@@ -118,11 +115,13 @@ public class PlayerController : MonoBehaviour
         if (leftStick.magnitude > 0.1f || crabVel.magnitude > 3.0f)
         {
 
+            //make sure to keep control scheme corresponding to camera's rotation
+            Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
+
             //input from controls move the crab in xz plane
-            Vector3 moveDirection = new Vector3(-1 * (leftStick.y), 0f, leftStick.x).normalized;
-            //Vector3 crabForward = crab.transform.forward;
-            //Vector3 crabRight = crab.transform.right;
-            //Vector3 moveDirection = (crabForward * leftStick.y + crabRight * leftStick.x).normalized;
+            Vector3 moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)).normalized;
+
 
             //rotate the crab with player motion to face the z-direction
             Quaternion targetRotate = Quaternion.LookRotation(moveDirection);
@@ -152,7 +151,6 @@ public class PlayerController : MonoBehaviour
             //for large rotations, rotate first, then move
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
             {
-                //Debug.Log(Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)));
                 //move the crab
                 crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
                 crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
@@ -187,15 +185,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //main camera follows behind player when walking
-            //Vector3 rotatedOffset = crab.transform.rotation * new Vector3(-camOffset.x, camOffset.y, -camOffset.z); //adjust offset direction based on crabs rotation
-            // Vector3 targetPos = crab.transform.position + rotatedOffset;
-            Vector3 targetPos = crab.transform.position + camOffset;
+            Vector3 rotatedOffset = crab.transform.rotation * new Vector3(-camOffset.x, camOffset.y, -camOffset.z); //adjust offset direction based on crabs rotation
+             Vector3 targetPos = crab.transform.position + rotatedOffset;
+            //Vector3 targetPos = crab.transform.position + camOffset;
 
             Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, crabSmooth);
             Camera.main.transform.position = smoothPos;
 
-           // float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, crabSmooth);
-           // Camera.main.transform.rotation = Quaternion.Euler(15, smoothRot, 0);
+            float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, camSmooth);
+            Camera.main.transform.rotation = Quaternion.Euler(15, smoothRot, 0);
 
 
             // Playing the particle system
@@ -252,7 +250,7 @@ public class PlayerController : MonoBehaviour
             clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
         }
 
-        // keep claws close to crab body
+        // keep claws close to crab body in an arc
         void MoveClaw(GameObject claw)
         {
             // Get the crab's position
@@ -373,7 +371,7 @@ public class PlayerController : MonoBehaviour
 
                 //play pick up audio
                 AudioManager.instance.sfxPlayer(0);
-            }
+        }
 
         
 
