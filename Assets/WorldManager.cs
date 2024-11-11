@@ -15,7 +15,7 @@ public class WorldManager : MonoBehaviour
     public Vector3 crabStartPos;
     public Vector3 cameraStartPos;
     public GameObject crab;
-    public bool enterFlag = false; //flag for checking if the crab only just entered the home area
+    public bool enterFlag = true; //flag for checking if the crab only just entered the home area
     public bool toDelete = false;
     public bool gameStart = true; //dont perform some actions at the very beginning of the game
 
@@ -43,13 +43,11 @@ public class WorldManager : MonoBehaviour
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
         itemSpawnScript.spawnItemsFunc();
 
-        terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
-
         //start the crab at the default position
         crab.transform.position = crabStartPos;
         Camera.main.transform.position = cameraStartPos;
 
-        enterFlag = false;
+        enterFlag = true;
         toDelete = false;
         gameStart = true;
 
@@ -109,5 +107,10 @@ public class WorldManager : MonoBehaviour
             toDelete = false;
         }
 
+    }
+
+    public bool getHomeStatus()
+    {
+        return enterFlag;
     }
 }

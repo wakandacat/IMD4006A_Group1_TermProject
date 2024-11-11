@@ -13,11 +13,17 @@ public class TerrainEditor : MonoBehaviour
     public float perlinStep;
     float perlinNoise;
 
+    private bool digDisabled = true;
+
+    WorldManager worldScript;
+
     int width;
     int height;
 
     private void Awake()
     {
+        worldScript = GameObject.Find("WorldManager").GetComponent<WorldManager>();
+        
         sandTerrain = GetComponent<Terrain>();
 
         width = sandTerrain.terrainData.heightmapResolution;
@@ -86,195 +92,201 @@ public class TerrainEditor : MonoBehaviour
 
     public void digTerrain(Vector3 crabPos, Quaternion crabRot, float triggerInput)
     {
-        // Ensuring that digging will only happen if the crab is on the terrain.
-        if (crabPos.x > 0 && crabPos.x < sandTerrain.terrainData.heightmapResolution)
+        // check if the crab is in their home area
+        digDisabled = worldScript.getHomeStatus();
+
+        if (digDisabled == false)
         {
-            if (crabPos.z > 0 && crabPos.z < sandTerrain.terrainData.heightmapResolution)
+            // Ensuring that digging will only happen if the crab is on the terrain.
+            if (crabPos.x > 0 && crabPos.x < sandTerrain.terrainData.heightmapResolution)
             {
-                // Turning the crab's coordinates into an integer to feed it
-                // to the initialHeights array. The multiplication by 5.12
-                // adjusts the digging position to account for the terrain resolution
-                int crabX = (int)(crabPos.x * 5.12f);
-                int crabY = (int)(crabPos.z * 5.12f);
-
-                triggerInput = triggerInput * 0.00003f;
-
-                // Debug.Log("Digging at: " + crabX + ", " + crabY);
-
-                // Pre-determined hole size (could be adjusted to be more dynamic
-                // in later versions)
-                initialHeights[crabY, crabX] -= (triggerInput + 0.000018f);
-                initialHeights[crabY + 1, crabX] -= (triggerInput + 0.000015f);
-                initialHeights[crabY - 1, crabX] -= (triggerInput + 0.000015f);
-                initialHeights[crabY, crabX -1] -= (triggerInput + 0.000015f);
-                initialHeights[crabY + 1, crabX -1] -= (triggerInput + 0.0000125f);
-                initialHeights[crabY - 1, crabX - 1] -= (triggerInput + 0.0000125f);
-                initialHeights[crabY, crabX + 1] -= (triggerInput + 0.0000125f);
-                initialHeights[crabY + 1, crabX + 1] -= (triggerInput + 0.0000125f);
-                initialHeights[crabY - 1, crabX + 1] -= (triggerInput + 0.0000125f);
-
-                if (initialHeights[crabY, crabX] < 0.0045f)
+                if (crabPos.z > 0 && crabPos.z < 70)
                 {
-                    initialHeights[crabY + 2, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX - 2] -= (triggerInput + 0.0000125f);
+                    // Turning the crab's coordinates into an integer to feed it
+                    // to the initialHeights array. The multiplication by 5.12
+                    // adjusts the digging position to account for the terrain resolution
+                    int crabX = (int)(crabPos.x * 5.12f);
+                    int crabY = (int)(crabPos.z * 5.12f);
+
+                    triggerInput = triggerInput * 0.00003f;
+
+                    // Debug.Log("Digging at: " + crabX + ", " + crabY);
+
+                    // Pre-determined hole size (could be adjusted to be more dynamic
+                    // in later versions)
+                    initialHeights[crabY, crabX] -= (triggerInput + 0.000018f);
+                    initialHeights[crabY + 1, crabX] -= (triggerInput + 0.000015f);
+                    initialHeights[crabY - 1, crabX] -= (triggerInput + 0.000015f);
+                    initialHeights[crabY, crabX - 1] -= (triggerInput + 0.000015f);
+                    initialHeights[crabY + 1, crabX - 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 1, crabX - 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY, crabX + 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY + 1, crabX + 1] -= (triggerInput + 0.0000125f);
+                    initialHeights[crabY - 1, crabX + 1] -= (triggerInput + 0.0000125f);
+
+                    if (initialHeights[crabY, crabX] < 0.0045f)
+                    {
+                        initialHeights[crabY + 2, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX - 2] -= (triggerInput + 0.0000125f);
+                    }
+
+                    if (initialHeights[crabY, crabX] < 0.004f)
+                    {
+                        initialHeights[crabY + 2, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX - 3] -= (triggerInput + 0.0000125f);
+                    }
+
+                    if (initialHeights[crabY, crabX] < 0.0035f)
+                    {
+                        initialHeights[crabY + 3, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 3] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 4, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX - 4] -= (triggerInput + 0.0000125f);
+                    }
+
+                    if (initialHeights[crabY, crabX] < 0.003f)
+                    {
+                        initialHeights[crabY + 3, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX - 3] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 4, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 4] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 4, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX - 4] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 5, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX - 1] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 5, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX - 2] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 1, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX - 5] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 2, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 5] -= (triggerInput + 0.0000125f);
+                    }
+
+                    if (initialHeights[crabY, crabX] < 0.0025f)
+                    {
+                        initialHeights[crabY + 6, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 6, crabX] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX + 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 6, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 6, crabX - 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 6, crabX + 1] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 6, crabX - 1] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 6, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 6, crabX - 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 6, crabX + 2] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 6, crabX - 2] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 1, crabX + 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX + 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 1, crabX - 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 1, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 2, crabX + 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX + 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 2, crabX - 6] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 2, crabX - 6] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 4, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX - 4] -= (triggerInput + 0.0000125f);
+
+                        initialHeights[crabY + 4, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 4, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 3, crabX - 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY + 5, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX + 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX + 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX + 3] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 4, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX - 4] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 3, crabX - 5] -= (triggerInput + 0.0000125f);
+                        initialHeights[crabY - 5, crabX - 3] -= (triggerInput + 0.0000125f);
+                    }
+
+                    sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
                 }
-                
-                if (initialHeights[crabY, crabX] < 0.004f)
-                {
-                    initialHeights[crabY + 2, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX - 3] -= (triggerInput + 0.0000125f);
-                }
-
-                if (initialHeights[crabY, crabX] < 0.0035f)
-                {
-                    initialHeights[crabY + 3, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 3] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 4, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX - 4] -= (triggerInput + 0.0000125f);
-                }
-
-                if (initialHeights[crabY, crabX] < 0.003f)
-                {
-                    initialHeights[crabY + 3, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX - 3] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 4, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 4] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 4, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX - 4] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 5, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX - 1] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 5, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX - 2] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 1, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX - 5] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 2, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 5] -= (triggerInput + 0.0000125f);
-                }
-
-                if (initialHeights[crabY, crabX] < 0.0025f)
-                {
-                    initialHeights[crabY + 6, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 6, crabX] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX + 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY, crabX - 6] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 6, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 6, crabX - 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 6, crabX + 1] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 6, crabX - 1] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 6, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 6, crabX - 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 6, crabX + 2] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 6, crabX - 2] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 1, crabX + 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX + 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 1, crabX - 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 1, crabX - 6] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 2, crabX + 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX + 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 2, crabX - 6] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 2, crabX - 6] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 4, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX - 4] -= (triggerInput + 0.0000125f);
-
-                    initialHeights[crabY + 4, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 4, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 3, crabX - 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY + 5, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX + 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX + 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX + 3] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 4, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX - 4] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 3, crabX - 5] -= (triggerInput + 0.0000125f);
-                    initialHeights[crabY - 5, crabX - 3] -= (triggerInput + 0.0000125f);
-                }
-
-                sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
             }
         }
     }

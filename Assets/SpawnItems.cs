@@ -33,7 +33,7 @@ public class SpawnItems : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        terrainScript = GameObject.Find("TerrainManager").GetComponent<TerrainEditor>();
+        //terrainScript = GameObject.Find("TerrainManager").GetComponent<TerrainEditor>();
     }
 
     //set the current spawnPosition to be the position of the prefab at the random num index
