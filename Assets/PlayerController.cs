@@ -57,19 +57,28 @@ public class PlayerController : MonoBehaviour
     public item shellBottom;
 
     //Booleans
-    bool canPickup = true;
     bool ifpickedUp;
-    bool ifpickedUpR = false;
-    bool ifpickedUpL = false;
+
 
     [SerializeField] public Rigidbody _rb;
 
     GameObject pickedUpItem;
     private GameObject currentHoldingClaw;
 
-    PickUpDrop pick_drop;
-    PickUpDrop pick_drop1;
+    //pick up drop specific variables
+    public bool canPickupR = false;
+    public bool canPickupL = false;
 
+    public bool Rpickedup = false;
+    public bool Lpickedup = false;
+
+    bool ifpickedUpR = false;
+    bool ifpickedUpL = false;
+
+    public GameObject leftItem;
+    public GameObject rightItem;
+    public GameObject heldRight;
+    public GameObject heldLeft;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +90,7 @@ public class PlayerController : MonoBehaviour
         //setup callback function to switch active claws
         //+= refers to adding a callback function
         controls.GamePlay.Switch.performed += OnSwitch;
+        controls.GamePlay.PickUpPutDown.performed += OnPickDropControls;
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
@@ -96,8 +106,7 @@ public class PlayerController : MonoBehaviour
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
 
         //setting up pick up drop
-        pick_drop = clawRight.AddComponent<PickUpDrop>();
-        pick_drop1 = clawLeft.AddComponent<PickUpDrop>();
+
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -377,27 +386,7 @@ public class PlayerController : MonoBehaviour
         float rightBumper = controls.GamePlay.PickUpPutDown.ReadValue<float>();
         //Debug.Log(rightBumper);
         //make the crab grab here
-
-        if (rightBumper == 1 && ifpickedUp == true && canPickup == false)
-        {
-            if (!isLeft)
-            {
-                ifpickedUpR = pick_drop.pickUpItemRight(clawRight);
-            }
-            else
-            {
-                ifpickedUpL = pick_drop1.pickUpItemLeft(clawLeft);
-            }
-        }
-        else if(rightBumper == 1 && ifpickedUp == false && canPickup == true)
-        {
-
-                //play pick up audio
-                AudioManager.instance.sfxPlayer(0);
-        }
-
-        
-
+     
     }
 
     //toggle the active claw
@@ -405,5 +394,92 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
+    }
+
+    public void OnPickDropControls(InputAction.CallbackContext context)
+    {
+        Debug.Log("this is pick up");
+        if (!isLeft)
+        {
+            if (ifpickedUpR == false)
+            {
+                ifpickedUpR = pickUpItemRight(clawRight);
+            }
+            else
+            {
+                dropItemR();
+                ifpickedUpR = false;
+            }
+
+        }
+        else
+        {
+            if (ifpickedUpL == false)
+            {
+                ifpickedUpL = pickUpItemLeft(clawLeft);
+            }
+            else
+            {
+                dropItemL();
+                ifpickedUpL = false;
+            }
+        }
+    }
+    public bool pickUpItemRight(GameObject clawRight)
+    {
+        if (Rpickedup == false && canPickupR == true)
+        {
+            Debug.Log("you are here");
+            rightItem.GetComponent<Collider>().enabled = false;
+            rightItem.transform.position = clawRight.transform.position;
+            rightItem.transform.parent = clawRight.transform;
+
+            heldRight = rightItem;
+            Rpickedup = true;
+        }
+        Debug.Log("pickedup is" + Rpickedup);
+        Debug.Log("canPickupR is " + canPickupR);
+        Debug.Log("this is in the pickupdrop script right item is: " + heldRight);
+        return Rpickedup;
+    }
+
+    public bool pickUpItemLeft(GameObject clawLeft)
+    {
+        if (Lpickedup == false && canPickupL == true)
+        {
+            Debug.Log("you are here");
+            leftItem.GetComponent<Collider>().enabled = false;
+            leftItem.transform.position = clawLeft.transform.position;
+            leftItem.transform.parent = clawLeft.transform;
+
+            heldLeft = leftItem;
+            Lpickedup = true;
+        }
+        Debug.Log("canPickup is " + canPickupL);
+        return Lpickedup;
+    }
+
+    public void dropItemR()
+    {
+        Debug.Log("right item" + heldRight);
+        heldRight.transform.parent = null;
+
+        heldRight.GetComponent<Collider>().enabled = true;
+        Rpickedup = false;
+        heldRight = null;
+
+        Debug.Log("dropped");
+    }
+
+    public void dropItemL()
+    {
+        Debug.Log("left item" + heldLeft);
+        heldLeft.transform.parent = null;
+
+        heldLeft.GetComponent<Collider>().enabled = true;
+        Lpickedup = false;
+        heldLeft = null;
+
+        Debug.Log("dropped");
     }
 }
