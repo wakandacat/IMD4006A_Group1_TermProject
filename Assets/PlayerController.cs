@@ -205,7 +205,7 @@ public class PlayerController : MonoBehaviour
             Camera.main.transform.position = smoothPos;
 
             float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, camSmooth);
-            Camera.main.transform.rotation = Quaternion.Euler(15, smoothRot, 0);
+            Camera.main.transform.rotation = Quaternion.Euler(20, smoothRot, 0);
 
 
             // Playing the particle system
@@ -324,7 +324,7 @@ public class PlayerController : MonoBehaviour
                     //Instantiate(shellBottom.gameObject, new Vector3(clawLeft.transform.position.x + 0.3f, 3.3f, clawLeft.transform.position.x + 0.3f), Quaternion.identity);
                 }
             }
-            else if (isLeft) //breaking the object
+            else if (!isLeft) //breaking the object
             {
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
