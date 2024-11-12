@@ -196,6 +196,7 @@ public class PlayerController : MonoBehaviour
             Camera.main.transform.rotation = Quaternion.Euler(15, smoothRot, 0);
 
 
+
             // Playing the particle system
             if (movePartSystem.isPlaying == false)
             {
