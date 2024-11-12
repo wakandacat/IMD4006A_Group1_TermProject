@@ -52,6 +52,9 @@ public class PlayerController : MonoBehaviour
     //break vars
     public float shakeAmount = 1f;
     public float shakeSpeed = 5f;
+    public item pearl;
+    public item shellTop;
+    public item shellBottom;
 
     //Booleans
     bool canPickup = true;
@@ -110,14 +113,14 @@ public class PlayerController : MonoBehaviour
         //read in the controller inputs
         Vector2 leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
 
+        //make sure to keep control scheme corresponding to camera's rotation
+        Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
+
         //ensure crab does not move when not reading inputs (including rotation)
         //but allow for some deceleration
         if (leftStick.magnitude > 0.1f || crabVel.magnitude > 3.0f)
         {
-
-            //make sure to keep control scheme corresponding to camera's rotation
-            Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-            Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
 
             //input from controls move the crab in xz plane
             Vector3 moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)).normalized;
@@ -166,7 +169,7 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUp)
             {
                 //item weight affects movement speed of crab
-                currMoveSpeed = baseMoveSpeed - pickedUpItem.GetComponent<Rigidbody>().mass;
+                currMoveSpeed = baseMoveSpeed - pickedUpItem.GetComponent<item>().itemWeight;
             } else
             {
                 currMoveSpeed = baseMoveSpeed;
@@ -218,29 +221,23 @@ public class PlayerController : MonoBehaviour
 
         //claw movement controls
         Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
-        Vector3 clawMovement = new Vector3(-1*(rightStick.y), 0f, rightStick.x); //side to side movement
+
+        //input from controls move the crab in xz plane -> take into account camera rotation here as well
+        Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
         Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
-
+        //move the active claw
         if (isLeft && rightStick.magnitude > 0.1f)
         {
-
-            //Debug.Log("left claw move");
-            //Debug.Log("y" + -1 * (rightStick.y));
-            //Debug.Log("x" + rightStick.x);
             clawLeft.transform.Translate(clawMove, Space.World);
 
-            MoveClaw(clawLeft);
+            MoveClaw(clawLeft); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f)
         {
-
-            //Debug.Log("right claw move");
-            //Debug.Log("y" + -1 * (rightStick.y));
-            //Debug.Log("x" + rightStick.x);
             clawRight.transform.Translate(clawMove, Space.World);
 
-            MoveClaw(clawRight);
+            MoveClaw(clawRight); //clamp into an arc
 
         }
         else
@@ -300,16 +297,42 @@ public class PlayerController : MonoBehaviour
             float xOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
             float yOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
             float zOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
-            if (isLeft)
+           
+            if (isLeft) //breaking the object
             {
                 Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+
+                if (leftTrigger == 1f) //broke the object
+                {
+                    //delete the clam
+                    //Destroy(pickedUpItem);
+                    //spawn the pearl in the claw
+                    //Instantiate(pearl.gameObject, clawLeft.transform.position, Quaternion.identity);
+                    //pickedUpItem = pearl.gameObject;
+                    //spawn shell top and bottom beside the crab
+                    //Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.3f, 3.3f, clawLeft.transform.position.x - 0.3f), Quaternion.identity);
+                    //Instantiate(shellBottom.gameObject, new Vector3(clawLeft.transform.position.x + 0.3f, 3.3f, clawLeft.transform.position.x + 0.3f), Quaternion.identity);
+                }
             }
-            else
+            else if (isLeft) //breaking the object
             {
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+
+                if (leftTrigger == 1f) //broke the object
+                {
+                    //delete the clam
+                    //Destroy(pickedUpItem);
+                    //spawn the pearl in the claw
+                    //Instantiate(pearl, clawRight.transform.position, Quaternion.identity);
+                    //pickedUpItem = pearl;
+                    //spawn shell top and bottom beside the crab
+                    //Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.3f, 3.3f, clawRight.transform.position.x - 0.3f), Quaternion.identity);
+                    //Instantiate(shellBottom.gameObject, new Vector3(clawRight.transform.position.x + 0.3f, 3.3f, clawRight.transform.position.x + 0.3f), Quaternion.identity);
+                }
             }
+
         }
 
         //---------------------------------------DIGGING-------------------------------------
