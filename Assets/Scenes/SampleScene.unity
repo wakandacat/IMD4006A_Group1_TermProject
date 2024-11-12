@@ -400,6 +400,8 @@ GameObject:
   - component: {fileID: 215910176}
   - component: {fileID: 215910175}
   - component: {fileID: 215910174}
+  - component: {fileID: 215910178}
+  - component: {fileID: 215910179}
   m_Layer: 0
   m_Name: claw_R
   m_TagString: Untagged
@@ -493,6 +495,45 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 215910172}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &215910178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215910172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa286329f79ff3e4da8727c459ee3732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &215910179
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215910172}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -11243,6 +11284,8 @@ GameObject:
   - component: {fileID: 1006207135}
   - component: {fileID: 1006207134}
   - component: {fileID: 1006207133}
+  - component: {fileID: 1006207137}
+  - component: {fileID: 1006207138}
   m_Layer: 0
   m_Name: claw_L
   m_TagString: Untagged
@@ -11336,6 +11379,45 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006207131}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1006207137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006207131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa286329f79ff3e4da8727c459ee3732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &1006207138
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006207131}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &1145613753
 GameObject:
   m_ObjectHideFlags: 0
@@ -12029,7 +12111,6 @@ GameObject:
   - component: {fileID: 1897861585}
   - component: {fileID: 1897861584}
   - component: {fileID: 1897861589}
-  - component: {fileID: 1897861590}
   m_Layer: 0
   m_Name: Crab
   m_TagString: Untagged
@@ -12163,34 +12244,18 @@ MonoBehaviour:
   maxClawDistance: 1.5
   shakeAmount: 1
   shakeSpeed: 5
+  pearl: {fileID: 0}
+  shellTop: {fileID: 0}
+  shellBottom: {fileID: 0}
   _rb: {fileID: 0}
---- !u!54 &1897861590
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1897861583}
-  serializedVersion: 4
-  m_Mass: 3
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 0
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
+  canPickupR: 0
+  canPickupL: 0
+  Rpickedup: 0
+  Lpickedup: 0
+  leftItem: {fileID: 0}
+  rightItem: {fileID: 0}
+  heldRight: {fileID: 0}
+  heldLeft: {fileID: 0}
 --- !u!1 &1930399889 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 448f18d5c2ef3d74c8ab58f2041034a7,
