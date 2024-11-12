@@ -15,8 +15,4 @@ public class item : MonoBehaviour
     public bool specialItem;        //true if only an NPC given item
     public bool breakable;          //true if it is a breakable item (clamshell)
 
-    //public void positionItem()
-    //{
-    //    
-    //}
 }
