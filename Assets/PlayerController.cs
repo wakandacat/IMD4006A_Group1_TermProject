@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
     public item pearl;
     public item shellTop;
     public item shellBottom;
+    public float holdLength = 2f; 
+    private float currHoldTime = 0f; 
 
     //Booleans
     bool ifpickedUp;
@@ -306,42 +308,66 @@ public class PlayerController : MonoBehaviour
             float xOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
             float yOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
             float zOffset = UnityEngine.Random.Range(-shakeAmount * leftTrigger, shakeAmount * leftTrigger);
-           
-            if (isLeft) //breaking the object
+
+            if (isLeft && heldLeft != null && heldLeft.gameObject.GetComponent<item>().breakable == true) //breaking the object
             {
+                //move the claw
                 Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                if (leftTrigger == 1f) //broke the object
+                Debug.Log(currHoldTime);
+                currHoldTime += Time.deltaTime; //count the time
+
+                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
-                    //delete the clam
-                    //Destroy(pickedUpItem);
+                    GameObject toBreak = heldLeft.gameObject;
+
                     //spawn the pearl in the claw
-                    //Instantiate(pearl.gameObject, clawLeft.transform.position, Quaternion.identity);
-                    //pickedUpItem = pearl.gameObject;
+                    heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
+                    heldLeft.transform.parent = clawLeft.transform;
+
+                    //delete the clam
+                    Destroy(toBreak);
+
                     //spawn shell top and bottom beside the crab
-                    //Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.3f, 3.3f, clawLeft.transform.position.x - 0.3f), Quaternion.identity);
-                    //Instantiate(shellBottom.gameObject, new Vector3(clawLeft.transform.position.x + 0.3f, 3.3f, clawLeft.transform.position.x + 0.3f), Quaternion.identity);
+                    Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
+                    Instantiate(shellBottom.gameObject, new Vector3(clawLeft.transform.position.x + 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
+
+                    currHoldTime = 0f; //reset time
                 }
             }
-            else if (!isLeft) //breaking the object
+            else if (!isLeft && heldRight != null && heldRight.gameObject.GetComponent<item>().breakable == true) //breaking the object
             {
+                //move the claw
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                if (leftTrigger == 1f) //broke the object
+                Debug.Log(currHoldTime);
+                currHoldTime += Time.deltaTime; //count the time
+
+                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
-                    //delete the clam
-                    //Destroy(pickedUpItem);
+                    GameObject toBreak = heldRight.gameObject;
+
                     //spawn the pearl in the claw
-                    //Instantiate(pearl, clawRight.transform.position, Quaternion.identity);
-                    //pickedUpItem = pearl;
+                    heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
+                    heldRight.transform.parent = clawRight.transform;
+
+                    //delete the clam
+                    Destroy(toBreak);
+
                     //spawn shell top and bottom beside the crab
-                    //Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.3f, 3.3f, clawRight.transform.position.x - 0.3f), Quaternion.identity);
-                    //Instantiate(shellBottom.gameObject, new Vector3(clawRight.transform.position.x + 0.3f, 3.3f, clawRight.transform.position.x + 0.3f), Quaternion.identity);
+                    Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
+                    Instantiate(shellBottom.gameObject, new Vector3(clawRight.transform.position.x + 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
+
+                    currHoldTime = 0f; //reset time
                 }
             }
 
+        } 
+        else
+        {
+            currHoldTime = 0f;
         }
 
         //---------------------------------------DIGGING-------------------------------------

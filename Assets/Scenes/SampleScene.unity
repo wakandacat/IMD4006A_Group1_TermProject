@@ -11796,7 +11796,7 @@ Transform:
   m_GameObject: {fileID: 1600498256}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 51, y: 29.8, z: -0.48}
+  m_LocalPosition: {x: 51, y: 9.3, z: -0.5}
   m_LocalScale: {x: 12, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12350,9 +12350,12 @@ MonoBehaviour:
   maxClawDistance: 1.5
   shakeAmount: 1
   shakeSpeed: 5
-  pearl: {fileID: 0}
-  shellTop: {fileID: 0}
-  shellBottom: {fileID: 0}
+  pearl: {fileID: -3147051786603554213, guid: 580c6800b88caa542a96df3f98de85d2, type: 3}
+  shellTop: {fileID: -7872568620254657459, guid: 3ef0574605fe98d4eb368302e0b6f7e5,
+    type: 3}
+  shellBottom: {fileID: -618792808786064747, guid: 5b2bf076844c31247bd84027da740c0c,
+    type: 3}
+  holdLength: 2
   _rb: {fileID: 0}
   canPickupR: 0
   canPickupL: 0
