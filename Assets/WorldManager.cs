@@ -92,12 +92,7 @@ public class WorldManager : MonoBehaviour
         //only destroy items once
         if (enterFlag && toDelete && gameStart == false)
         {
-            //Debug.Log("Destroyed");
-            //destory current items
-            itemSpawnScript.destroyItemsFunc();
-            //spawn new items
-            //Debug.Log("Created");
-            itemSpawnScript.spawnItemsFunc();
+            StartCoroutine(CallDeleteDelay());
 
             toDelete = false;
         }
@@ -107,5 +102,22 @@ public class WorldManager : MonoBehaviour
     public bool getHomeStatus()
     {
         return enterFlag;
+    }
+
+    IEnumerator CallDeleteDelay()
+    {
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+        Delete(); // Call the function
+    }
+
+    void Delete()
+    {
+        Debug.Log("Destroyed");
+        //destory current items
+        itemSpawnScript.destroyItemsFunc();
+        //spawn new items
+        //Debug.Log("Created");
+        itemSpawnScript.spawnItemsFunc();
+
     }
 }

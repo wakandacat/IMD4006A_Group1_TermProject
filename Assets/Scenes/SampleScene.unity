@@ -12095,6 +12095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f54ed0faf6c72f4fa39639f69984e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  homeItems: []
   home: {fileID: 1777476355}
   spawnNPC: 7
 --- !u!1 &1885497097
@@ -12356,6 +12357,7 @@ MonoBehaviour:
   shellBottom: {fileID: -618792808786064747, guid: 5b2bf076844c31247bd84027da740c0c,
     type: 3}
   holdLength: 2
+  homeScript: {fileID: 0}
   _rb: {fileID: 0}
   canPickupR: 0
   canPickupL: 0

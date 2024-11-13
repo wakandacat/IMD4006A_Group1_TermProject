@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 8032327203292464674}
   itemName: Turritella
-  itemWeight: 1
+  itemWeight: 2
   itemPtValue: 2
   spawnAreas: 0000000001000000
   specialItem: 0
