@@ -49,16 +49,6 @@ public class AudioManager : MonoBehaviour
     //loads audio source based on the index and plays
     public void sfxPlayer(int i)
     {
-        ////determine if the clip should loop
-        //if (i == 2)
-        //{
-        //    isLooping = true;   //digging and walking should loop
-        //}
-        //else
-        //{
-        //    isLooping = false;  //pick up and put down should play once
-        //}
-
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
         //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
@@ -68,12 +58,7 @@ public class AudioManager : MonoBehaviour
     //play walk sound with speed of clip increasing with magnitude on joystick
     public IEnumerator walkTimer()
     {
-        //if(walkMag < 0.1f)
-        //{
-        //    secondsToWait = 1.0f;
-        //    yield return new WaitForSeconds(secondsToWait);
-        //}
-
+      
         //for as long as player is using joystick
         while (true)
         {
@@ -90,13 +75,13 @@ public class AudioManager : MonoBehaviour
             }
             else if (walkMag >= 0.5f && walkMag < 0.7f)
             {
-                secondsToWait = 0.8f;
+                secondsToWait = 0.5f;
                 //play a single instance of the sfx
                 sfxSource.PlayOneShot(sfxClips[5]);
             }
             else if (walkMag >= 0.1f && walkMag < 0.5f)
             {
-                secondsToWait = 1.0f;
+                secondsToWait = 0.6f;
                 //play a single instance of the sfx
                 sfxSource.PlayOneShot(sfxClips[5]);
             }
@@ -104,9 +89,6 @@ public class AudioManager : MonoBehaviour
             {
                 secondsToWait = 1.0f;
             }
-
-            ////play a single instance of the sfx
-            //sfxSource.PlayOneShot(sfxClips[5]);
 
             //wait for x seconds before re-entering the loop
             yield return new WaitForSeconds(secondsToWait);
