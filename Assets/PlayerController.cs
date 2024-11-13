@@ -59,6 +59,9 @@ public class PlayerController : MonoBehaviour
     public float maxClawDistance;
     private bool dirChange = false;
 
+    private Vector3 clawDrop = new Vector3(0.0f, -0.1f, 0.0f);
+    private Vector3 clawRaise = new Vector3(0.0f, 0.1f, 0.0f);
+
     //break vars
     public float shakeAmount = 1f;
     public float shakeSpeed = 5f;
@@ -109,6 +112,15 @@ public class PlayerController : MonoBehaviour
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
+
+        if (isLeft)
+        {
+            clawLocator_R.transform.Translate(clawDrop);
+        }
+        else
+        {
+            clawLocator_L.transform.Translate(clawDrop);
+        }
 
         //grab starting positions
         clawLeftStart = clawLocator_L.transform.localPosition;
@@ -463,6 +475,17 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(isLeft);
 
         AudioManager.instance.sfxPlayer(2);
+
+        if (isLeft && clawLocator_R.transform.position.y > -0.5)
+        {
+            clawLocator_R.transform.Translate(clawDrop);
+            clawLocator_L.transform.Translate(clawRaise);
+        }
+        else if (!isLeft && clawLocator_L.transform.position.y > -0.5)
+        {
+            clawLocator_R.transform.Translate(clawRaise);
+            clawLocator_L.transform.Translate(clawDrop);
+        }
 
         //make active claw bounce
         //float yOffset = UnityEngine.Random.Range(-0.1f, 0.9f); //not sure if works
