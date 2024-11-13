@@ -22,7 +22,7 @@ public class CrabClaw : MonoBehaviour
     {
         if (other.gameObject.tag == "item")
         {
-            Debug.Log("The gameObject is: " + gameObject.name);
+            //Debug.Log("The gameObject is: " + gameObject.name);
             if (gameObject.name == "claw_R")
             {
                 //gameObject.GetComponentInParent<PlayerController>().rightItem = other.gameObject;
@@ -45,7 +45,7 @@ public class CrabClaw : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("The gameObject is: " + gameObject.name);
+        //Debug.Log("The gameObject is: " + gameObject.name);
         if (gameObject.name == "claw_R")
         {
             //gameObject.GetComponentInParent<PlayerController>().rightItem = null;

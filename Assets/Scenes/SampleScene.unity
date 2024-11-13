@@ -651,13 +651,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09229593, y: -0.7010574, z: 0.09229593, w: 0.7010574}
-  m_LocalPosition: {x: 11, y: 6, z: 65}
+  m_LocalRotation: {x: 0.12278779, y: -0.6963643, z: 0.12278779, w: 0.6963643}
+  m_LocalPosition: {x: 10, y: 6, z: 65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 15, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: -90, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6158,7 +6158,7 @@ MonoBehaviour:
   outOfBounds: {fileID: 909816512}
   homeArea: {fileID: 1777476355}
   crabStartPos: {x: 7, y: 3.5, z: 65}
-  cameraStartPos: {x: 11, y: 6, z: 65}
+  cameraStartPos: {x: 10, y: 6, z: 65}
   crab: {fileID: 1897861583}
   enterFlag: 0
   toDelete: 0
@@ -11974,7 +11974,7 @@ Transform:
   m_GameObject: {fileID: 1600498256}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 51, y: 29.8, z: -0.48}
+  m_LocalPosition: {x: 51, y: 9.3, z: -0.5}
   m_LocalScale: {x: 12, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12278,6 +12278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f54ed0faf6c72f4fa39639f69984e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  homeItems: []
   home: {fileID: 1777476355}
   spawnNPC: 7
 --- !u!1 &1885497097
@@ -12515,9 +12516,13 @@ MonoBehaviour:
   maxClawDistance: 1.5
   shakeAmount: 1
   shakeSpeed: 5
-  pearl: {fileID: 0}
-  shellTop: {fileID: 0}
-  shellBottom: {fileID: 0}
+  pearl: {fileID: -3147051786603554213, guid: 580c6800b88caa542a96df3f98de85d2, type: 3}
+  shellTop: {fileID: -7872568620254657459, guid: 3ef0574605fe98d4eb368302e0b6f7e5,
+    type: 3}
+  shellBottom: {fileID: -618792808786064747, guid: 5b2bf076844c31247bd84027da740c0c,
+    type: 3}
+  holdLength: 2
+  homeScript: {fileID: 0}
   _rb: {fileID: 0}
   canPickupR: 0
   canPickupL: 0
