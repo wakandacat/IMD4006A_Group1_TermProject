@@ -144,6 +144,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
+        AudioManager.instance.ambientSource.Play();
 
         _rb = GetComponent<Rigidbody>();
     }
