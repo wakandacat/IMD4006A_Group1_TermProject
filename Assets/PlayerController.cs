@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public GameObject clawRight;
     public GameObject clawLeft;
 
+    public GameObject clawLocator_R;
+    public GameObject clawLocator_L;
+
     private TerrainEditor terrainScript;
 
     //particle systems and particle control variables
@@ -96,8 +99,10 @@ public class PlayerController : MonoBehaviour
         camOffset = Camera.main.transform.position - crab.transform.position;
 
         //grab starting positions
-        clawLeftStart = clawLeft.transform.localPosition;
-        clawRightStart = clawRight.transform.localPosition;
+        clawLeftStart = clawLocator_L.transform.localPosition;
+        clawRightStart = clawLocator_R.transform.localPosition;
+        //clawLeftStart = clawLeft.transform.localPosition;
+        //clawRightStart = clawRight.transform.localPosition;
 
         // Stopping the particle system by default
         movePartSystem.Stop();
@@ -236,16 +241,27 @@ public class PlayerController : MonoBehaviour
         Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
         Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
+        // Finding the new claw locator positions
+        clawLeftStart = (clawLocator_L.transform.position);
+        clawRightStart = (clawLocator_R.transform.position);
+
+        clawLeft.transform.rotation = clawLocator_L.transform.rotation;
+        clawRight.transform.rotation = clawLocator_R.transform.rotation;
+
         //move the active claw
         if (isLeft && rightStick.magnitude > 0.1f)
         {
             clawLeft.transform.Translate(clawMove, Space.World);
+
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
 
             MoveClaw(clawLeft); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f)
         {
             clawRight.transform.Translate(clawMove, Space.World);
+
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth);
 
             MoveClaw(clawRight); //clamp into an arc
 
@@ -426,6 +442,19 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void updateRClawStatus(GameObject collItem, bool canPickup)
+    {
+        rightItem = collItem;
+        canPickupR = canPickup;
+    }
+
+    public void updateLClawStatus(GameObject collItem, bool canPickup)
+    {
+        leftItem = collItem;
+        canPickupL = canPickup;
+    }
+
     public bool pickUpItemRight(GameObject clawRight)
     {
         if (Rpickedup == false && canPickupR == true)
