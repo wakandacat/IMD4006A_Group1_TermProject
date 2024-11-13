@@ -106,7 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 9199614140521935113}
   itemName: Clam
-  itemWeight: 6
+  itemWeight: 4
   itemPtValue: 4
   spawnAreas: 02000000
   specialItem: 0
