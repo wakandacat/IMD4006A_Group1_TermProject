@@ -15,8 +15,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;   //used for sfx sounds
     public AudioSource walkSource;  //used exclusively for the walking sound
     public AudioSource digSource;   //used exclusively for the digging sound
+    public AudioSource armMoveSource; //used exclusively for the arm movement sound
 
-    public bool isLooping = false;
+    //public bool isLooping = false;
 
     private float secondsToWait;
 
@@ -64,26 +65,30 @@ public class AudioManager : MonoBehaviour
         {
             //get walkMag
             float walkMag = GameObject.Find("Crab").GetComponent<PlayerController>().leftStick.magnitude;
-            Debug.Log("walk mag is: " + walkMag);
+            //Debug.Log("walk mag is: " + walkMag);
 
             //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
             if(walkMag >= 0.7f)
             {
                 secondsToWait = 0.3f;
                 //play a single instance of the sfx
-                sfxSource.PlayOneShot(sfxClips[5]);
+                walkSource.PlayOneShot(walkSource.clip);
+                //sfxSource.PlayOneShot(sfxClips[5]);
             }
             else if (walkMag >= 0.5f && walkMag < 0.7f)
             {
                 secondsToWait = 0.5f;
                 //play a single instance of the sfx
-                sfxSource.PlayOneShot(sfxClips[5]);
+                walkSource.PlayOneShot(walkSource.clip);
+                //sfxSource.PlayOneShot(sfxClips[5]);
             }
             else if (walkMag >= 0.1f && walkMag < 0.5f)
             {
                 secondsToWait = 0.6f;
                 //play a single instance of the sfx
-                sfxSource.PlayOneShot(sfxClips[5]);
+                walkSource.PlayOneShot(walkSource.clip);
+
+                //sfxSource.PlayOneShot(sfxClips[5]);
             }
             else
             {
@@ -92,6 +97,58 @@ public class AudioManager : MonoBehaviour
 
             //wait for x seconds before re-entering the loop
             yield return new WaitForSeconds(secondsToWait);
+
+        }
+    }
+
+    //adds sound for as long as the player is moving the claws
+    public IEnumerator armMoveTimer()
+    {
+
+        //for as long as player is using joystick
+        while (true)
+        {
+            //get stickMag
+            float stickMag = GameObject.Find("Crab").GetComponent<PlayerController>().rightStick.magnitude;
+            Debug.Log("rightstick mag is: " + stickMag);
+
+            //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
+            //if (stickMag >= 0.7f)
+            //{
+            //    secondsToWait = 0.4f;
+            //    //play a single instance of the sfx
+            //    sfxSource.PlayOneShot(sfxClips[6]);
+            //}
+            //else if (stickMag >= 0.6f && stickMag < 0.7f)
+            //{
+            //    secondsToWait = 0.5f;
+            //    //play a single instance of the sfx
+            //    sfxSource.PlayOneShot(sfxClips[6]);
+            //}
+            //else if (stickMag >= 0.1f && stickMag < 0.5f)
+            //{
+            //    secondsToWait = 0.8f;
+            //    //play a single instance of the sfx
+            //    sfxSource.PlayOneShot(sfxClips[6]);
+            //}
+            //else
+            //{
+            //    secondsToWait = 1.0f;
+            //}
+            if(stickMag >= 0.1f)
+            {
+                //sfxSource.PlayOneShot(sfxClips[6]);
+                armMoveSource.PlayOneShot(armMoveSource.clip);
+
+            }
+            else
+            {
+                armMoveSource.Stop();
+                //sfxSource.Stop();
+            }
+
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(1);
 
         }
     }

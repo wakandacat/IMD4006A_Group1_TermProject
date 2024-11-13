@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
     //basic movement vars
     public Vector2 leftStick = Vector2.zero;
+    public Vector2 rightStick = Vector2.zero;
     public float baseMoveSpeed = 7f;
     public float currMoveSpeed;
     public float rotateSpeed = 0.8f;
@@ -124,8 +125,9 @@ public class PlayerController : MonoBehaviour
 
         //setting up pick up drop
 
-        //start sound coroutine
+        //start sound coroutine for walking and arm movement
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -240,7 +242,8 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
         //claw movement controls
-        Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
+        //Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
+        rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
 
         //input from controls move the crab in xz plane -> take into account camera rotation here as well
         Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
@@ -437,7 +440,7 @@ public class PlayerController : MonoBehaviour
             digAnimTimer = 20.0f;
             digPartSystem.Stop();
 
-            //play digging audio
+            //play digging audio --> need to update post alpha
             AudioManager.instance.digSource.Play();
         }
 
@@ -465,11 +468,13 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUpR == false)
             {
                 ifpickedUpR = pickUpItemRight(clawRight);
+
             }
             else
             {
                 dropItemR();
                 ifpickedUpR = false;
+               
             }
 
         }
@@ -478,11 +483,13 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUpL == false)
             {
                 ifpickedUpL = pickUpItemLeft(clawLeft);
+
             }
             else
             {
                 dropItemL();
                 ifpickedUpL = false;
+                
             }
         }
     }
@@ -512,6 +519,9 @@ public class PlayerController : MonoBehaviour
             addWeight(heldRight);
 
             Rpickedup = true;
+
+            //play pick up sound
+            AudioManager.instance.sfxPlayer(0);
         }
        // Debug.Log("pickedup is" + Rpickedup);
        // Debug.Log("canPickupR is " + canPickupR);
@@ -532,6 +542,9 @@ public class PlayerController : MonoBehaviour
             addWeight(heldLeft);
 
             Lpickedup = true;
+
+            //play pick up sound
+            AudioManager.instance.sfxPlayer(0);
         }
         //Debug.Log("canPickup is " + canPickupL);
         return Lpickedup;
@@ -547,6 +560,8 @@ public class PlayerController : MonoBehaviour
         Rpickedup = false;
         heldRight = null;
         reduceWeight();
+        //play drop sound
+        AudioManager.instance.sfxPlayer(1);
 
         //Debug.Log("dropped");
     }
@@ -561,6 +576,8 @@ public class PlayerController : MonoBehaviour
         Lpickedup = false;
         heldLeft = null;
         reduceWeight();
+        //play drop sound
+        AudioManager.instance.sfxPlayer(1);
 
         //Debug.Log("dropped");
     }
