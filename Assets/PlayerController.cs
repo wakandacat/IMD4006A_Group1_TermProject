@@ -549,7 +549,8 @@ public class PlayerController : MonoBehaviour
         {
            // Debug.Log("you are here");
             rightItem.GetComponent<Collider>().enabled = false;
-            rightItem.transform.position = clawRight.transform.position;
+            Vector3 itemRHoldPos = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y + 0.1f, clawRight.transform.position.z - 0.2f);
+            rightItem.transform.position = itemRHoldPos;
             rightItem.transform.parent = clawRight.transform;
 
             heldRight = rightItem;
