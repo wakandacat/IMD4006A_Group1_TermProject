@@ -5885,11 +5885,9 @@ MonoBehaviour:
   sfxClips:
   - {fileID: 8300000, guid: d1206fc463db2534bb67261f51b82480, type: 3}
   - {fileID: 8300000, guid: 49b1b0360da215f47b67bcd1cda0c5df, type: 3}
-  - {fileID: 8300000, guid: 0cbd738dd32fe10419025f3f515f2460, type: 3}
+  - {fileID: 8300000, guid: 3475220caec85304b807784fb118b017, type: 3}
   - {fileID: 8300000, guid: 5a88b0cec825357469eb5ff65a9d4d39, type: 3}
   - {fileID: 8300000, guid: 7336f2f397d661c4b89c37ae6d44d7e2, type: 3}
-  - {fileID: 8300000, guid: 3a618ad167b453643af7fcebc7c771eb, type: 3}
-  - {fileID: 8300000, guid: 696ea4dd3d1bc254ebc4f814446e16cf, type: 3}
   sfxSource: {fileID: 436012132}
   walkSource: {fileID: 436012131}
   digSource: {fileID: 436012134}
@@ -6209,7 +6207,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 696ea4dd3d1bc254ebc4f814446e16cf, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -15653,6 +15651,7 @@ MonoBehaviour:
   clawLeft: {fileID: 1006207131}
   clawLocator_R: {fileID: 56739554}
   clawLocator_L: {fileID: 1434789988}
+  rightTrigger: 0
   audiomanager: {fileID: 436012129}
   movePartSystem: {fileID: 410000508}
   digPartSystem: {fileID: 824042363}

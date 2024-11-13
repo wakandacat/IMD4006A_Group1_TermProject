@@ -110,45 +110,47 @@ public class AudioManager : MonoBehaviour
         {
             //get stickMag
             float stickMag = GameObject.Find("Crab").GetComponent<PlayerController>().rightStick.magnitude;
-            Debug.Log("rightstick mag is: " + stickMag);
+            //Debug.Log("rightstick mag is: " + stickMag);
 
-            //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
-            //if (stickMag >= 0.7f)
-            //{
-            //    secondsToWait = 0.4f;
-            //    //play a single instance of the sfx
-            //    sfxSource.PlayOneShot(sfxClips[6]);
-            //}
-            //else if (stickMag >= 0.6f && stickMag < 0.7f)
-            //{
-            //    secondsToWait = 0.5f;
-            //    //play a single instance of the sfx
-            //    sfxSource.PlayOneShot(sfxClips[6]);
-            //}
-            //else if (stickMag >= 0.1f && stickMag < 0.5f)
-            //{
-            //    secondsToWait = 0.8f;
-            //    //play a single instance of the sfx
-            //    sfxSource.PlayOneShot(sfxClips[6]);
-            //}
-            //else
-            //{
-            //    secondsToWait = 1.0f;
-            //}
             if(stickMag >= 0.1f)
             {
-                //sfxSource.PlayOneShot(sfxClips[6]);
                 armMoveSource.PlayOneShot(armMoveSource.clip);
 
             }
             else
             {
                 armMoveSource.Stop();
-                //sfxSource.Stop();
             }
 
             //wait for x seconds before re-entering the loop
             yield return new WaitForSeconds(1);
+
+        }
+    }
+
+    //adds sound for as long as the player is digging
+    public IEnumerator digSoundTimer()
+    {
+
+        //for as long as player is using joystick
+        while (true)
+        {
+            //get stickMag
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
+            //Debug.Log("rightstick mag is: " + stickMag);
+
+            if (triggerVal >= 0.1f)
+            {
+                digSource.PlayOneShot(digSource.clip);
+
+            }
+            else
+            {
+                digSource.Stop();
+            }
+
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(1.3f);
 
         }
     }

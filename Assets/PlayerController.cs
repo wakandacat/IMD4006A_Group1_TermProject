@@ -19,8 +19,11 @@ public class PlayerController : MonoBehaviour
     public GameObject clawLocator_R;
     public GameObject clawLocator_L;
 
+    //digging related vars
     private TerrainEditor terrainScript;
+    public float rightTrigger = 0.0f;
 
+    //Audio manager to activate sounds
     public GameObject audiomanager;
 
     //particle systems and particle control variables
@@ -128,6 +131,7 @@ public class PlayerController : MonoBehaviour
         //start sound coroutine for walking and arm movement
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -235,8 +239,7 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
-            //play walking audio --------- need to figure out why this works against the logic
-            //AudioManager.instance.walkSource.Play();
+            
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
@@ -411,7 +414,7 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------DIGGING-------------------------------------
 
         //digging controls ---------> only if a claw is available
-        float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
+        rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
         if (rightTrigger > 0f)
@@ -441,7 +444,7 @@ public class PlayerController : MonoBehaviour
             digPartSystem.Stop();
 
             //play digging audio --> need to update post alpha
-            AudioManager.instance.digSource.Play();
+            //AudioManager.instance.digSource.Play();
         }
 
         //---------------------------------------PICK UP AND DROP-------------------------------------
@@ -458,6 +461,17 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
+
+        AudioManager.instance.sfxPlayer(2);
+
+        //make active claw bounce
+        //float yOffset = UnityEngine.Random.Range(-0.1f, 0.9f); //not sure if works
+        //Vector3 newPos = clawLeftStart + new Vector3(clawLeftStart.x, yOffset, clawLeftStart.z);
+        //clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+
+        ////move the claw
+        //Vector3 newPos = clawRightStart + new Vector3(clawRightStart.x, yOffset, clawRightStart.z);
+        //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
     }
 
     public void OnPickDropControls(InputAction.CallbackContext context)
