@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Rendering.LookDev;
+//using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -19,7 +19,12 @@ public class PlayerController : MonoBehaviour
     public GameObject clawLocator_R;
     public GameObject clawLocator_L;
 
+    //digging related vars
     private TerrainEditor terrainScript;
+    public float rightTrigger = 0.0f;
+
+    //Audio manager to activate sounds
+    public GameObject audiomanager;
 
     //particle systems and particle control variables
     public ParticleSystem movePartSystem;
@@ -32,6 +37,8 @@ public class PlayerController : MonoBehaviour
     //global variables
 
     //basic movement vars
+    public Vector2 leftStick = Vector2.zero;
+    public Vector2 rightStick = Vector2.zero;
     public float baseMoveSpeed = 7f;
     public float currMoveSpeed;
     public float rotateSpeed = 0.8f;
@@ -121,6 +128,10 @@ public class PlayerController : MonoBehaviour
 
         //setting up pick up drop
 
+        //start sound coroutine for walking and arm movement
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -134,7 +145,8 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
-        Vector2 leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
+        //Vector2 leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
+        leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
 
         //make sure to keep control scheme corresponding to camera's rotation
         Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
@@ -227,14 +239,14 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
-            //play walking audio --------- need to figure out why this works against the logic
-            AudioManager.instance.walkSource.Play();
+            
         }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
         //claw movement controls
-        Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
+        //Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
+        rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
 
         //input from controls move the crab in xz plane -> take into account camera rotation here as well
         Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
@@ -329,8 +341,9 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                Debug.Log(currHoldTime);
+               // Debug.Log(currHoldTime);
                 currHoldTime += Time.deltaTime; //count the time
+               //AudioManager.instance.sfxPlayer(3);
 
                 if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
@@ -345,6 +358,10 @@ public class PlayerController : MonoBehaviour
                     //delete the clam
                     Destroy(toBreak);
 
+                    //play break nosie
+                    //AudioManager.instance.sfxSource.Stop();
+                    AudioManager.instance.sfxPlayer(4);
+
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
                     Instantiate(shellBottom.gameObject, new Vector3(clawLeft.transform.position.x + 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
@@ -358,8 +375,9 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                Debug.Log(currHoldTime);
+                //Debug.Log(currHoldTime);
                 currHoldTime += Time.deltaTime; //count the time
+                //AudioManager.instance.sfxPlayer(3);
 
                 if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
@@ -374,6 +392,10 @@ public class PlayerController : MonoBehaviour
                     //delete the clam
                     Destroy(toBreak);
 
+                    //play break nosie
+                    //AudioManager.instance.sfxSource.Stop();
+                    AudioManager.instance.sfxPlayer(4);
+
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
                     Instantiate(shellBottom.gameObject, new Vector3(clawRight.transform.position.x + 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
@@ -386,12 +408,13 @@ public class PlayerController : MonoBehaviour
         else
         {
             currHoldTime = 0f;
+            //AudioManager.instance.sfxSource.Stop();
         }
 
         //---------------------------------------DIGGING-------------------------------------
 
         //digging controls ---------> only if a claw is available
-        float rightTrigger = controls.GamePlay.Break.ReadValue<float>();
+        rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
         if (rightTrigger > 0f)
@@ -410,7 +433,7 @@ public class PlayerController : MonoBehaviour
 
             if (digAnimTimer / 20.0f >= 1.0f)
             {
-                Debug.Log("Dig Particles Deployed");
+               // Debug.Log("Dig Particles Deployed");
                 digPartSystem.Play();
                 digAnimTimer = 0.0f;
             }
@@ -420,8 +443,8 @@ public class PlayerController : MonoBehaviour
             digAnimTimer = 20.0f;
             digPartSystem.Stop();
 
-            //play digging audio
-            AudioManager.instance.digSource.Play();
+            //play digging audio --> need to update post alpha
+            //AudioManager.instance.digSource.Play();
         }
 
         //---------------------------------------PICK UP AND DROP-------------------------------------
@@ -438,6 +461,17 @@ public class PlayerController : MonoBehaviour
     {
         isLeft = !isLeft;
         //Debug.Log(isLeft);
+
+        AudioManager.instance.sfxPlayer(2);
+
+        //make active claw bounce
+        //float yOffset = UnityEngine.Random.Range(-0.1f, 0.9f); //not sure if works
+        //Vector3 newPos = clawLeftStart + new Vector3(clawLeftStart.x, yOffset, clawLeftStart.z);
+        //clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+
+        ////move the claw
+        //Vector3 newPos = clawRightStart + new Vector3(clawRightStart.x, yOffset, clawRightStart.z);
+        //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
     }
 
     public void OnPickDropControls(InputAction.CallbackContext context)
@@ -448,11 +482,13 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUpR == false)
             {
                 ifpickedUpR = pickUpItemRight(clawRight);
+
             }
             else
             {
                 dropItemR();
                 ifpickedUpR = false;
+               
             }
 
         }
@@ -461,11 +497,13 @@ public class PlayerController : MonoBehaviour
             if (ifpickedUpL == false)
             {
                 ifpickedUpL = pickUpItemLeft(clawLeft);
+
             }
             else
             {
                 dropItemL();
                 ifpickedUpL = false;
+                
             }
         }
     }
@@ -495,6 +533,9 @@ public class PlayerController : MonoBehaviour
             addWeight(heldRight);
 
             Rpickedup = true;
+
+            //play pick up sound
+            AudioManager.instance.sfxPlayer(0);
         }
        // Debug.Log("pickedup is" + Rpickedup);
        // Debug.Log("canPickupR is " + canPickupR);
@@ -515,6 +556,9 @@ public class PlayerController : MonoBehaviour
             addWeight(heldLeft);
 
             Lpickedup = true;
+
+            //play pick up sound
+            AudioManager.instance.sfxPlayer(0);
         }
         //Debug.Log("canPickup is " + canPickupL);
         return Lpickedup;
@@ -530,6 +574,8 @@ public class PlayerController : MonoBehaviour
         Rpickedup = false;
         heldRight = null;
         reduceWeight();
+        //play drop sound
+        AudioManager.instance.sfxPlayer(1);
 
         //Debug.Log("dropped");
     }
@@ -544,6 +590,8 @@ public class PlayerController : MonoBehaviour
         Lpickedup = false;
         heldLeft = null;
         reduceWeight();
+        //play drop sound
+        AudioManager.instance.sfxPlayer(1);
 
         //Debug.Log("dropped");
     }

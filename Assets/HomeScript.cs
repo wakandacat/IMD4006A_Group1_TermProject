@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class HomeScript : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class HomeScript : MonoBehaviour
 
     //home area
     public GameObject home;
+    public GameObject npc;
 
     //total point value
     int totalPts = 0;
@@ -32,7 +33,7 @@ public class HomeScript : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(totalPts);
+        //Debug.Log(totalPts);
         //check if the total point value is enought to spawn NPC
         if (totalPts >= spawnNPC && NPCSpawned == false)
         {
@@ -43,6 +44,7 @@ public class HomeScript : MonoBehaviour
         {
             //spawn NPC guy with message "looking good!" or something
             //Debug.Log("NPC spawned");
+            Instantiate(npc, new Vector3(3.5f, 3.0f, 60.0f), Quaternion.identity);
         }
     }
 

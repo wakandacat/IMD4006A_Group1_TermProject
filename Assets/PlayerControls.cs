@@ -150,6 +150,34 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""MenuControls"",
+            ""id"": ""e9d5396a-cf84-4b01-aca5-c2d20cf440d7"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""28a2d5d1-1de9-4951-bcf8-aeaa7f6bd534"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3a5a756d-eea0-455e-9955-c5f54f6235a6"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -162,6 +190,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GamePlay_Dig = m_GamePlay.FindAction("Dig", throwIfNotFound: true);
         m_GamePlay_PickUpPutDown = m_GamePlay.FindAction("PickUpPutDown", throwIfNotFound: true);
         m_GamePlay_Switch = m_GamePlay.FindAction("Switch", throwIfNotFound: true);
+        // MenuControls
+        m_MenuControls = asset.FindActionMap("MenuControls", throwIfNotFound: true);
+        m_MenuControls_Newaction = m_MenuControls.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -305,6 +336,52 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public GamePlayActions @GamePlay => new GamePlayActions(this);
+
+    // MenuControls
+    private readonly InputActionMap m_MenuControls;
+    private List<IMenuControlsActions> m_MenuControlsActionsCallbackInterfaces = new List<IMenuControlsActions>();
+    private readonly InputAction m_MenuControls_Newaction;
+    public struct MenuControlsActions
+    {
+        private @PlayerControls m_Wrapper;
+        public MenuControlsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_MenuControls_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_MenuControls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuControlsActions set) { return set.Get(); }
+        public void AddCallbacks(IMenuControlsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenuControlsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenuControlsActionsCallbackInterfaces.Add(instance);
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
+        }
+
+        private void UnregisterCallbacks(IMenuControlsActions instance)
+        {
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
+        }
+
+        public void RemoveCallbacks(IMenuControlsActions instance)
+        {
+            if (m_Wrapper.m_MenuControlsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMenuControlsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenuControlsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenuControlsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MenuControlsActions @MenuControls => new MenuControlsActions(this);
     public interface IGamePlayActions
     {
         void OnWalk(InputAction.CallbackContext context);
@@ -313,5 +390,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnDig(InputAction.CallbackContext context);
         void OnPickUpPutDown(InputAction.CallbackContext context);
         void OnSwitch(InputAction.CallbackContext context);
+    }
+    public interface IMenuControlsActions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }
