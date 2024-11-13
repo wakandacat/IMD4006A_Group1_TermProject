@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 4499017289584415514}
   itemName: Clam Bottom
-  itemWeight: 3
+  itemWeight: 2
   itemPtValue: 2
   spawnAreas: 00000000
   specialItem: 0

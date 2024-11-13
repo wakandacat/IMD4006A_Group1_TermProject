@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public GameObject clawRight;
     public GameObject clawLeft;
 
+    public GameObject clawLocator_R;
+    public GameObject clawLocator_L;
+
     private TerrainEditor terrainScript;
 
     //particle systems and particle control variables
@@ -58,6 +61,9 @@ public class PlayerController : MonoBehaviour
     public float holdLength = 2f; 
     private float currHoldTime = 0f; 
 
+    //for decorate
+    public HomeScript homeScript;
+
     //Booleans
     bool ifpickedUp;
 
@@ -98,14 +104,20 @@ public class PlayerController : MonoBehaviour
         camOffset = Camera.main.transform.position - crab.transform.position;
 
         //grab starting positions
-        clawLeftStart = clawLeft.transform.localPosition;
-        clawRightStart = clawRight.transform.localPosition;
+        clawLeftStart = clawLocator_L.transform.localPosition;
+        clawRightStart = clawLocator_R.transform.localPosition;
+        //clawLeftStart = clawLeft.transform.localPosition;
+        //clawRightStart = clawRight.transform.localPosition;
+
+        currMoveSpeed = baseMoveSpeed;
 
         // Stopping the particle system by default
         movePartSystem.Stop();
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+
+        homeScript = GameObject.Find("HomeArea").GetComponent<HomeScript>();
 
         //setting up pick up drop
 
@@ -176,16 +188,6 @@ public class PlayerController : MonoBehaviour
                 crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
             }
 
-            //move the crab and take into account the weight of any held objects
-            if (ifpickedUp)
-            {
-                //item weight affects movement speed of crab
-                currMoveSpeed = baseMoveSpeed - pickedUpItem.GetComponent<item>().itemWeight;
-            } else
-            {
-                currMoveSpeed = baseMoveSpeed;
-            }
-
             // Figuring out the crab's Y position, relative to the terrain
             currTerrHeight = terrainScript.getTerrainHeight(crab.gameObject.transform.position);
 
@@ -208,6 +210,7 @@ public class PlayerController : MonoBehaviour
 
             float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, camSmooth);
             Camera.main.transform.rotation = Quaternion.Euler(20, smoothRot, 0);
+
 
 
             // Playing the particle system
@@ -237,16 +240,27 @@ public class PlayerController : MonoBehaviour
         Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
         Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
+        // Finding the new claw locator positions
+        clawLeftStart = (clawLocator_L.transform.position);
+        clawRightStart = (clawLocator_R.transform.position);
+
+        clawLeft.transform.rotation = clawLocator_L.transform.rotation;
+        clawRight.transform.rotation = clawLocator_R.transform.rotation;
+
         //move the active claw
         if (isLeft && rightStick.magnitude > 0.1f)
         {
             clawLeft.transform.Translate(clawMove, Space.World);
+
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
 
             MoveClaw(clawLeft); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f)
         {
             clawRight.transform.Translate(clawMove, Space.World);
+
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth);
 
             MoveClaw(clawRight); //clamp into an arc
 
@@ -326,6 +340,8 @@ public class PlayerController : MonoBehaviour
                     heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
                     heldLeft.transform.parent = clawLeft.transform;
 
+                    addWeight(heldLeft);
+
                     //delete the clam
                     Destroy(toBreak);
 
@@ -352,6 +368,8 @@ public class PlayerController : MonoBehaviour
                     //spawn the pearl in the claw
                     heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
                     heldRight.transform.parent = clawRight.transform;
+
+                    addWeight(heldRight);
 
                     //delete the clam
                     Destroy(toBreak);
@@ -424,7 +442,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnPickDropControls(InputAction.CallbackContext context)
     {
-        Debug.Log("this is pick up");
+       // Debug.Log("this is pick up");
         if (!isLeft)
         {
             if (ifpickedUpR == false)
@@ -451,21 +469,36 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void updateRClawStatus(GameObject collItem, bool canPickup)
+    {
+        rightItem = collItem;
+        canPickupR = canPickup;
+    }
+
+    public void updateLClawStatus(GameObject collItem, bool canPickup)
+    {
+        leftItem = collItem;
+        canPickupL = canPickup;
+    }
+
     public bool pickUpItemRight(GameObject clawRight)
     {
         if (Rpickedup == false && canPickupR == true)
         {
-            Debug.Log("you are here");
+           // Debug.Log("you are here");
             rightItem.GetComponent<Collider>().enabled = false;
             rightItem.transform.position = clawRight.transform.position;
             rightItem.transform.parent = clawRight.transform;
 
             heldRight = rightItem;
+            addWeight(heldRight);
+
             Rpickedup = true;
         }
-        Debug.Log("pickedup is" + Rpickedup);
-        Debug.Log("canPickupR is " + canPickupR);
-        Debug.Log("this is in the pickupdrop script right item is: " + heldRight);
+       // Debug.Log("pickedup is" + Rpickedup);
+       // Debug.Log("canPickupR is " + canPickupR);
+       //Debug.Log("this is in the pickupdrop script right item is: " + heldRight);
         return Rpickedup;
     }
 
@@ -473,39 +506,67 @@ public class PlayerController : MonoBehaviour
     {
         if (Lpickedup == false && canPickupL == true)
         {
-            Debug.Log("you are here");
+           // Debug.Log("you are here");
             leftItem.GetComponent<Collider>().enabled = false;
             leftItem.transform.position = clawLeft.transform.position;
             leftItem.transform.parent = clawLeft.transform;
 
             heldLeft = leftItem;
+            addWeight(heldLeft);
+
             Lpickedup = true;
         }
-        Debug.Log("canPickup is " + canPickupL);
+        //Debug.Log("canPickup is " + canPickupL);
         return Lpickedup;
     }
 
     public void dropItemR()
     {
-        Debug.Log("right item" + heldRight);
+        //Debug.Log("right item" + heldRight);
+        homeScript.decorateItem(heldRight);
         heldRight.transform.parent = null;
 
         heldRight.GetComponent<Collider>().enabled = true;
         Rpickedup = false;
         heldRight = null;
+        reduceWeight();
 
-        Debug.Log("dropped");
+        //Debug.Log("dropped");
     }
 
     public void dropItemL()
     {
-        Debug.Log("left item" + heldLeft);
+       // Debug.Log("left item" + heldLeft);
+        homeScript.decorateItem(heldLeft);
         heldLeft.transform.parent = null;
 
         heldLeft.GetComponent<Collider>().enabled = true;
         Lpickedup = false;
         heldLeft = null;
+        reduceWeight();
 
-        Debug.Log("dropped");
+        //Debug.Log("dropped");
     }
+
+    public void addWeight(GameObject heldItem)
+    {
+        //move the crab and take into account the weight of any held objects
+        if (heldItem != null)
+        {          
+            //item weight affects movement speed of crab
+            currMoveSpeed = currMoveSpeed - heldItem.gameObject.GetComponent<item>().itemWeight;
+        }
+        else
+        {
+            currMoveSpeed = baseMoveSpeed;
+        }
+    }
+
+    public void reduceWeight()
+    {
+
+      currMoveSpeed = baseMoveSpeed;
+        
+    }
+
 }
