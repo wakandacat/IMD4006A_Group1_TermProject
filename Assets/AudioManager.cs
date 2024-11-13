@@ -18,6 +18,8 @@ public class AudioManager : MonoBehaviour
 
     public bool isLooping = false;
 
+    private float secondsToWait;
+
     private void Awake()
     {
         //if instance doesn't exist, fill with this one else destroy the existing version
@@ -60,6 +62,55 @@ public class AudioManager : MonoBehaviour
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
         //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
-        sfxSource.Play();               //play clip
+        sfxSource.PlayOneShot(sfxClips[i]);               //play clip
+    }
+
+    //play walk sound with speed of clip increasing with magnitude on joystick
+    public IEnumerator walkTimer()
+    {
+        //if(walkMag < 0.1f)
+        //{
+        //    secondsToWait = 1.0f;
+        //    yield return new WaitForSeconds(secondsToWait);
+        //}
+
+        //for as long as player is using joystick
+        while (true)
+        {
+            //get walkMag
+            float walkMag = GameObject.Find("Crab").GetComponent<PlayerController>().leftStick.magnitude;
+            Debug.Log("walk mag is: " + walkMag);
+
+            //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
+            if(walkMag >= 0.7f)
+            {
+                secondsToWait = 0.3f;
+                //play a single instance of the sfx
+                sfxSource.PlayOneShot(sfxClips[5]);
+            }
+            else if (walkMag >= 0.5f && walkMag < 0.7f)
+            {
+                secondsToWait = 0.8f;
+                //play a single instance of the sfx
+                sfxSource.PlayOneShot(sfxClips[5]);
+            }
+            else if (walkMag >= 0.1f && walkMag < 0.5f)
+            {
+                secondsToWait = 1.0f;
+                //play a single instance of the sfx
+                sfxSource.PlayOneShot(sfxClips[5]);
+            }
+            else
+            {
+                secondsToWait = 1.0f;
+            }
+
+            ////play a single instance of the sfx
+            //sfxSource.PlayOneShot(sfxClips[5]);
+
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(secondsToWait);
+
+        }
     }
 }
