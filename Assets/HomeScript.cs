@@ -42,7 +42,7 @@ public class HomeScript : MonoBehaviour
         if (NPCSpawned == true)
         {
             //spawn NPC guy with message "looking good!" or something
-            Debug.Log("NPC spawned");
+            //Debug.Log("NPC spawned");
         }
     }
 
@@ -50,7 +50,7 @@ public class HomeScript : MonoBehaviour
     {
         if (droppedItem.transform.position.x <= home.transform.position.x + home.transform.localScale.x / 2 && droppedItem.transform.position.x >= home.transform.position.x - home.transform.localScale.x / 2 && droppedItem.transform.position.z <= home.transform.position.z + home.transform.localScale.z / 2 && droppedItem.transform.position.z >= home.transform.position.z - home.transform.localScale.z / 2)
         {
-            Debug.Log("dropped inside house");
+            //Debug.Log("dropped inside house");
             //increment total points
             totalPts = totalPts + droppedItem.GetComponent<item>().itemPtValue;
 
