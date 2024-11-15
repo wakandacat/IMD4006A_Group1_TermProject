@@ -16,3 +16,5 @@ public class item : MonoBehaviour
     public bool breakable;          //true if it is a breakable item (clamshell)
 
 }
+//using QuickOutline package for colored outlines: https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488?aid=1101l9Bhe
+
