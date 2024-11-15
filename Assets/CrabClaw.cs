@@ -65,9 +65,9 @@ public class CrabClaw : MonoBehaviour
 
         }
 
-        //indicate the object is no longer in range by changing its outline colour
+        //indicate the object is no longer in range by changing its outline colour back to its original colour
         var outline = other.gameObject.GetComponent<Outline>();
 
-        outline.OutlineColor = new Color32(22, 224, 222, 255);
+        outline.OutlineColor = other.gameObject.GetComponent<item>().outlineColor;
     }
 }

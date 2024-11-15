@@ -14,6 +14,7 @@ public class item : MonoBehaviour
     public int[] spawnAreas;        //array of the indeces of all areas in which it can spawn (ex. can spawn in area1 and area2, then spawnAreas = [1, 2])
     public bool specialItem;        //true if only an NPC given item
     public bool breakable;          //true if it is a breakable item (clamshell)
+    public Color32 outlineColor;       //color of outline -> breakable will be different
 
 }
 //using QuickOutline package for colored outlines: https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488?aid=1101l9Bhe

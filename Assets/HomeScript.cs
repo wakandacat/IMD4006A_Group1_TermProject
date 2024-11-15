@@ -22,6 +22,7 @@ public class HomeScript : MonoBehaviour
     //NPC spawn value
     public int spawnNPC = 7;
     bool NPCSpawned = false;
+    bool hasSpawned = false;
 
     // Start is called before the first frame update
     void Start()
@@ -40,11 +41,12 @@ public class HomeScript : MonoBehaviour
             NPCSpawned = true;
         }
 
-        if (NPCSpawned == true)
+        if (NPCSpawned == true && hasSpawned == false)
         {
             //spawn NPC guy with message "looking good!" or something
             //Debug.Log("NPC spawned");
             Instantiate(npc, new Vector3(3.5f, 3.0f, 60.0f), Quaternion.identity);
+            hasSpawned = true;
         }
     }
 
@@ -52,7 +54,6 @@ public class HomeScript : MonoBehaviour
     {
         if (droppedItem.transform.position.x <= home.transform.position.x + home.transform.localScale.x / 2 && droppedItem.transform.position.x >= home.transform.position.x - home.transform.localScale.x / 2 && droppedItem.transform.position.z <= home.transform.position.z + home.transform.localScale.z / 2 && droppedItem.transform.position.z >= home.transform.position.z - home.transform.localScale.z / 2)
         {
-            //Debug.Log("dropped inside house");
             //increment total points
             totalPts = totalPts + droppedItem.GetComponent<item>().itemPtValue;
 
@@ -61,6 +62,10 @@ public class HomeScript : MonoBehaviour
 
             //add it to the house by getting the next position from the set array of positions
             droppedItem.transform.position = spawnPoints[homeItems.Count-1];
+
+            var outline = droppedItem.gameObject.GetComponent<Outline>();
+
+            outline.OutlineColor = new Color32(22, 224, 40, 255);
 
         }
     }

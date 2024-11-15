@@ -115,6 +115,9 @@ MonoBehaviour:
   spawnAreas: 02000000
   specialItem: 0
   breakable: 1
+  outlineColor:
+    serializedVersion: 2
+    rgba: 4279640800
 --- !u!65 &-622481824132689219
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -149,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 1
-  outlineColor: {r: 0.08627451, g: 0.8784314, b: 0.87058824, a: 1}
+  outlineColor: {r: 0.8784314, g: 0.13276729, b: 0.0862745, a: 1}
   outlineWidth: 5
   precomputeOutline: 1
   bakeKeys:

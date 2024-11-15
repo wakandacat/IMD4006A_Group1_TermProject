@@ -110,6 +110,9 @@ MonoBehaviour:
   spawnAreas: 00000000
   specialItem: 0
   breakable: 0
+  outlineColor:
+    serializedVersion: 2
+    rgba: 4292796438
 --- !u!65 &186421271722608010
 BoxCollider:
   m_ObjectHideFlags: 0
