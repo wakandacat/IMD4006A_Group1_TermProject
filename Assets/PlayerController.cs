@@ -62,6 +62,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 clawDrop = new Vector3(0.0f, -0.1f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.1f, 0.0f);
 
+    private float clawGrabDistance = 500f;
+    public float clawExtendTime = 1f;
+    private float currExtendTime = 0f;
+
     //break vars
     public float shakeAmount = 1f;
     public float shakeSpeed = 5f;
@@ -107,8 +111,14 @@ public class PlayerController : MonoBehaviour
 
         //setup callback function to switch active claws
         //+= refers to adding a callback function
-        controls.GamePlay.Switch.performed += OnSwitch;
+        // controls.GamePlay.Switch.performed += OnSwitch;
+        //controls.GamePlay.PickUpPutDown.performed += OnPickDropControls;
+
+
+        //grab with left claw
         controls.GamePlay.PickUpPutDown.performed += OnPickDropControls;
+        //grab with right claw
+        controls.GamePlay.Switch.performed += rightGrab;
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
@@ -463,30 +473,42 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------PICK UP AND DROP-------------------------------------
 
         //grab controls ---------> either claw
-        float rightBumper = controls.GamePlay.PickUpPutDown.ReadValue<float>();
+        //float rightBumper = controls.GamePlay.PickUpPutDown.ReadValue<float>();
         //Debug.Log(rightBumper);
         //make the crab grab here
      
     }
 
     //toggle the active claw
-    public void OnSwitch(InputAction.CallbackContext context)
+    public void rightGrab(InputAction.CallbackContext context)
     {
+        //make sure to keep control scheme corresponding to camera's rotation
+        Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
+
+
+
         isLeft = !isLeft;
         //Debug.Log(isLeft);
 
-        AudioManager.instance.sfxPlayer(2);
+        //AudioManager.instance.sfxPlayer(2);
 
-        if (isLeft && clawLocator_R.transform.position.y > -0.5)
-        {
-            clawLocator_R.transform.Translate(clawDrop);
-            clawLocator_L.transform.Translate(clawRaise);
-        }
-        else if (!isLeft && clawLocator_L.transform.position.y > -0.5)
-        {
-            clawLocator_R.transform.Translate(clawRaise);
-            clawLocator_L.transform.Translate(clawDrop);
-        }
+        //if (isLeft && clawLocator_R.transform.position.y > -0.5)
+        //{
+        //    clawLocator_R.transform.Translate(clawDrop);
+        //    clawLocator_L.transform.Translate(clawRaise);
+        //}
+        //else if (!isLeft && clawLocator_L.transform.position.y > -0.5)
+        //{
+        //    clawLocator_R.transform.Translate(clawRaise);
+        //    clawLocator_L.transform.Translate(clawDrop);
+        //}
+
+        //extend the claw
+        clawLocator_R.transform.position = Vector3.Lerp(clawRightStart, (clawRightStart + (clawGrabDistance * camForward)), Time.deltaTime * clawSmooth);
+
+        StartCoroutine(RetractClaw());
+
 
         //make active claw bounce
         //float yOffset = UnityEngine.Random.Range(-0.1f, 0.9f); //not sure if works
@@ -497,6 +519,21 @@ public class PlayerController : MonoBehaviour
         //Vector3 newPos = clawRightStart + new Vector3(clawRightStart.x, yOffset, clawRightStart.z);
         //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
     }
+
+    private IEnumerator RetractClaw()
+    {
+
+        //make sure to keep control scheme corresponding to camera's rotation
+        Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
+
+        //wait a bit
+        yield return new WaitForSeconds(clawExtendTime);
+        Debug.Log(clawRightStart);
+        //retract the claw
+        clawLocator_R.transform.position = Vector3.Lerp(clawLocator_R.transform.position, (clawRightStart - (clawGrabDistance * camForward)), Time.deltaTime * clawSmooth);
+    }
+
 
     public void OnPickDropControls(InputAction.CallbackContext context)
     {

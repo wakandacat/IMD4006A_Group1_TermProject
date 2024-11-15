@@ -15767,6 +15767,7 @@ MonoBehaviour:
   clawSmooth: 0.5
   clawAngle: 40
   maxClawDistance: 1.5
+  clawExtendTime: 2
   shakeAmount: 1
   shakeSpeed: 5
   pearl: {fileID: -3147051786603554213, guid: 580c6800b88caa542a96df3f98de85d2, type: 3}
