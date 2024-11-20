@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 clawDrop = new Vector3(0.0f, -0.1f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.1f, 0.0f);
 
-    private float clawGrabDistance = 500f;
+    private float clawGrabDistance = 5f;
     public float clawExtendTime = 1f;
     private float currExtendTime = 0f;
 
@@ -505,7 +505,8 @@ public class PlayerController : MonoBehaviour
         //}
 
         //extend the claw
-        clawLocator_R.transform.position = Vector3.Lerp(clawRightStart, (clawRightStart + (clawGrabDistance * camForward)), Time.deltaTime * clawSmooth);
+        Debug.Log(clawGrabDistance);
+        clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart + (clawGrabDistance * camForward), 1f);
 
         StartCoroutine(RetractClaw());
 
@@ -529,9 +530,10 @@ public class PlayerController : MonoBehaviour
 
         //wait a bit
         yield return new WaitForSeconds(clawExtendTime);
-        Debug.Log(clawRightStart);
+        //Debug.Log(clawGrabDistance);
         //retract the claw
-        clawLocator_R.transform.position = Vector3.Lerp(clawLocator_R.transform.position, (clawRightStart - (clawGrabDistance * camForward)), Time.deltaTime * clawSmooth);
+        clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart - (clawGrabDistance * camForward), Time.deltaTime * clawSmooth);
+        //clawLocator_R.transform.position = Vector3.Lerp(clawLocator_R.transform.position, (clawRightStart - (clawGrabDistance * camForward)), Time.deltaTime * clawSmooth);
     }
 
 
