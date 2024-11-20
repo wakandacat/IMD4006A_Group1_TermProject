@@ -144,6 +144,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
+        AudioManager.instance.ambientSource.Play();
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -573,7 +574,9 @@ public class PlayerController : MonoBehaviour
         {
            // Debug.Log("you are here");
             leftItem.GetComponent<Collider>().enabled = false;
-            leftItem.transform.position = clawLeft.transform.position;
+            Vector3 itemLHoldPos = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y + 0.1f, clawLeft.transform.position.z - 0.2f);
+            leftItem.transform.position = itemLHoldPos;
+            //leftItem.transform.position = clawLeft.transform.position;
             leftItem.transform.parent = clawLeft.transform;
 
             heldLeft = leftItem;

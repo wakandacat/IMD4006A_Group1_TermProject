@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource walkSource;  //used exclusively for the walking sound
     public AudioSource digSource;   //used exclusively for the digging sound
     public AudioSource armMoveSource; //used exclusively for the arm movement sound
+    public AudioSource ambientSource; //used exclusively for the background sounds
 
     //public bool isLooping = false;
 
