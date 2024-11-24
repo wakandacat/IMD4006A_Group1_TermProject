@@ -42,7 +42,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PickUpPutDown",
+                    "name": "SwitchToRight",
                     "type": "Button",
                     "id": "bb7f325a-71df-464e-ba30-4c3f23891a97",
                     "expectedControlType": "Button",
@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Switch",
+                    "name": "SwitchToLeft",
                     "type": "Button",
                     "id": "5ca6414b-9edb-41f8-a0ee-ef61e644303b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GrabDrop",
+                    "type": "Button",
+                    "id": "f1f5dd01-18b3-49ec-848b-1d71a46421a3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -112,7 +121,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PickUpPutDown",
+                    "action": "SwitchToRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -123,7 +132,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Switch",
+                    "action": "SwitchToLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d9eae214-599d-4483-99fd-1c682c3b8b3b",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GrabDrop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

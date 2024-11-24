@@ -64,7 +64,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""PickUpPutDown"",
+                    ""name"": ""SwitchToRight"",
                     ""type"": ""Button"",
                     ""id"": ""bb7f325a-71df-464e-ba30-4c3f23891a97"",
                     ""expectedControlType"": ""Button"",
@@ -73,9 +73,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Switch"",
+                    ""name"": ""SwitchToLeft"",
                     ""type"": ""Button"",
                     ""id"": ""5ca6414b-9edb-41f8-a0ee-ef61e644303b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GrabDrop"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1f5dd01-18b3-49ec-848b-1d71a46421a3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -134,7 +143,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PickUpPutDown"",
+                    ""action"": ""SwitchToRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -145,7 +154,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Switch"",
+                    ""action"": ""SwitchToLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9eae214-599d-4483-99fd-1c682c3b8b3b"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GrabDrop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -188,8 +208,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GamePlay_Claw = m_GamePlay.FindAction("Claw", throwIfNotFound: true);
         m_GamePlay_Break = m_GamePlay.FindAction("Break", throwIfNotFound: true);
         m_GamePlay_Dig = m_GamePlay.FindAction("Dig", throwIfNotFound: true);
-        m_GamePlay_PickUpPutDown = m_GamePlay.FindAction("PickUpPutDown", throwIfNotFound: true);
-        m_GamePlay_Switch = m_GamePlay.FindAction("Switch", throwIfNotFound: true);
+        m_GamePlay_SwitchToRight = m_GamePlay.FindAction("SwitchToRight", throwIfNotFound: true);
+        m_GamePlay_SwitchToLeft = m_GamePlay.FindAction("SwitchToLeft", throwIfNotFound: true);
+        m_GamePlay_GrabDrop = m_GamePlay.FindAction("GrabDrop", throwIfNotFound: true);
         // MenuControls
         m_MenuControls = asset.FindActionMap("MenuControls", throwIfNotFound: true);
         m_MenuControls_Newaction = m_MenuControls.FindAction("New action", throwIfNotFound: true);
@@ -258,8 +279,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GamePlay_Claw;
     private readonly InputAction m_GamePlay_Break;
     private readonly InputAction m_GamePlay_Dig;
-    private readonly InputAction m_GamePlay_PickUpPutDown;
-    private readonly InputAction m_GamePlay_Switch;
+    private readonly InputAction m_GamePlay_SwitchToRight;
+    private readonly InputAction m_GamePlay_SwitchToLeft;
+    private readonly InputAction m_GamePlay_GrabDrop;
     public struct GamePlayActions
     {
         private @PlayerControls m_Wrapper;
@@ -268,8 +290,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Claw => m_Wrapper.m_GamePlay_Claw;
         public InputAction @Break => m_Wrapper.m_GamePlay_Break;
         public InputAction @Dig => m_Wrapper.m_GamePlay_Dig;
-        public InputAction @PickUpPutDown => m_Wrapper.m_GamePlay_PickUpPutDown;
-        public InputAction @Switch => m_Wrapper.m_GamePlay_Switch;
+        public InputAction @SwitchToRight => m_Wrapper.m_GamePlay_SwitchToRight;
+        public InputAction @SwitchToLeft => m_Wrapper.m_GamePlay_SwitchToLeft;
+        public InputAction @GrabDrop => m_Wrapper.m_GamePlay_GrabDrop;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -291,12 +314,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Dig.started += instance.OnDig;
             @Dig.performed += instance.OnDig;
             @Dig.canceled += instance.OnDig;
-            @PickUpPutDown.started += instance.OnPickUpPutDown;
-            @PickUpPutDown.performed += instance.OnPickUpPutDown;
-            @PickUpPutDown.canceled += instance.OnPickUpPutDown;
-            @Switch.started += instance.OnSwitch;
-            @Switch.performed += instance.OnSwitch;
-            @Switch.canceled += instance.OnSwitch;
+            @SwitchToRight.started += instance.OnSwitchToRight;
+            @SwitchToRight.performed += instance.OnSwitchToRight;
+            @SwitchToRight.canceled += instance.OnSwitchToRight;
+            @SwitchToLeft.started += instance.OnSwitchToLeft;
+            @SwitchToLeft.performed += instance.OnSwitchToLeft;
+            @SwitchToLeft.canceled += instance.OnSwitchToLeft;
+            @GrabDrop.started += instance.OnGrabDrop;
+            @GrabDrop.performed += instance.OnGrabDrop;
+            @GrabDrop.canceled += instance.OnGrabDrop;
         }
 
         private void UnregisterCallbacks(IGamePlayActions instance)
@@ -313,12 +339,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Dig.started -= instance.OnDig;
             @Dig.performed -= instance.OnDig;
             @Dig.canceled -= instance.OnDig;
-            @PickUpPutDown.started -= instance.OnPickUpPutDown;
-            @PickUpPutDown.performed -= instance.OnPickUpPutDown;
-            @PickUpPutDown.canceled -= instance.OnPickUpPutDown;
-            @Switch.started -= instance.OnSwitch;
-            @Switch.performed -= instance.OnSwitch;
-            @Switch.canceled -= instance.OnSwitch;
+            @SwitchToRight.started -= instance.OnSwitchToRight;
+            @SwitchToRight.performed -= instance.OnSwitchToRight;
+            @SwitchToRight.canceled -= instance.OnSwitchToRight;
+            @SwitchToLeft.started -= instance.OnSwitchToLeft;
+            @SwitchToLeft.performed -= instance.OnSwitchToLeft;
+            @SwitchToLeft.canceled -= instance.OnSwitchToLeft;
+            @GrabDrop.started -= instance.OnGrabDrop;
+            @GrabDrop.performed -= instance.OnGrabDrop;
+            @GrabDrop.canceled -= instance.OnGrabDrop;
         }
 
         public void RemoveCallbacks(IGamePlayActions instance)
@@ -388,8 +417,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnClaw(InputAction.CallbackContext context);
         void OnBreak(InputAction.CallbackContext context);
         void OnDig(InputAction.CallbackContext context);
-        void OnPickUpPutDown(InputAction.CallbackContext context);
-        void OnSwitch(InputAction.CallbackContext context);
+        void OnSwitchToRight(InputAction.CallbackContext context);
+        void OnSwitchToLeft(InputAction.CallbackContext context);
+        void OnGrabDrop(InputAction.CallbackContext context);
     }
     public interface IMenuControlsActions
     {
