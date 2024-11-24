@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     public float baseMoveSpeed = 7f;
     public float currMoveSpeed;
     public float rotateSpeed = 0.8f;
-    public float accelRate = 1.5f;
+    public float accelRate;
     private Vector3 crabVel = Vector3.zero;
 
     private float currTerrHeight;
@@ -154,26 +154,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        //walking controls
-
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
-        //Vector2 leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
         leftStick = controls.GamePlay.Walk.ReadValue<Vector2>();
 
         //make sure to keep control scheme corresponding to camera's rotation
+        //https://discussions.unity.com/t/what-is-vector3-scale-use-for-in-this-code/632022
+        //https://www.youtube.com/watch?v=reWtxGTyN78&ab_channel=TheGameDevCave
         Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
 
+        //input from controls move the crab in xz plane
+        Vector3 moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)) * currMoveSpeed;
+
         //ensure crab does not move when not reading inputs (including rotation)
         //but allow for some deceleration
-        if (leftStick.magnitude > 0.1f || crabVel.magnitude > 3.0f)
+        if (leftStick.magnitude > 0.1f)
         {
-
-            //input from controls move the crab in xz plane
-            Vector3 moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)).normalized;
-
 
             //rotate the crab with player motion to face the z-direction
             Quaternion targetRotate = Quaternion.LookRotation(moveDirection);
@@ -195,6 +193,7 @@ public class PlayerController : MonoBehaviour
                 }
                 
                 targetRotate = Quaternion.LookRotation(-moveDirection);
+
             } else
             {
                 dirChange = false;
@@ -203,40 +202,35 @@ public class PlayerController : MonoBehaviour
             //for large rotations, rotate first, then move
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
             {
-                //move the crab
-                crabVel = Vector3.Lerp(crabVel, moveDirection * currMoveSpeed, accelRate * Time.deltaTime);
-                crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
+                //calculate the velocity
+                if (moveDirection != Vector3.zero)
+                {
+                    crabVel = Vector3.Lerp(crabVel, moveDirection, accelRate * Time.deltaTime);
+                } 
+
             }
 
             //rotate the crab but not on deceleration
             if (leftStick.magnitude > 0.1f)
             {
                 crab.transform.rotation = Quaternion.Slerp(crab.transform.rotation, targetRotate, rotateSpeed * Time.deltaTime);
+
             }
 
             // Figuring out the crab's Y position, relative to the terrain
             currTerrHeight = terrainScript.getTerrainHeight(crab.gameObject.transform.position);
 
-            if (currTerrHeight != 0.005f)
-            {
 
-            }
-            else
-            {
-
-            }
-
+            //--------------------CAMERA-----------------------------
             //main camera follows behind player when walking
             Vector3 rotatedOffset = crab.transform.rotation * new Vector3(-camOffset.x, camOffset.y, -camOffset.z); //adjust offset direction based on crabs rotation
-             Vector3 targetPos = crab.transform.position + rotatedOffset;
-            //Vector3 targetPos = crab.transform.position + camOffset;
+            Vector3 targetPos = crab.transform.position + rotatedOffset;
 
             Vector3 smoothPos = Vector3.Lerp(Camera.main.transform.position, targetPos, crabSmooth);
             Camera.main.transform.position = smoothPos;
 
             float smoothRot = Mathf.LerpAngle(Camera.main.transform.eulerAngles.y, crab.transform.eulerAngles.y + 90, camSmooth);
             Camera.main.transform.rotation = Quaternion.Euler(20, smoothRot, 0);
-
 
 
             // Playing the particle system
@@ -253,8 +247,14 @@ public class PlayerController : MonoBehaviour
             {
                 movePartSystem.Stop();
             }
-            
+
+            //decelerate
+            crabVel = Vector3.Lerp(crabVel, Vector3.zero, accelRate * Time.deltaTime);
+
         }
+
+        //move the crab
+        crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
