@@ -15894,8 +15894,8 @@ MonoBehaviour:
   crabSmooth: 0.2
   camSmooth: 0.1
   isLeft: 0
-  clawSmooth: 0.5
-  clawAngle: 40
+  clawSmooth: 20
+  clawAngle: 60
   maxClawDistance: 1.5
   shakeAmount: 1
   shakeSpeed: 5

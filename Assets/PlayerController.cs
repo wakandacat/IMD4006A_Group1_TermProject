@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -259,12 +260,11 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
         //claw movement controls
-        //Vector2 rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
         rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
 
         //input from controls move the crab in xz plane -> take into account camera rotation here as well
-        Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)).normalized;
-        Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
+        Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
+        //Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
         // Finding the new claw locator positions
         clawLeftStart = (clawLocator_L.transform.position);
@@ -273,66 +273,56 @@ public class PlayerController : MonoBehaviour
         clawLeft.transform.rotation = clawLocator_L.transform.rotation;
         clawRight.transform.rotation = clawLocator_R.transform.rotation;
 
-        //move the active claw
+        //moving the left claw, right claw just follows body
         if (isLeft && rightStick.magnitude > 0.1f)
         {
-            clawLeft.transform.Translate(clawMove, Space.World);
+            clawLeft.transform.Translate(clawMovement, Space.World);
 
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
 
-            MoveClaw(clawLeft); //clamp into an arc
+            ClampClaw(clawLeft, clawLeftStart); //clamp into an arc
         }
-        else if (!isLeft && rightStick.magnitude > 0.1f)
+        else if (!isLeft && rightStick.magnitude > 0.1f) //moving the right claw, left claw just follows body
         {
-            clawRight.transform.Translate(clawMove, Space.World);
+            clawRight.transform.Translate(clawMovement, Space.World);
 
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth);
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
 
-            MoveClaw(clawRight); //clamp into an arc
+            ClampClaw(clawRight, clawRightStart); //clamp into an arc
 
         }
-        else
+        else //move both claws with the body when no direct input
         {
-            //move with the body when no direct input for claws
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth);
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth);
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
         }
 
         // keep claws close to crab body in an arc
-        void MoveClaw(GameObject claw)
+        void ClampClaw(GameObject claw, Vector3 clawStart)
         {
-            // Get the crab's position
-            Vector3 crabPosition = crab.transform.position;
-            Vector3 crabForward = crab.transform.right; //forward in this case being its actual face
+            
+            Vector3 directionFromStart = claw.transform.localPosition - clawStart;
+            //clamp the claw into a set radius
+            //https://stackoverflow.com/questions/70501814/mathf-clamp-inside-of-a-sphere-radius-unity
+            directionFromStart = Vector3.ClampMagnitude(directionFromStart, maxClawDistance);
 
-            // get distance between the claw and the crab
-            float distanceFromCrab = Vector3.Distance(claw.transform.position, crabPosition);
+            //get the forward direction to calculate the angle from
+            Vector3 forwardDirection = crab.transform.right;
+            float angle = Vector3.SignedAngle(forwardDirection, directionFromStart, Vector3.up);
 
-            // clamp claw within max distance
-            if (distanceFromCrab > maxClawDistance)
-            {
-                // direction from the crab to the claw
-                Vector3 directionFromCrab = (claw.transform.position - crabPosition).normalized;
-
-                // set the claw's position to the maximum allowed distance from crab if it is further
-                //creates a radius around the crab for the claw to move
-                claw.transform.position = crabPosition + directionFromCrab * maxClawDistance;
-            }
-
-            //get the angle of the claw relative to the crab
-            Vector3 directionToClaw = (claw.transform.position - crabPosition).normalized;
-            float angle = Vector3.SignedAngle(crabForward, directionToClaw, Vector3.up);
-
-            //stay within an arc
+            //stay within a subset of the radius
             if (angle > -clawAngle || angle < clawAngle)
             {
-                //clamp again into the arc
+                //remember how to use clamp with some help from https://discussions.unity.com/t/clamping-angle-between-two-values/782349
                 float clampedAngle = Mathf.Clamp(angle, -clawAngle, clawAngle);
-                Quaternion rotation = Quaternion.AngleAxis(clampedAngle, Vector3.up);
+                Quaternion rotation = Quaternion.Euler(0, clampedAngle, 0);
 
-                // set the new position
-                claw.transform.position = crabPosition + rotation * (crabForward * maxClawDistance);
+                directionFromStart = rotation * forwardDirection * directionFromStart.magnitude;
+
             }
+
+            //move the claw
+            claw.transform.localPosition = clawStart + directionFromStart;
 
         }
 
