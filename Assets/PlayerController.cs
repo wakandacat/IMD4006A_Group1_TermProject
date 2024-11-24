@@ -1,3 +1,4 @@
+using Cinemachine;
 using JetBrains.Annotations;
 using System;
 using System.Collections;
@@ -256,6 +257,25 @@ public class PlayerController : MonoBehaviour
 
         //move the crab
         crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
+
+        //--------------------ELLENA SPECIAL TOPIC-----------------------------------
+        //grab the tiltcams
+        GameObject tempCam = GameObject.Find("tiltCam");
+        CinemachineVirtualCamera tiltCam = tempCam.GetComponent<CinemachineVirtualCamera>();
+
+        //grab the tiltcams
+        GameObject tempCam2 = GameObject.Find("tiltCam2");
+        CinemachineVirtualCamera tiltCam2 = tempCam2.GetComponent<CinemachineVirtualCamera>();
+
+        //increase camera FOV when going very fast
+        if (crabVel.magnitude >= baseMoveSpeed - 1)
+        {
+            tiltCam2.Priority = tiltCam.Priority + 1;
+        } 
+        else
+        {
+            tiltCam.Priority = tiltCam2.Priority + 1;
+        }
 
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
