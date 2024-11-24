@@ -42,10 +42,14 @@ public class CrabClaw : MonoBehaviour
                 //Debug.Log("left can pick up is " + gameObject.GetComponentInParent<PlayerController>().canPickupL);
             }
 
-            //indicate the object can be picked up by changing its outline colour
-            var outline = other.gameObject.GetComponent<Outline>();
+            if (other.tag == "item")
+            {
+                //indicate the object can be picked up by changing its outline colour
+                var outline = other.gameObject.GetComponent<Outline>();
 
-            outline.OutlineColor = Color.yellow;
+                outline.OutlineColor = Color.yellow;
+            }
+
         }
     }
     public void OnTriggerExit(Collider other)
@@ -65,9 +69,13 @@ public class CrabClaw : MonoBehaviour
 
         }
 
-        //indicate the object is no longer in range by changing its outline colour back to its original colour
-        var outline = other.gameObject.GetComponent<Outline>();
+        if (other.tag == "item")
+        {
+            //indicate the object is no longer in range by changing its outline colour back to its original colour
+            var outline = other.gameObject.GetComponent<Outline>();
 
-        outline.OutlineColor = other.gameObject.GetComponent<item>().outlineColor;
+            outline.OutlineColor = other.gameObject.GetComponent<item>().outlineColor;
+        }
+
     }
 }
