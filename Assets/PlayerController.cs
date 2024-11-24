@@ -107,8 +107,9 @@ public class PlayerController : MonoBehaviour
 
         //setup callback function to switch active claws
         //+= refers to adding a callback function
-        controls.GamePlay.Switch.performed += OnSwitch;
-        controls.GamePlay.PickUpPutDown.performed += OnPickDropControls;
+        controls.GamePlay.SwitchToLeft.performed += OnSwitchLeft;
+        controls.GamePlay.SwitchToRight.performed += OnSwitchRight;
+        controls.GamePlay.GrabDrop.performed += OnPickDropControls;
 
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
@@ -361,6 +362,7 @@ public class PlayerController : MonoBehaviour
                 if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
+                    reduceWeight(toBreak);
 
                     //spawn the pearl in the claw
                     heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
@@ -395,10 +397,11 @@ public class PlayerController : MonoBehaviour
                 if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
+                    reduceWeight(toBreak);
 
                     //spawn the pearl in the claw
                     heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
-                    heldRight.transform.parent = clawRight.transform;
+                    heldRight.transform.parent = clawLeft.transform;
 
                     addWeight(heldRight);
 
@@ -460,42 +463,41 @@ public class PlayerController : MonoBehaviour
             //AudioManager.instance.digSource.Play();
         }
 
-        //---------------------------------------PICK UP AND DROP-------------------------------------
 
-        //grab controls ---------> either claw
-        float rightBumper = controls.GamePlay.PickUpPutDown.ReadValue<float>();
-        //Debug.Log(rightBumper);
-        //make the crab grab here
-     
     }
 
-    //toggle the active claw
-    public void OnSwitch(InputAction.CallbackContext context)
+
+       
+//toggle the active claw
+    public void OnSwitchLeft(InputAction.CallbackContext context)
     {
-        isLeft = !isLeft;
-        //Debug.Log(isLeft);
 
-        AudioManager.instance.sfxPlayer(2);
-
-        if (isLeft && clawLocator_R.transform.position.y > -0.5)
+        if (!isLeft && clawLocator_R.transform.position.y > -0.5)
         {
             clawLocator_R.transform.Translate(clawDrop);
             clawLocator_L.transform.Translate(clawRaise);
+
+            AudioManager.instance.sfxPlayer(2);
         }
-        else if (!isLeft && clawLocator_L.transform.position.y > -0.5)
+
+        isLeft = true;
+
+    }
+
+    public void OnSwitchRight(InputAction.CallbackContext context)
+    {
+
+        if (isLeft && clawLocator_L.transform.position.y > -0.5)
         {
             clawLocator_R.transform.Translate(clawRaise);
             clawLocator_L.transform.Translate(clawDrop);
+
+
+            AudioManager.instance.sfxPlayer(2);
         }
 
-        //make active claw bounce
-        //float yOffset = UnityEngine.Random.Range(-0.1f, 0.9f); //not sure if works
-        //Vector3 newPos = clawLeftStart + new Vector3(clawLeftStart.x, yOffset, clawLeftStart.z);
-        //clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
+        isLeft = false;
 
-        ////move the claw
-        //Vector3 newPos = clawRightStart + new Vector3(clawRightStart.x, yOffset, clawRightStart.z);
-        //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
     }
 
     public void OnPickDropControls(InputAction.CallbackContext context)
@@ -593,6 +595,8 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemR()
     {
+
+        reduceWeight(heldRight);
         //Debug.Log("right item" + heldRight);
         homeScript.decorateItem(heldRight);
         heldRight.transform.parent = null;
@@ -600,7 +604,6 @@ public class PlayerController : MonoBehaviour
         heldRight.GetComponent<Collider>().enabled = true;
         Rpickedup = false;
         heldRight = null;
-        reduceWeight();
         //play drop sound
         AudioManager.instance.sfxPlayer(1);
 
@@ -608,15 +611,15 @@ public class PlayerController : MonoBehaviour
     }
 
     public void dropItemL()
-    {
-       // Debug.Log("left item" + heldLeft);
+    {        
+        reduceWeight(heldLeft);
+        // Debug.Log("left item" + heldLeft);
         homeScript.decorateItem(heldLeft);
         heldLeft.transform.parent = null;
 
         heldLeft.GetComponent<Collider>().enabled = true;
         Lpickedup = false;
         heldLeft = null;
-        reduceWeight();
         //play drop sound
         AudioManager.instance.sfxPlayer(1);
 
@@ -637,10 +640,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void reduceWeight()
+    public void reduceWeight(GameObject droppedItem)
     {
 
-      currMoveSpeed = baseMoveSpeed;
+      currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
         
     }
 
