@@ -15932,13 +15932,13 @@ MonoBehaviour:
   baseMoveSpeed: 7
   currMoveSpeed: 0
   rotateSpeed: 0.8
-  accelRate: 1.1
+  accelRate: 5
   crabY: 0
   crabSmooth: 0.2
   camSmooth: 0.1
   isLeft: 0
-  clawSmooth: 0.5
-  clawAngle: 40
+  clawSmooth: 20
+  clawAngle: 60
   maxClawDistance: 1.5
   shakeAmount: 1
   shakeSpeed: 5
