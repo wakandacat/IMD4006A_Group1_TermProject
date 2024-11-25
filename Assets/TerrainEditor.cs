@@ -42,7 +42,7 @@ public class TerrainEditor : MonoBehaviour
             {
                 // initialHeights[i, j] = 0.005f;
                 perlinNoise = Mathf.PerlinNoise(i * perlinStep, j * perlinStep);
-                initialHeights[i, j] = (perlinNoise * 0.00075f) + 0.0045f;
+                initialHeights[i, j] = (perlinNoise * 0.00075f) + 0.0025f;
                 savedHeights[i, j] = initialHeights[i, j];
             }
         }
@@ -124,7 +124,7 @@ public class TerrainEditor : MonoBehaviour
                     initialHeights[crabY + 1, crabX + 1] -= (triggerInput + 0.000004f);
                     initialHeights[crabY - 1, crabX + 1] -= (triggerInput + 0.000004f);
 
-                    if (initialHeights[crabY, crabX] < 0.0045f)
+                    if (initialHeights[crabY, crabX] < 0.0025f)
                     {
                         initialHeights[crabY + 2, crabX] -= (triggerInput + 0.000004f);
                         initialHeights[crabY - 2, crabX] -= (triggerInput + 0.000004f);
@@ -140,7 +140,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 2] -= (triggerInput + 0.000004f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.004f)
+                    if (initialHeights[crabY, crabX] < 0.002f)
                     {
                         initialHeights[crabY + 2, crabX + 2] -= (triggerInput + 0.000004f);
                         initialHeights[crabY - 2, crabX + 2] -= (triggerInput + 0.000004f);
@@ -160,7 +160,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 3] -= (triggerInput + 0.000004f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.0035f)
+                    if (initialHeights[crabY, crabX] < 0.0015f)
                     {
                         initialHeights[crabY + 3, crabX + 2] -= (triggerInput + 0.000004f);
                         initialHeights[crabY + 2, crabX + 3] -= (triggerInput + 0.000004f);
@@ -185,7 +185,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 4] -= (triggerInput + 0.000004f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.003f)
+                    if (initialHeights[crabY, crabX] < 0.001f)
                     {
                         initialHeights[crabY + 3, crabX + 3] -= (triggerInput + 0.000004f);
                         initialHeights[crabY - 3, crabX + 3] -= (triggerInput + 0.000004f);
@@ -235,7 +235,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 2, crabX - 5] -= (triggerInput + 0.000004f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.0025f)
+                    if (initialHeights[crabY, crabX] < 0.0005f)
                     {
                         initialHeights[crabY + 6, crabX] -= (triggerInput + 0.000004f);
                         initialHeights[crabY - 6, crabX] -= (triggerInput + 0.000004f);
@@ -285,7 +285,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 5, crabX - 3] -= (triggerInput + 0.000004f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.0020f)
+                    if (initialHeights[crabY, crabX] < 0.0001f)
                     {
 
                     }
