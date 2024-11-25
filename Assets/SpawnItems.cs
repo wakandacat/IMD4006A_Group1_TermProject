@@ -10,8 +10,15 @@ using UnityEngine.Windows;
 [System.Serializable]
 public class SpawnItems : MonoBehaviour
 {
+    // 88, Y, 47. 70, Y, 11
     public item[] prefabList;     //array of gameObjects of class 'item', these should be prefabs
-    Vector3[] spawnPoints = new[] { new Vector3(40f, 0f, 20f), new Vector3(35f, 0f, 55f), new Vector3(33f, 0f, 30f), new Vector3(10f, 0f, 25f), new Vector3(15f, 0f, 35f), new Vector3(43f, 0f, 37f), new Vector3(41f, 0f, 58f), new Vector3(21f, 0f, 53f), new Vector3(37f, 0f, 65f), new Vector3(26f, 0f, 11f) };
+    Vector3[] spawnPoints = new[] { new Vector3(40f, 0f, 20f), new Vector3(35f, 0f, 55f),
+                                    new Vector3(33f, 0f, 30f), new Vector3(10f, 0f, 25f),
+                                    new Vector3(15f, 0f, 35f), new Vector3(43f, 0f, 37f),
+                                    new Vector3(41f, 0f, 58f), new Vector3(21f, 0f, 53f),
+                                    new Vector3(37f, 0f, 65f), new Vector3(26f, 0f, 11f),
+                                    new Vector3(83f, 0f, 32f), new Vector3(74f, 0f, 43f),
+                                    new Vector3(72f, 0f, 16f), new Vector3(78f, 0f, 24f)};
 
     private TerrainEditor terrainScript;
 
@@ -156,6 +163,10 @@ public class SpawnItems : MonoBehaviour
                     //Debug.Log("area2");
                     itemInArea = true;
                     //choose between the possible prefabs for this area
+                    tempNum = getItem(currArea);
+                    break;
+                case 3:
+                    itemInArea = true;
                     tempNum = getItem(currArea);
                     break;
                 default:

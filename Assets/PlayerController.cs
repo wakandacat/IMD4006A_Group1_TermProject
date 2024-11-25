@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     //particle systems and particle control variables
     public ParticleSystem movePartSystem;
     public ParticleSystem digPartSystem;
+    public ParticleSystem footstepPartSystem;
     public float digAnimTimer = 20.0f;
 
     //input action asset that reads controller inputs
@@ -135,6 +136,7 @@ public class PlayerController : MonoBehaviour
 
         // Stopping the particle system by default
         movePartSystem.Stop();
+        footstepPartSystem.Stop();
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
@@ -239,6 +241,7 @@ public class PlayerController : MonoBehaviour
             if (movePartSystem.isPlaying == false)
             {
                 movePartSystem.Play();
+                footstepPartSystem.Play();
             }
         }
         else
@@ -248,6 +251,7 @@ public class PlayerController : MonoBehaviour
             if (movePartSystem.isPlaying == true)
             {
                 movePartSystem.Stop();
+                footstepPartSystem.Stop();
             }
 
             //decelerate

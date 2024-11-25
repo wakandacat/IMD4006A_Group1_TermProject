@@ -107,7 +107,7 @@ MonoBehaviour:
   itemName: Turritella
   itemWeight: 2
   itemPtValue: 2
-  spawnAreas: 0000000001000000
+  spawnAreas: 000000000100000002000000
   specialItem: 0
   breakable: 0
   outlineColor:
