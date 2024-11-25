@@ -112,7 +112,7 @@ MonoBehaviour:
   itemName: Clam
   itemWeight: 4
   itemPtValue: 4
-  spawnAreas: 02000000
+  spawnAreas: 03000000
   specialItem: 0
   breakable: 1
   outlineColor:
