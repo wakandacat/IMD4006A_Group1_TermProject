@@ -14561,7 +14561,7 @@ MonoBehaviour:
     m_Tip: {fileID: 8579426935933031594}
     m_Target: {fileID: 517687526}
     m_Hint: {fileID: 803663657}
-    m_TargetPositionWeight: 1
+    m_TargetPositionWeight: 0.5
     m_TargetRotationWeight: 1
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
@@ -14619,7 +14619,7 @@ MonoBehaviour:
     m_Tip: {fileID: 5819660904030730894}
     m_Target: {fileID: 1905674660}
     m_Hint: {fileID: 482318292}
-    m_TargetPositionWeight: 1
+    m_TargetPositionWeight: 0.5
     m_TargetRotationWeight: 1
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
@@ -14677,7 +14677,7 @@ MonoBehaviour:
     m_Tip: {fileID: 5220032116799612520}
     m_Target: {fileID: 2021249997}
     m_Hint: {fileID: 370108799}
-    m_TargetPositionWeight: 1
+    m_TargetPositionWeight: 0.5
     m_TargetRotationWeight: 1
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
@@ -14917,7 +14917,7 @@ MonoBehaviour:
     m_Tip: {fileID: 7146740649232288072}
     m_Target: {fileID: 324617781}
     m_Hint: {fileID: 1941460640}
-    m_TargetPositionWeight: 1
+    m_TargetPositionWeight: 0.5
     m_TargetRotationWeight: 1
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
