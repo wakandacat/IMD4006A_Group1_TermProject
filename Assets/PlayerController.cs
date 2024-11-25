@@ -1,3 +1,4 @@
+using Cinemachine;
 using JetBrains.Annotations;
 using System;
 using System.Collections;
@@ -261,6 +262,50 @@ public class PlayerController : MonoBehaviour
         //move the crab
         crab.transform.Translate(crabVel * Time.deltaTime, Space.World);
 
+        //--------------------ELLENA SPECIAL TOPIC-----------------------------------
+        //grab the tiltcam
+        GameObject tempCam = GameObject.Find("tiltCam");
+        CinemachineVirtualCamera tiltCam = tempCam.GetComponent<CinemachineVirtualCamera>();
+
+        //grab the larger fov cam
+        GameObject tempCam2 = GameObject.Find("tiltCam2");
+        CinemachineVirtualCamera tiltCam2 = tempCam2.GetComponent<CinemachineVirtualCamera>();
+
+        //grab the dig cam
+        GameObject tempCam3 = GameObject.Find("digCam");
+        CinemachineVirtualCamera digCam = tempCam3.GetComponent<CinemachineVirtualCamera>();
+
+        //increase camera FOV when going very fast
+        if (crabVel.magnitude >= baseMoveSpeed - 1)
+        {
+            tiltCam2.Priority = tiltCam.Priority + 1;
+        } 
+        //if crab is in a hole then change to digcam
+        else if (crab.transform.position.y <= 2.5f)
+        {
+            if (tiltCam.Priority > tiltCam2.Priority)
+            {
+                digCam.Priority = tiltCam.Priority + 1;
+            }
+            else
+            {
+                digCam.Priority = tiltCam2.Priority + 1;
+            }
+
+        }
+        else
+        {
+            if (tiltCam2.Priority > digCam.Priority)
+            {
+                tiltCam.Priority = tiltCam2.Priority + 1;
+            }
+            else
+            {
+                tiltCam.Priority = digCam.Priority + 1;
+            }
+
+        }
+
         //---------------------------------------CLAWMOVEMENT-------------------------------------
 
         //claw movement controls
@@ -395,7 +440,7 @@ public class PlayerController : MonoBehaviour
 
                     //spawn the pearl in the claw
                     heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
-                    heldRight.transform.parent = clawLeft.transform;
+                    heldRight.transform.parent = clawRight.transform;
 
                     addWeight(heldRight);
 
