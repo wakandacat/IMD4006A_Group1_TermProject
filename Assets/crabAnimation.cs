@@ -47,7 +47,7 @@ public class crabAnimation : MonoBehaviour
                 {
                     Vector3 newTarg = legIKtargets[i].transform.localPosition;
                     newTarg.x = legIKtargets[i].transform.localPosition.x + stepDistance;
-                    legIKtargets[i].transform.Translate(newTarg * Time.deltaTime, Space.Self);
+                    legIKtargets[i].transform.Translate(newTarg, Space.Self);
                     //Debug.Log("original pos: " + legIKtargets[i].transform.localPosition.x + " new pos: " + newTarg);
                 }
                 //reset timer
