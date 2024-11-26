@@ -20,7 +20,7 @@ public class CrabClaw : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "item")
+        if (other.gameObject.tag == "item" || other.gameObject.tag == "specialitem")
         {
             //Debug.Log("The gameObject is: " + gameObject.name);
             if (gameObject.name == "new_R_claw_locator")
@@ -42,7 +42,7 @@ public class CrabClaw : MonoBehaviour
                 //Debug.Log("left can pick up is " + gameObject.GetComponentInParent<PlayerController>().canPickupL);
             }
 
-            if (other.tag == "item")
+            if (other.tag == "item" || other.gameObject.tag == "specialitem")
             {
                 //indicate the object can be picked up by changing its outline colour
                 var outline = other.gameObject.GetComponent<Outline>();
@@ -69,7 +69,7 @@ public class CrabClaw : MonoBehaviour
 
         }
 
-        if (other.tag == "item")
+        if (other.tag == "item" || other.gameObject.tag == "specialitem")
         {
             //indicate the object is no longer in range by changing its outline colour back to its original colour
             var outline = other.gameObject.GetComponent<Outline>();

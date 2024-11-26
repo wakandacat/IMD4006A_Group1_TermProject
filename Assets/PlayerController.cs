@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
             tiltCam2.Priority = tiltCam.Priority + 1;
         } 
         //if crab is in a hole then change to digcam
-        else if (crab.transform.position.y <= 2.5f)
+        else if (crab.transform.position.y <= 2f)
         {
             if (tiltCam.Priority > tiltCam2.Priority)
             {
