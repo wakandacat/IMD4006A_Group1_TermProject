@@ -9,7 +9,7 @@ public class CrabClaw : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pControllerScript = GameObject.Find("Crab").GetComponent<PlayerController>();
+        pControllerScript = GameObject.Find("CrabParentObj").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class CrabClaw : MonoBehaviour
         if (other.gameObject.tag == "item")
         {
             //Debug.Log("The gameObject is: " + gameObject.name);
-            if (gameObject.name == "claw_R")
+            if (gameObject.name == "new_R_claw_locator")
             {
                 //gameObject.GetComponentInParent<PlayerController>().rightItem = other.gameObject;
                 //gameObject.GetComponentInParent<PlayerController>().canPickupR = true;
@@ -55,7 +55,7 @@ public class CrabClaw : MonoBehaviour
     public void OnTriggerExit(Collider other)
     {
         //Debug.Log("The gameObject is: " + gameObject.name);
-        if (gameObject.name == "claw_R")
+        if (gameObject.name == "new_R_claw_locator")
         {
             //gameObject.GetComponentInParent<PlayerController>().rightItem = null;
             //gameObject.GetComponentInParent<PlayerController>().canPickupR = false;

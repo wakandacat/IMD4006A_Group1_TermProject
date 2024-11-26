@@ -17,9 +17,11 @@ public class PlayerController : MonoBehaviour
     public GameObject camera;
     public GameObject clawRight;
     public GameObject clawLeft;
+    public GameObject clawR_grab;
+    public GameObject clawL_grab;
 
-    public GameObject clawLocator_R;
-    public GameObject clawLocator_L;
+    //public GameObject clawLocator_R;
+    //public GameObject clawLocator_L;
 
     //digging related vars
     private TerrainEditor terrainScript;
@@ -75,7 +77,7 @@ public class PlayerController : MonoBehaviour
     private float currHoldTime = 0f; 
 
     //for decorate
-    public HomeScript homeScript;
+    private HomeScript homeScript;
 
     //Booleans
     bool ifpickedUp;
@@ -117,20 +119,22 @@ public class PlayerController : MonoBehaviour
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
 
-        if (isLeft)
+        if (isLeft) //COME BACK TO THIS
         {
-            clawLocator_R.transform.Translate(clawDrop);
+            //clawRight.transform.Translate(clawDrop);
         }
         else
         {
-            clawLocator_L.transform.Translate(clawDrop);
+            //clawLeft.transform.Translate(clawDrop);
         }
 
-        //grab starting positions
-        clawLeftStart = clawLocator_L.transform.localPosition;
-        clawRightStart = clawLocator_R.transform.localPosition;
-        //clawLeftStart = clawLeft.transform.localPosition;
-        //clawRightStart = clawRight.transform.localPosition;
+        //claw starting positions
+        clawLeftStart = clawLeft.transform.localPosition;
+        clawRightStart = clawRight.transform.localPosition;
+
+        //locators/grab start position -> these are the gameobjects outside of the crab gameobject
+        clawR_grab.transform.position = clawRight.transform.position;
+        clawL_grab.transform.position = clawLeft.transform.position;
 
         currMoveSpeed = baseMoveSpeed;
 
@@ -316,11 +320,18 @@ public class PlayerController : MonoBehaviour
         //Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
 
         // Finding the new claw locator positions
-        clawLeftStart = (clawLocator_L.transform.position);
-        clawRightStart = (clawLocator_R.transform.position);
+        //clawLeftStart = (clawLeft.transform.position);
+        //clawRightStart = (clawRight.transform.position);
 
-        clawLeft.transform.rotation = clawLocator_L.transform.rotation;
-        clawRight.transform.rotation = clawLocator_R.transform.rotation;
+        //clawLeft.transform.rotation = clawLocator_L.transform.rotation;
+        //clawRight.transform.rotation = clawLocator_R.transform.rotation;
+
+        //update external gameobjects to match the internal claw positions
+        clawR_grab.transform.position = clawRight.transform.position;
+        clawL_grab.transform.position = clawLeft.transform.position;
+
+        clawR_grab.transform.rotation = clawRight.transform.rotation;
+        clawL_grab.transform.rotation = clawLeft.transform.rotation;
 
         //moving the left claw, right claw just follows body
         if (isLeft && rightStick.magnitude > 0.1f)
@@ -511,10 +522,10 @@ public class PlayerController : MonoBehaviour
     public void OnSwitchLeft(InputAction.CallbackContext context)
     {
 
-        if (!isLeft && clawLocator_R.transform.position.y > -0.5)
+        if (!isLeft && clawRight.transform.position.y > -0.5)
         {
-            clawLocator_R.transform.Translate(clawDrop);
-            clawLocator_L.transform.Translate(clawRaise);
+            //clawRight.transform.Translate(clawDrop);
+            //clawLeft.transform.Translate(clawRaise);
 
             AudioManager.instance.sfxPlayer(2);
         }
@@ -526,10 +537,10 @@ public class PlayerController : MonoBehaviour
     public void OnSwitchRight(InputAction.CallbackContext context)
     {
 
-        if (isLeft && clawLocator_L.transform.position.y > -0.5)
+        if (isLeft && clawLeft.transform.position.y > -0.5)
         {
-            clawLocator_R.transform.Translate(clawRaise);
-            clawLocator_L.transform.Translate(clawDrop);
+            //clawRight.transform.Translate(clawRaise);
+            //clawLeft.transform.Translate(clawDrop);
 
 
             AudioManager.instance.sfxPlayer(2);
@@ -544,16 +555,19 @@ public class PlayerController : MonoBehaviour
        // Debug.Log("this is pick up");
         if (!isLeft)
         {
+            Debug.Log("inside the R3 first if");
             if (ifpickedUpR == false)
             {
-                ifpickedUpR = pickUpItemRight(clawRight);
+                ifpickedUpR = pickUpItemRight(clawR_grab);
+                Debug.Log("inside ifpickedUpR == false");
 
             }
             else
             {
                 dropItemR();
                 ifpickedUpR = false;
-               
+                Debug.Log("inside first else");
+
             }
 
         }
@@ -561,7 +575,7 @@ public class PlayerController : MonoBehaviour
         {
             if (ifpickedUpL == false)
             {
-                ifpickedUpL = pickUpItemLeft(clawLeft);
+                ifpickedUpL = pickUpItemLeft(clawL_grab);
 
             }
             else
@@ -585,15 +599,15 @@ public class PlayerController : MonoBehaviour
         canPickupL = canPickup;
     }
 
-    public bool pickUpItemRight(GameObject clawRight)
+    public bool pickUpItemRight(GameObject clawR_grab)
     {
         if (Rpickedup == false && canPickupR == true)
         {
            // Debug.Log("you are here");
             rightItem.GetComponent<Collider>().enabled = false;
-            Vector3 itemRHoldPos = new Vector3(clawRight.transform.position.x, clawRight.transform.position.y + 0.1f, clawRight.transform.position.z - 0.2f);
+            Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
             rightItem.transform.position = itemRHoldPos;
-            rightItem.transform.parent = clawRight.transform;
+            rightItem.transform.parent = clawR_grab.transform;
 
             heldRight = rightItem;
             addWeight(heldRight);
@@ -609,16 +623,16 @@ public class PlayerController : MonoBehaviour
         return Rpickedup;
     }
 
-    public bool pickUpItemLeft(GameObject clawLeft)
+    public bool pickUpItemLeft(GameObject clawL_grab)
     {
         if (Lpickedup == false && canPickupL == true)
         {
            // Debug.Log("you are here");
             leftItem.GetComponent<Collider>().enabled = false;
-            Vector3 itemLHoldPos = new Vector3(clawLeft.transform.position.x, clawLeft.transform.position.y + 0.1f, clawLeft.transform.position.z - 0.2f);
+            Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
-            leftItem.transform.parent = clawLeft.transform;
+            leftItem.transform.parent = clawL_grab.transform;
 
             heldLeft = leftItem;
             addWeight(heldLeft);
