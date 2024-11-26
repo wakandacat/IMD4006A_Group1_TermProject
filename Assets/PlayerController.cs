@@ -360,14 +360,16 @@ public class PlayerController : MonoBehaviour
         // keep claws close to crab body in an arc
         void ClampClaw(GameObject claw, Vector3 clawStart)
         {
-            
+
             Vector3 directionFromStart = claw.transform.localPosition - clawStart;
+
             //clamp the claw into a set radius
             //https://stackoverflow.com/questions/70501814/mathf-clamp-inside-of-a-sphere-radius-unity
             directionFromStart = Vector3.ClampMagnitude(directionFromStart, maxClawDistance);
 
             //get the forward direction to calculate the angle from
-            Vector3 forwardDirection = crab.transform.right;
+            // Vector3 forwardDirection = -crab.transform.forward;
+            Vector3 forwardDirection = claw.transform.right;
             float angle = Vector3.SignedAngle(forwardDirection, directionFromStart, Vector3.up);
 
             //stay within a subset of the radius
