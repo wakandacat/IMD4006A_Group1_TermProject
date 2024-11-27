@@ -1291,7 +1291,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392926534}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268346, y: -0.000000039170896, z: 0.00000001622512, w: 0.92387956}
+  m_LocalRotation: {x: 0.38268346, y: -0.00000007096414, z: 0.00000002939431, w: 0.92387956}
   m_LocalPosition: {x: 7.0000005, y: 7, z: 61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22122,6 +22122,7 @@ MonoBehaviour:
   currMoveSpeed: 0
   rotateSpeed: 0.8
   accelRate: 5
+  moveDirection: {x: 0, y: 0, z: 0}
   crabY: 0
   crabSmooth: 0.2
   camSmooth: 0.1
@@ -35279,6 +35280,7 @@ GameObject:
   - component: {fileID: 810310404708559895}
   - component: {fileID: 403729991582135787}
   - component: {fileID: 8405254947029387180}
+  - component: {fileID: 8405254947029387181}
   m_Layer: 0
   m_Name: CrabParentObj
   m_TagString: Untagged
@@ -35509,6 +35511,7 @@ MonoBehaviour:
   currMoveSpeed: 0
   rotateSpeed: 0.8
   accelRate: 5
+  moveDirection: {x: 0, y: 0, z: 0}
   crabY: 0
   crabSmooth: 0.2
   camSmooth: 0.1
@@ -35554,6 +35557,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8405254947029387181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7306607389023037453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8859487e3f543e4a876f63c3ffd85e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMoving: 0
+  isDigging: 0
 --- !u!1 &8453246572361818974
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     public float rotateSpeed = 0.8f;
     public float accelRate;
     private Vector3 crabVel = Vector3.zero;
+    public Vector3 moveDirection;
 
     private float currTerrHeight;
     public float crabY;
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
     public float clawSmooth;
     public float clawAngle;
     public float maxClawDistance;
-    private bool dirChange = false;
+    public bool dirChange = false;
 
     private Vector3 clawDrop = new Vector3(0.0f, -0.1f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.1f, 0.0f);
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
         Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
 
         //input from controls move the crab in xz plane
-        Vector3 moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)) * currMoveSpeed;
+        moveDirection = ((camForward * leftStick.y) + (camRight * leftStick.x)) * currMoveSpeed;
 
         //ensure crab does not move when not reading inputs (including rotation)
         //but allow for some deceleration
@@ -183,9 +184,10 @@ public class PlayerController : MonoBehaviour
 
             //rotate the crab with player motion to face the z-direction
             Quaternion targetRotate = Quaternion.LookRotation(moveDirection);
-
+            //Debug.Log("move direction value: " + moveDirection);
             //get forward direction of crab (positive z-direction)
             Vector3 currentForward = transform.forward;
+            //Debug.Log("forward value: " + currentForward);
 
             //get angle between forward direction and target direction
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
@@ -206,7 +208,7 @@ public class PlayerController : MonoBehaviour
             {
                 dirChange = false;
             }
-
+            //Debug.Log(dirChange);
             //for large rotations, rotate first, then move
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
             {
