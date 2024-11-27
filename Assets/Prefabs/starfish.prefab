@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: starfish
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 17aa372ceb51c1141a15538413bbcece,
+        type: 3}
+      propertyPath: m_TagString
+      value: item
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -105,14 +110,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 8173959341749892883}
   itemName: Starfish
-  itemWeight: 0
-  itemPtValue: 0
-  spawnAreas: 
+  itemWeight: 2
+  itemPtValue: 3
+  spawnAreas: 0200000003000000
   specialItem: 0
   breakable: 0
   outlineColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4292796438
 --- !u!114 &1256506819025339096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,8 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineMode: 1
+  outlineColor: {r: 0.08627451, g: 0.8784314, b: 0.87058824, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
@@ -146,7 +151,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

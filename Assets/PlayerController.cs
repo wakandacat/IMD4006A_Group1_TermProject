@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem movePartSystem;
     public ParticleSystem digPartSystem;
     public ParticleSystem footstepPartSystem;
-    public float digAnimTimer = 20.0f;
+    ParticleSystem.EmissionModule digEmit;
+    ParticleSystem.EmissionModule footstepEmit;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -64,8 +65,8 @@ public class PlayerController : MonoBehaviour
     public float maxClawDistance;
     private bool dirChange = false;
 
-    private Vector3 clawDrop = new Vector3(0.0f, -0.1f, 0.0f);
-    private Vector3 clawRaise = new Vector3(0.0f, 0.1f, 0.0f);
+    private Vector3 clawDrop = new Vector3(0.0f, -0.2f, 0.0f);
+    private Vector3 clawRaise = new Vector3(0.0f, 0.2f, 0.0f);
 
     //break vars
     public float shakeAmount = 1f;
@@ -152,6 +153,8 @@ public class PlayerController : MonoBehaviour
         // Stopping the particle system by default
         movePartSystem.Stop();
         footstepPartSystem.Stop();
+        digEmit = digPartSystem.emission;
+        footstepEmit = footstepPartSystem.emission;
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
@@ -252,10 +255,17 @@ public class PlayerController : MonoBehaviour
 
 
             // Playing the particle system
-            if (movePartSystem.isPlaying == false)
+            if (crab.transform.position.z < 70)
             {
-                movePartSystem.Play();
-                footstepPartSystem.Play();
+                if (movePartSystem.isPlaying == false)
+                {
+                    movePartSystem.Play();
+
+                    // Found advice for changing particle emission here:
+                    // https://discussions.unity.com/t/how-do-you-change-a-particle-systems-emission-rate-over-time-in-script/775702/2
+                    footstepEmit.rateOverTime = 10 - (leftStick.magnitude * 5);
+                    footstepPartSystem.Play();
+                }
             }
         }
         else
@@ -295,7 +305,7 @@ public class PlayerController : MonoBehaviour
             tiltCam2.Priority = tiltCam.Priority + 1;
         } 
         //if crab is in a hole then change to digcam
-        else if (crab.transform.position.y <= 2.5f)
+        else if (crab.transform.position.y <= 2f)
         {
             if (tiltCam.Priority > tiltCam2.Priority)
             {
@@ -370,14 +380,17 @@ public class PlayerController : MonoBehaviour
         // keep claws close to crab body in an arc
         void ClampClaw(GameObject claw, Vector3 clawStart)
         {
-            
+
             Vector3 directionFromStart = claw.transform.localPosition - clawStart;
+
             //clamp the claw into a set radius
             //https://stackoverflow.com/questions/70501814/mathf-clamp-inside-of-a-sphere-radius-unity
             directionFromStart = Vector3.ClampMagnitude(directionFromStart, maxClawDistance);
 
-            //get the forward direction to calculate the angle from
-            Vector3 forwardDirection = crab.transform.right;
+            //get the forward direction to calculate the angle from -> crab local position forward
+            Vector3 forwardDirection = crab.transform.InverseTransformDirection(claw.transform.forward);
+            //Vector3 forwardDirection = claw.transform.InverseTransformDirection(claw.transform.forward);
+
             float angle = Vector3.SignedAngle(forwardDirection, directionFromStart, Vector3.up);
 
             //stay within a subset of the radius
@@ -425,8 +438,9 @@ public class PlayerController : MonoBehaviour
                     reduceWeight(toBreak);
 
                     //spawn the pearl in the claw
-                    heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
-                    heldLeft.transform.parent = clawLeft.transform;
+                    //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
+                    heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_bttmClaw").transform.position, Quaternion.identity);
+                    heldLeft.transform.parent = GameObject.Find("jnt_L_bttmClaw").transform;
 
                     addWeight(heldLeft);
 
@@ -460,8 +474,9 @@ public class PlayerController : MonoBehaviour
                     reduceWeight(toBreak);
 
                     //spawn the pearl in the claw
-                    heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
-                    heldRight.transform.parent = clawRight.transform;
+                    //heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
+                    heldRight = Instantiate(pearl.gameObject, GameObject.Find("jnt_R_bttmClaw").transform.position, Quaternion.identity);
+                    heldRight.transform.parent = GameObject.Find("jnt_R_bttmClaw").transform;
 
                     addWeight(heldRight);
 
@@ -493,9 +508,8 @@ public class PlayerController : MonoBehaviour
         rightTrigger = controls.GamePlay.Break.ReadValue<float>();
         //Debug.Log(rightTrigger);
         //make the crab dig here
-        if (rightTrigger > 0f)
+        if (rightTrigger > 0f && crab.transform.position.z < 70)
         {
-            digAnimTimer += rightTrigger;
 
             if (isLeft)
             {
@@ -505,18 +519,15 @@ public class PlayerController : MonoBehaviour
             {
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
             }
-            
 
-            if (digAnimTimer / 20.0f >= 1.0f)
-            {
-               // Debug.Log("Dig Particles Deployed");
-                digPartSystem.Play();
-                digAnimTimer = 0.0f;
-            }
+            // Found advice for changing particle emission here:
+            // https://discussions.unity.com/t/how-do-you-change-a-particle-systems-emission-rate-over-time-in-script/775702/2
+            digEmit.rateOverTime = rightTrigger * 30;
+            digPartSystem.Play();
+
         }
         else
         {
-            digAnimTimer = 20.0f;
             digPartSystem.Stop();
 
             //play digging audio --> need to update post alpha
@@ -546,8 +557,8 @@ public class PlayerController : MonoBehaviour
 
         if (isLeft && clawLeft.transform.position.y > -0.5)
         {
-            //clawRight.transform.Translate(clawRaise);
-            //clawLeft.transform.Translate(clawDrop);
+            clawRight.transform.Translate(clawRaise);
+            clawLeft.transform.Translate(clawDrop);
 
             AudioManager.instance.sfxPlayer(2);
         }
@@ -610,10 +621,15 @@ public class PlayerController : MonoBehaviour
         if (Rpickedup == false && canPickupR == true)
         {
            // Debug.Log("you are here");
+           Vector3 clawRItemPos = GameObject.Find("jnt_R_bttmClaw").transform.position;
             rightItem.GetComponent<Collider>().enabled = false;
-            Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
+            //Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
+            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.1f); // <----------- Add offset here
             rightItem.transform.position = itemRHoldPos;
-            rightItem.transform.parent = clawR_grab.transform;
+            //rightItem.transform.parent = clawR_grab.transform;
+            rightItem.transform.parent = GameObject.Find("jnt_R_bttmClaw").transform;
+
+
 
             heldRight = rightItem;
             addWeight(heldRight);
@@ -633,12 +649,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Lpickedup == false && canPickupL == true)
         {
-           // Debug.Log("you are here");
+            // Debug.Log("you are here");
+            Vector3 clawLItemPos = GameObject.Find("jnt_L_bttmClaw").transform.position;
             leftItem.GetComponent<Collider>().enabled = false;
-            Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
+            //Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
+            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.1f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
-            leftItem.transform.parent = clawL_grab.transform;
+            //leftItem.transform.parent = clawL_grab.transform;
+            leftItem.transform.parent = GameObject.Find("jnt_L_bttmClaw").transform;
 
             heldLeft = leftItem;
             addWeight(heldLeft);
