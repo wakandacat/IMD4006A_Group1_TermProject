@@ -43,7 +43,7 @@ public class HomeScript : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(totalPts);
+        //Debug.Log(totalPts);
         //check if the total point value is enought to spawn NPC
         for (int i = 0; i < npcArr.Length; i++)
         {

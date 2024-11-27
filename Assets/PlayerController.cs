@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
     public float clawSmooth;
     public float clawAngle;
     public float maxClawDistance;
-    private bool dirChange = false;
+    public bool dirChange = false;
 
     private Vector3 clawDrop = new Vector3(0.0f, -0.2f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.2f, 0.0f);
