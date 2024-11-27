@@ -25,6 +25,7 @@ public class animateCrab : MonoBehaviour
     {
         if (mAnimator != null)
         {
+            //walking/movement animation
             //set playback speed for animation
             mAnimator.SetFloat("walkSpeed", pControllerScript.leftStick.magnitude);
 
@@ -51,6 +52,28 @@ public class animateCrab : MonoBehaviour
                 mAnimator.SetTrigger("ExitWalk");
 
             }
+
+
+            //digging animation
+            //if player is pressing on the right trigger
+            //if(pControllerScript.rightTrigger > 0.1f)
+            //{
+            //    //play on active claw
+            //    if (pControllerScript.isLeft == true)
+            //    {
+            //        mAnimator.SetTrigger("isDiggingL");
+            //    }
+            //    else
+            //    {
+            //        mAnimator.SetTrigger("isDiggingR");
+            //    }
+                
+            //}
+            //else
+            //{
+            //    //end digging animation
+            //    mAnimator.SetTrigger("ExitDigging");
+            //}
 
         }
     }
