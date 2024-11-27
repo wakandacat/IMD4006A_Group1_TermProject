@@ -25,12 +25,13 @@ public class animateCrab : MonoBehaviour
     {
         if (mAnimator != null)
         {
+            //set playback speed for animation
+            mAnimator.SetFloat("walkSpeed", pControllerScript.leftStick.magnitude);
+
             //if the player is moving then trigger the walk animation, otherwise trigger the exit walk animation
             if (pControllerScript.leftStick.magnitude > 0.1f)
             {
-                //set playback speed for animation
-                mAnimator.SetFloat("walkSpeed", pControllerScript.leftStick.magnitude);
-
+                
                 //moving to the right
                 if (pControllerScript.dirChange == true)
                 {
