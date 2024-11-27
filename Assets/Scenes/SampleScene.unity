@@ -570,7 +570,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159336637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622773, y: -0.000000086927216, z: 0.000000028975736, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622776, y: -0.000000045425608, z: 0.000000015141865, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -732,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 198594892}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.70613354, w: 0.7080786}
-  m_LocalPosition: {x: 0.6936113, y: 0.02912283, z: 1.1299686}
+  m_LocalPosition: {x: 0.512, y: 0.029, z: 0.805}
   m_LocalScale: {x: 0.10000002, y: 0.100000024, z: 0.09999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8164,7 +8164,7 @@ Transform:
   m_GameObject: {fileID: 801265961}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.70613354, w: 0.7080786}
-  m_LocalPosition: {x: -0.31646708, y: 0.0054478645, z: 1.7578366}
+  m_LocalPosition: {x: -0.13, y: 0.006, z: 1.125}
   m_LocalScale: {x: 0.10000002, y: 0.100000024, z: 0.09999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35388,6 +35388,8 @@ GameObject:
   - component: {fileID: 8405254947029387179}
   - component: {fileID: 810310404708559895}
   - component: {fileID: 403729991582135787}
+  - component: {fileID: 8405254947029387181}
+  - component: {fileID: 8405254947029387180}
   m_Layer: 0
   m_Name: CrabParentObj
   m_TagString: Untagged
@@ -35646,6 +35648,41 @@ MonoBehaviour:
   rightItem: {fileID: 0}
   heldRight: {fileID: 0}
   heldLeft: {fileID: 0}
+--- !u!114 &8405254947029387180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7306607389023037453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26865dc5c4cf2f348aa276d741b705ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMoving: 0
+  isDigging: 0
+--- !u!95 &8405254947029387181
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7306607389023037453}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e9196b8277083264eadf8d67aa8755da, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8453246572361818974
 GameObject:
   m_ObjectHideFlags: 0

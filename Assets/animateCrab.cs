@@ -30,20 +30,17 @@ public class animateCrab : MonoBehaviour
             {
                 //set playback speed for animation
                 mAnimator.SetFloat("walkSpeed", pControllerScript.leftStick.magnitude);
-                //mAnimator.speed = 
 
                 //moving to the right
                 if (pControllerScript.dirChange == true)
                 {
                     mAnimator.SetTrigger("walkingRight");
-                    //mAnimator.SetBool("directionR", true);
-                    //mAnimator.SetBool("directionL", false);
+
                 }
                 else //moving to the left
                 {
                     mAnimator.SetTrigger("walkingLeft");
-                    //mAnimator.SetBool("directionL", true);
-                    //mAnimator.SetBool("directionR", false);
+
                 }
 
             }
@@ -51,8 +48,7 @@ public class animateCrab : MonoBehaviour
             {
                 //end walk cycle and set directions back to false
                 mAnimator.SetTrigger("ExitWalk");
-                //mAnimator.SetBool("directionR", false);
-                //mAnimator.SetBool("directionL", false);
+
             }
 
         }
