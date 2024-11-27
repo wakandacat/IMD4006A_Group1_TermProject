@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TerrManager
   - item
+  - specialitem
   layers:
   - Default
   - TransparentFX
