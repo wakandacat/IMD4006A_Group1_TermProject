@@ -45,7 +45,6 @@ public class HomeScript : MonoBehaviour
 
         Debug.Log(totalPts);
         //check if the total point value is enought to spawn NPC
-        if (totalPts >= spawnNPC && NPCSpawned == false)
         for (int i = 0; i < npcArr.Length; i++)
         {
             if (totalPts >= npcArr[i].ptsToSpawn)
