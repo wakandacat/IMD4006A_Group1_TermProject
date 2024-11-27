@@ -34,7 +34,7 @@ public class HomeScript : MonoBehaviour
     void Update()
     {
 
-        //Debug.Log(totalPts);
+        Debug.Log(totalPts);
         //check if the total point value is enought to spawn NPC
         if (totalPts >= spawnNPC && NPCSpawned == false)
         {
@@ -51,23 +51,9 @@ public class HomeScript : MonoBehaviour
     }
 
     public void decorateItem(GameObject droppedItem)
-    {
-        if (droppedItem.transform.position.x <= home.transform.position.x + home.transform.localScale.x / 2 && droppedItem.transform.position.x >= home.transform.position.x - home.transform.localScale.x / 2 && droppedItem.transform.position.z <= home.transform.position.z + home.transform.localScale.z / 2 && droppedItem.transform.position.z >= home.transform.position.z - home.transform.localScale.z / 2)
-        {
-            //increment total points
+    {       //increment total points
             totalPts = totalPts + droppedItem.GetComponent<item>().itemPtValue;
-
-            //add to list
-            homeItems.Add(droppedItem);
-
-            //add it to the house by getting the next position from the set array of positions
-            droppedItem.transform.position = spawnPoints[homeItems.Count-1];
-
-            var outline = droppedItem.gameObject.GetComponent<Outline>();
-
-            outline.OutlineColor = new Color32(22, 224, 40, 255);
-
-        }
+        
     }
 
 }
