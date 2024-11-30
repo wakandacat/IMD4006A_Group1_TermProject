@@ -1,0 +1,5 @@
+IMD4006A - Texture Credits
+
+Below is a list of the texture images modified and used in the game Crab Cove, created for IMD4006A Advanced Game Development:
+
+- 
