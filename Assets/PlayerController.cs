@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
     public float clawSmooth;
     public float clawAngle;
     public float maxClawDistance;
-    private bool dirChange = false;
+    public bool dirChange = false;
 
     private Vector3 clawDrop = new Vector3(0.0f, -0.2f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.2f, 0.0f);
@@ -79,6 +79,10 @@ public class PlayerController : MonoBehaviour
 
     //for decorate
     private HomeScript homeScript;
+    public GameObject droppedItemR;
+    public GameObject droppedItemL;
+    public GameObject decorateItemR;
+    public GameObject decorateItemL;
 
     //Booleans
     bool ifpickedUp;
@@ -104,9 +108,16 @@ public class PlayerController : MonoBehaviour
     public GameObject heldRight;
     public GameObject heldLeft;
 
+    Decorate_right decorateRight;
+    Decorate_Left decorateLeft;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        decorateRight = clawR_grab.GetComponent<Decorate_right>();
+        decorateLeft = clawL_grab.GetComponent<Decorate_Left>();
+
         //instantiate a new input action object and enable it
         controls = new PlayerControls();
         controls.Enable();
@@ -164,7 +175,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
@@ -526,8 +536,6 @@ public class PlayerController : MonoBehaviour
 
 
     }
-
-
        
 //toggle the active claw
     public void OnSwitchLeft(InputAction.CallbackContext context)
@@ -535,9 +543,8 @@ public class PlayerController : MonoBehaviour
 
         if (!isLeft && clawRight.transform.position.y > -0.5)
         {
-            clawRight.transform.Translate(clawDrop);
-            clawLeft.transform.Translate(clawRaise);
-
+            //clawRight.transform.Translate(clawDrop);
+            //clawLeft.transform.Translate(clawRaise);
             AudioManager.instance.sfxPlayer(2);
         }
 
@@ -552,7 +559,6 @@ public class PlayerController : MonoBehaviour
         {
             clawRight.transform.Translate(clawRaise);
             clawLeft.transform.Translate(clawDrop);
-
 
             AudioManager.instance.sfxPlayer(2);
         }
@@ -667,15 +673,38 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemR()
     {
-
         reduceWeight(heldRight);
-        //Debug.Log("right item" + heldRight);
-        homeScript.decorateItem(heldRight);
-        heldRight.transform.parent = null;
+        droppedItemR = heldRight;
 
+        //Debug.Log("right item" + heldRight);
+        //homeScript.decorateItem(heldRight);
+        decorateItemR = droppedItemR;
+        Debug.Log("decorate Right" + decorateRight.castleCollision);
+        if (decorateRight.castleCollision == true)
+        {
+            Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
+            Debug.Log("The point is" + decorateRight.Cpoint.point);
+            decorateItemR.transform.position = decorateRight.Cpoint.point;
+            homeScript.decorateItem(decorateItemR);
+            decorateItemR.tag = "none";
+            decorateItemR.GetComponent<Collider>().enabled = false;
+            decorateItemR.GetComponent<Outline>().enabled = false;
+
+        }
+        else
+        {
+            heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
+    
+        }
+
+        Debug.Log("we are here here!");
+        heldRight.transform.parent = null;
         heldRight.GetComponent<Collider>().enabled = true;
         Rpickedup = false;
         heldRight = null;
+        decorateItemR = null;
+        droppedItemR = null;
+
         //play drop sound
         AudioManager.instance.sfxPlayer(1);
 
@@ -683,19 +712,41 @@ public class PlayerController : MonoBehaviour
     }
 
     public void dropItemL()
-    {        
+    {
         reduceWeight(heldLeft);
-        // Debug.Log("left item" + heldLeft);
-        homeScript.decorateItem(heldLeft);
-        heldLeft.transform.parent = null;
+        droppedItemL = heldLeft;
 
+        //Debug.Log("right item" + heldRight);
+        //homeScript.decorateItem(heldRight);
+        decorateItemL = droppedItemL;
+        Debug.Log("decorate Left" + decorateLeft.castleCollision);
+        if (decorateLeft.castleCollision == true)
+        {
+            Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
+            Debug.Log("The point is" + decorateLeft.Cpoint.point);
+            decorateItemL.transform.position = decorateLeft.Cpoint.point;
+            homeScript.decorateItem(decorateItemL);
+            decorateItemL.tag = "none";
+            decorateItemL.GetComponent<Collider>().enabled = false;
+            decorateItemL.GetComponent<Outline>().enabled = false;
+
+        }
+        else
+        {
+            heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
+
+        }
+
+        Debug.Log("we are here here!");
+        heldLeft.transform.parent = null;
         heldLeft.GetComponent<Collider>().enabled = true;
         Lpickedup = false;
         heldLeft = null;
+        decorateItemL = null;
+        droppedItemL = null;
+
         //play drop sound
         AudioManager.instance.sfxPlayer(1);
-
-        //Debug.Log("dropped");
     }
 
     public void addWeight(GameObject heldItem)
@@ -718,5 +769,14 @@ public class PlayerController : MonoBehaviour
       currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
         
     }
+
+    public void DecorateRight()
+    {
+        if(isLeft && Rpickedup == true)
+        {
+
+        }
+    }
+
 
 }
