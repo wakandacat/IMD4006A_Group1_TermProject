@@ -570,7 +570,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159336637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622773, y: -0.000000086927216, z: 0.000000028975736, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622776, y: -0.000000045425608, z: 0.000000015141865, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1026,7 +1026,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622773, y: -0.000000026164658, z: 0.00000000872155, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622776, y: -0.00000006766625, z: 0.000000022555414, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21500,15 +21500,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   homeItems: []
   home: {fileID: 1777476355}
-  npc: {fileID: 919132149155446097, guid: 3ac9f0966a4f16641a765d3b3b959145, type: 3}
+  npcs:
+  - {fileID: 3604481206703521054, guid: 3ae6d0e61f645e14a875db17d12d4d0b, type: 3}
+  - {fileID: 1276401750626539509, guid: 6014c8f241503784980a1dd3de13fd96, type: 3}
+  - {fileID: 7943138835944025558, guid: 572b5b803bda5c24f81e2004c4f1cbee, type: 3}
   items:
   - {fileID: 5546419691790237532, guid: b8310e31cd819314b83f8268f8136fe7, type: 3}
   - {fileID: 5209355059052111864, guid: d0957818860c51e4baefbfedaa7e3efe, type: 3}
   - {fileID: 8173959341749892883, guid: e56f3a7447113ef4bb45d40a9e2e8ba8, type: 3}
   - {fileID: 2800305168493862567, guid: dd6cc8fe3229832488a1b2aa8d0f3c87, type: 3}
+  NPCMats:
+  - {fileID: 2100000, guid: 6a657ef8fbbc2794992161467498e3bc, type: 2}
+  - {fileID: 2100000, guid: c731dd8f458f7ff4eb1ac3699df82755, type: 2}
+  - {fileID: 2100000, guid: 67dd4bbee64b0ca409a1f1e73e3ed214, type: 2}
+  - {fileID: 2100000, guid: 2e1b54923bc7193499529e44d368d5f3, type: 2}
+  - {fileID: 2100000, guid: 28e9e475f8cbf7f44ba50f0f8408422a, type: 2}
+  - {fileID: 2100000, guid: 8d1ec152a46248143bae272287f5311a, type: 2}
   textPrefab: {fileID: 7872771806234592789, guid: 10d07b8fc31a1494f8f62f5220aed3b2,
     type: 3}
   camera: {fileID: 330585543}
+  NPCText:
+  - What a nice home!
+  - OOOOOO!
+  - Nice place! Here ya go!
+  - Found this for you!
+  - You should be mayor!
+  - 
 --- !u!114 &1777476359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22880,7 +22897,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126098237}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622773, y: -0.000000026164658, z: 0.00000000872155, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622776, y: -0.00000006766625, z: 0.000000022555414, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
