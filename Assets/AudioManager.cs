@@ -65,7 +65,7 @@ public class AudioManager : MonoBehaviour
         while (true)
         {
             //get walkMag
-            float walkMag = GameObject.Find("CrabParentObj").GetComponent<PlayerController>().leftStick.magnitude;
+            float walkMag = GameObject.Find("Crab").GetComponent<PlayerController>().leftStick.magnitude;
             //Debug.Log("walk mag is: " + walkMag);
 
             //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
@@ -110,7 +110,7 @@ public class AudioManager : MonoBehaviour
         while (true)
         {
             //get stickMag
-            float stickMag = GameObject.Find("CrabParentObj").GetComponent<PlayerController>().rightStick.magnitude;
+            float stickMag = GameObject.Find("Crab").GetComponent<PlayerController>().rightStick.magnitude;
             //Debug.Log("rightstick mag is: " + stickMag);
 
             if(stickMag >= 0.1f)
@@ -137,18 +137,18 @@ public class AudioManager : MonoBehaviour
         while (true)
         {
             //get stickMag
-            float triggerVal = GameObject.Find("CrabParentObj").GetComponent<PlayerController>().rightTrigger;
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
             //Debug.Log("rightstick mag is: " + stickMag);
 
             if (triggerVal >= 0.1f)
             {
-                Debug.Log("digging should play sound");
+                //Debug.Log("digging should play sound");
                 digSource.PlayOneShot(digSource.clip);
 
             }
             else
             {
-                Debug.Log("stop digging sound");
+                //Debug.Log("stop digging sound");
                 digSource.Stop();
             }
 
