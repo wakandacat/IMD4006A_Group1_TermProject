@@ -14,7 +14,7 @@ public class animateCrab : MonoBehaviour
     void Start()
     {
         //get player controller script, needed for accessing joystick inputs
-        pControllerScript = GameObject.Find("CrabParentObj").GetComponent<PlayerController>();
+        pControllerScript = GameObject.Find("Crab").GetComponent<PlayerController>();
 
         //get animator component on parent aka crab
         mAnimator = GetComponent<Animator>();

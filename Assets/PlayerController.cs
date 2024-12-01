@@ -621,13 +621,13 @@ public class PlayerController : MonoBehaviour
         if (Rpickedup == false && canPickupR == true)
         {
            // Debug.Log("you are here");
-           Vector3 clawRItemPos = GameObject.Find("jnt_R_bttmClaw").transform.position;
+           Vector3 clawRItemPos = GameObject.Find("jnt_R_tip").transform.position;
             rightItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
             Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.1f); // <----------- Add offset here
             rightItem.transform.position = itemRHoldPos;
             //rightItem.transform.parent = clawR_grab.transform;
-            rightItem.transform.parent = GameObject.Find("jnt_R_bttmClaw").transform;
+            rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
 
 
@@ -650,14 +650,14 @@ public class PlayerController : MonoBehaviour
         if (Lpickedup == false && canPickupL == true)
         {
             // Debug.Log("you are here");
-            Vector3 clawLItemPos = GameObject.Find("jnt_L_bttmClaw").transform.position;
+            Vector3 clawLItemPos = GameObject.Find("jnt_L_tip").transform.position;
             leftItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
             Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.1f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
             //leftItem.transform.parent = clawL_grab.transform;
-            leftItem.transform.parent = GameObject.Find("jnt_L_bttmClaw").transform;
+            leftItem.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
             heldLeft = leftItem;
             addWeight(heldLeft);
