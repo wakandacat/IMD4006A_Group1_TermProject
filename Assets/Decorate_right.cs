@@ -11,7 +11,7 @@ public class Decorate_right : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pControllerScript = GameObject.Find("Crab").GetComponent<PlayerController>();
+        pControllerScript = GameObject.Find("CrabParentObj").GetComponent<PlayerController>();
 
     }
 

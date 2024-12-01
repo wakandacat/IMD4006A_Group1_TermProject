@@ -52,7 +52,7 @@ public class NPCClass : MonoBehaviour
     //ensure the NPCs are always looking at the player
     public void updateRotation()
     {
-        Transform player = GameObject.Find("Crab").transform;
+        Transform player = GameObject.Find("CrabParentObj").transform;
 
         if (hasSpawned == true)
         {

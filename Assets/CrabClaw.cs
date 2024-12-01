@@ -9,7 +9,7 @@ public class CrabClaw : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pControllerScript = GameObject.Find("Crab").GetComponent<PlayerController>();
+        pControllerScript = GameObject.Find("CrabParentObj").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame

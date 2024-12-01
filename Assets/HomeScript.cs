@@ -17,7 +17,7 @@ public class HomeScript : MonoBehaviour
     public Material[] NPCMats;
     public GameObject textPrefab;
     public GameObject camera;
-    public string[] NPCText = new[] { "What a nice home!", "Oooooo! Fancy!", "Nice place! Here ya go!", "I found this for you!", "You should be mayor!", "Whoa! Cool house!" , "I brought you a housewarming gift!" , "I love your house!", "Welcome to Crab Cove!" };
+    public string[] NPCText = new[] { "What a nice home!", "OOOOOO!", "Nice place! Here ya go!", "Found this for you!", "You should be mayor!", "Whoa!" , "What a beautiful home!" , "I love it!", "Amazing place!" };
 
     //total point value on castle
     int totalPts = 0;

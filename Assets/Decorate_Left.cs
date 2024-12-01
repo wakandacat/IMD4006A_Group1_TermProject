@@ -5,14 +5,14 @@ using UnityEngine;
 public class Decorate_Left : MonoBehaviour
 {
     private PlayerController pControllerScript;
-    //public GameObject decorateItemL;
+    public GameObject decorateItemL;
     public ContactPoint Cpoint;
     public bool castleCollision = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        pControllerScript = GameObject.Find("Crab").GetComponent<PlayerController>();
+        pControllerScript = GameObject.Find("CrabParentObj").GetComponent<PlayerController>();
 
     }
 
