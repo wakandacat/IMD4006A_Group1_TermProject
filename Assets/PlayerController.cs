@@ -520,6 +520,11 @@ public class PlayerController : MonoBehaviour
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
                 //animate claw movement applied to right
+                Vector3 digPosDown = clawRight.transform.localPosition + new Vector3(0.0f, -0.6f, 0.0f); //should take current claw pos and only make the y value decrease
+                Vector3 digPosUp = clawRight.transform.localPosition + new Vector3(0.0f, 0.4f, 0.0f); //should take current claw pos and only make the y value decrease
+                clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosDown, Time.deltaTime * 1.0f); //lerp down
+                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosUp, Time.deltaTime * 5.0f); //lerp back up?
+                //Debug.Log("Local Pos: " + clawRight.transform.localPosition + ", newDigPos: " + newDigPos);
             }
 
             // Found advice for changing particle emission here:
