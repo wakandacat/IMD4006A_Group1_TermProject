@@ -439,8 +439,8 @@ public class PlayerController : MonoBehaviour
 
                     //spawn the pearl in the claw
                     //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
-                    heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_bttmClaw").transform.position, Quaternion.identity);
-                    heldLeft.transform.parent = GameObject.Find("jnt_L_bttmClaw").transform;
+                    heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_tip").transform.position, Quaternion.identity);
+                    heldLeft.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
                     addWeight(heldLeft);
 
@@ -475,8 +475,8 @@ public class PlayerController : MonoBehaviour
 
                     //spawn the pearl in the claw
                     //heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
-                    heldRight = Instantiate(pearl.gameObject, GameObject.Find("jnt_R_bttmClaw").transform.position, Quaternion.identity);
-                    heldRight.transform.parent = GameObject.Find("jnt_R_bttmClaw").transform;
+                    heldRight = Instantiate(pearl.gameObject, GameObject.Find("jnt_R_tip").transform.position, Quaternion.identity);
+                    heldRight.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
                     addWeight(heldRight);
 

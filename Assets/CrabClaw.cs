@@ -47,7 +47,7 @@ public class CrabClaw : MonoBehaviour
                 //indicate the object can be picked up by changing its outline colour
                 var outline = other.gameObject.GetComponent<Outline>();
 
-                outline.OutlineColor = Color.yellow;
+                outline.OutlineColor = Color.green;
             }
 
         }
