@@ -364,7 +364,7 @@ public class TerrainEditor : MonoBehaviour
             initialHeights[itemY + 1, itemX - 3] += 0.0005f;
             initialHeights[itemY - 1, itemX - 3] += 0.0005f;
 
-            Debug.Log("Mound Created.");
+            //Debug.Log("Mound Created.");
 
             sandTerrain.terrainData.SetHeightsDelayLOD(0, 0, initialHeights);
         }
