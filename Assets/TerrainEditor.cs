@@ -108,7 +108,7 @@ public class TerrainEditor : MonoBehaviour
                     int crabX = (int)(crabPos.x * 5.12f);
                     int crabY = (int)(crabPos.z * 5.12f);
 
-                    triggerInput = triggerInput * 0.00002f;
+                    triggerInput = triggerInput * 0.00003f;
 
                     // Debug.Log("Digging at: " + crabX + ", " + crabY);
 
@@ -124,7 +124,7 @@ public class TerrainEditor : MonoBehaviour
                     initialHeights[crabY + 1, crabX + 1] -= (triggerInput + 0.000007f);
                     initialHeights[crabY - 1, crabX + 1] -= (triggerInput + 0.000007f);
 
-                    if (initialHeights[crabY, crabX] < 0.0025f)
+                    if (initialHeights[crabY, crabX] < 0.003f)
                     {
                         initialHeights[crabY + 2, crabX] -= (triggerInput + 0.000007f);
                         initialHeights[crabY - 2, crabX] -= (triggerInput + 0.000007f);
@@ -140,7 +140,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 2] -= (triggerInput + 0.000007f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.002f)
+                    if (initialHeights[crabY, crabX] < 0.0025f)
                     {
                         initialHeights[crabY + 2, crabX + 2] -= (triggerInput + 0.000007f);
                         initialHeights[crabY - 2, crabX + 2] -= (triggerInput + 0.000007f);
@@ -160,7 +160,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 3] -= (triggerInput + 0.000007f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.0015f)
+                    if (initialHeights[crabY, crabX] < 0.002f)
                     {
                         initialHeights[crabY + 3, crabX + 2] -= (triggerInput + 0.000007f);
                         initialHeights[crabY + 2, crabX + 3] -= (triggerInput + 0.000007f);
@@ -185,7 +185,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 1, crabX - 4] -= (triggerInput + 0.000007f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.001f)
+                    if (initialHeights[crabY, crabX] < 0.0015f)
                     {
                         initialHeights[crabY + 3, crabX + 3] -= (triggerInput + 0.000007f);
                         initialHeights[crabY - 3, crabX + 3] -= (triggerInput + 0.000007f);
@@ -235,7 +235,7 @@ public class TerrainEditor : MonoBehaviour
                         initialHeights[crabY - 2, crabX - 5] -= (triggerInput + 0.000007f);
                     }
 
-                    if (initialHeights[crabY, crabX] < 0.0005f)
+                    if (initialHeights[crabY, crabX] < 0.001f)
                     {
                         initialHeights[crabY + 6, crabX] -= (triggerInput + 0.000007f);
                         initialHeights[crabY - 6, crabX] -= (triggerInput + 0.000007f);
