@@ -429,6 +429,7 @@ public class PlayerController : MonoBehaviour
                // Debug.Log(currHoldTime);
                 currHoldTime += Time.deltaTime; //count the time
                //AudioManager.instance.sfxPlayer(3);
+               //add breaking build up noise here? potentially a coroutine
 
                 if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
                 {
@@ -437,8 +438,8 @@ public class PlayerController : MonoBehaviour
 
                     //spawn the pearl in the claw
                     //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
-                    heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_bttmClaw").transform.position, Quaternion.identity);
-                    heldLeft.transform.parent = GameObject.Find("jnt_L_bttmClaw").transform;
+                    heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_tip").transform.position, Quaternion.identity);
+                    heldLeft.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
                     addWeight(heldLeft);
 
@@ -446,7 +447,6 @@ public class PlayerController : MonoBehaviour
                     Destroy(toBreak);
 
                     //play break nosie
-                    //AudioManager.instance.sfxSource.Stop();
                     AudioManager.instance.sfxPlayer(4);
 
                     //spawn shell top and bottom beside the crab
@@ -512,10 +512,14 @@ public class PlayerController : MonoBehaviour
             if (isLeft)
             {
                 terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
+                //animate claw movement applied to left
             }
             else
             {
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
+                //animate claw movement applied to right
             }
 
             // Found advice for changing particle emission here:
@@ -527,9 +531,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             digPartSystem.Stop();
+            //may need to reset claw pos here
 
-            //play digging audio --> need to update post alpha
-            //AudioManager.instance.digSource.Play();
         }
 
 
