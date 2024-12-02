@@ -68,6 +68,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 clawDrop = new Vector3(0.0f, -0.2f, 0.0f);
     private Vector3 clawRaise = new Vector3(0.0f, 0.2f, 0.0f);
 
+    //vectors used to set the claw targets for active/non-active claws
+    private Vector3 defaultClawPos = new Vector3(0.0f, 0.0f, 0.0f);     
+    private Vector3 activeClawPos = new Vector3(0.0f, 0.0f, 0.0f);
+
     //break vars
     public float shakeAmount = 1f;
     public float shakeSpeed = 5f;
