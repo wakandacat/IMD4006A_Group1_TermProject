@@ -139,6 +139,7 @@ public class AudioManager : MonoBehaviour
             //get stickMag
             float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
             //Debug.Log("rightstick mag is: " + stickMag);
+            float seconds = 0.8f / triggerVal;
 
             if (triggerVal >= 0.1f)
             {
@@ -153,7 +154,7 @@ public class AudioManager : MonoBehaviour
             }
 
             //wait for x seconds before re-entering the loop
-            yield return new WaitForSeconds(1.3f);
+            yield return new WaitForSeconds(0.6f);
 
         }
     }
