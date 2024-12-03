@@ -68,36 +68,48 @@ public class animateCrab : MonoBehaviour
             GameObject clawStart_R = GameObject.Find("Crab").GetComponent<PlayerController>().clawRight;
             GameObject clawStart_L = GameObject.Find("Crab").GetComponent<PlayerController>().clawLeft;
             bool isLeftt = GameObject.Find("Crab").GetComponent<PlayerController>().isLeft;
+            float seconds = 0.0f;
+            float yPos = -0.8f * triggerVal;
 
             //Debug.Log("rightstick mag is: " + stickMag);
 
             if (triggerVal >= 0.1f)
             {
+
                 if (isLeftt)
                 {
-                    Vector3 digPosDown = clawStart_L.transform.localPosition + new Vector3(0.0f, -0.8f, 0.0f);
+                    Vector3 digPosDown = clawStart_L.transform.localPosition + new Vector3(0.0f, yPos, 0.0f);
                     clawStart_L.transform.localPosition = Vector3.Lerp(clawStart_L.transform.localPosition, digPosDown, 0.5f);
                 }
                 else
                 {
-                    Vector3 digPosDown = clawStart_R.transform.localPosition + new Vector3(0.0f, -0.8f, 0.0f);
+                    Vector3 digPosDown = clawStart_R.transform.localPosition + new Vector3(0.0f, yPos, 0.0f);
                     clawStart_R.transform.localPosition = Vector3.Lerp(clawStart_R.transform.localPosition, digPosDown, 0.5f);
                 }
-                //Debug.Log("digging should play sound");
-                //digSource.PlayOneShot(digSource.clip);
-                //Vector3 digPosDown = clawRight.transform.localPosition + new Vector3(0.0f, -0.6f, 0.0f); //should take current claw pos and only make the y value decrease
-                //Vector3 digPosUp = clawRight.transform.localPosition + new Vector3(0.0f, 0.4f, 0.0f); //should take current claw pos and only make the y value decrease
-                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosDown, Time.deltaTime * 5.0f);
+
+                //fastest speed
+                if(triggerVal >= 0.7f)
+                {
+                    seconds = 0.3f;
+                }
+                else if(triggerVal >= 0.5f && triggerVal < 0.7f)
+                {
+                    seconds = 0.4f;
+                }
+                else if (triggerVal >= 0.1f && triggerVal < 0.5f)
+                {
+                    seconds = 0.5f;
+                }
+                else
+                {
+                    //slowest speed
+                    seconds = 0.5f;
+                }
 
             }
-            else
-            {
-                //Debug.Log("stop digging sound");
-                //digSource.Stop();
-            }
-
+            
             //wait for x seconds before re-entering the loop
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(seconds);
 
         }
     }

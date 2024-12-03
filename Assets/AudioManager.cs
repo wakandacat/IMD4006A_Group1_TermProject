@@ -133,28 +133,41 @@ public class AudioManager : MonoBehaviour
     public IEnumerator digSoundTimer()
     {
 
-        //for as long as player is using joystick
+        //for as long as player is pressing on the trigger
         while (true)
         {
-            //get stickMag
+            //get trigger value for dig
             float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
-            //Debug.Log("rightstick mag is: " + stickMag);
-            float seconds = 0.8f / triggerVal;
+            float seconds = 0.0f;
 
-            if (triggerVal >= 0.1f)
+            //fastest
+            if (triggerVal >= 0.7f)
             {
-                //Debug.Log("digging should play sound");
+                seconds = 0.4f;
+                //play a single instance of the sfx
                 digSource.PlayOneShot(digSource.clip);
-
+            }
+            else if (triggerVal >= 0.5f && triggerVal < 0.7f)
+            {
+                seconds = 0.5f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
+            }
+            //slowest
+            else if (triggerVal >= 0.1f && triggerVal < 0.5f)
+            {
+                seconds = 0.6f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
             }
             else
             {
-                //Debug.Log("stop digging sound");
                 digSource.Stop();
+                seconds = 0.4f;
             }
 
             //wait for x seconds before re-entering the loop
-            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(seconds);
 
         }
     }
