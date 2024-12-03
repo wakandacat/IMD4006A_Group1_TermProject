@@ -44,7 +44,7 @@ public class NPCClass : MonoBehaviour
             GameObject newItem = Instantiate(item, new Vector3(spawnPos.x + 1f, spawnPos.y, spawnPos.z + 1f), Quaternion.identity);
             newItem.tag = "specialitem";
             this.text = Instantiate(text, new Vector3(spawnPos.x, spawnPos.y + 1.5f, spawnPos.z), text.transform.rotation);
-            this.text.GetComponent<TextMesh>().text = textDesc;
+            this.text.transform.GetChild(0).GetComponent<TextMesh>().text = textDesc;
             hasSpawned = true;
         }
     }

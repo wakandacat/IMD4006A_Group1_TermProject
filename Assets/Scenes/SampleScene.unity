@@ -508,7 +508,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1643385396}
   m_Follow: {fileID: 1643385396}
   m_Lens:
-    FieldOfView: 80
+    FieldOfView: 90
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -5630,7 +5630,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -5859,7 +5859,7 @@ MonoBehaviour:
   m_TransparentLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_MinimumDistanceFromTarget: 1
+  m_MinimumDistanceFromTarget: 3
   m_AvoidObstacles: 1
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
@@ -21536,16 +21536,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 2e1b54923bc7193499529e44d368d5f3, type: 2}
   - {fileID: 2100000, guid: 28e9e475f8cbf7f44ba50f0f8408422a, type: 2}
   - {fileID: 2100000, guid: 8d1ec152a46248143bae272287f5311a, type: 2}
-  textPrefab: {fileID: 7872771806234592789, guid: 10d07b8fc31a1494f8f62f5220aed3b2,
+  textPrefab: {fileID: 8573987657572315584, guid: 10d07b8fc31a1494f8f62f5220aed3b2,
     type: 3}
   camera: {fileID: 330585543}
-  NPCText:
-  - What a nice home!
-  - OOOOOO!
-  - Nice place! Here ya go!
-  - Found this for you!
-  - You should be mayor!
-  - 
 --- !u!114 &1777476359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22023,17 +22016,17 @@ PrefabInstance:
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.81977
+      value: 12.83
       objectReference: {fileID: 0}
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0100207
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 58.443302
+      value: 59.83
       objectReference: {fileID: 0}
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
@@ -22725,7 +22718,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1643385396}
   m_Follow: {fileID: 1643385396}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 70
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000

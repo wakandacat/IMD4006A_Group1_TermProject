@@ -302,8 +302,8 @@ public class PlayerController : MonoBehaviour
         {
             tiltCam2.Priority = tiltCam.Priority + 1;
         } 
-        //if crab is in a hole then change to digcam
-        else if (crab.transform.position.y <= 2f)
+        //if crab is digging currently, then change to digcam
+        else if (rightTrigger > 0.1f || crab.transform.position.y <= 2.3f)
         {
             if (tiltCam.Priority > tiltCam2.Priority)
             {
@@ -427,11 +427,11 @@ public class PlayerController : MonoBehaviour
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
                // Debug.Log(currHoldTime);
-                currHoldTime += Time.deltaTime; //count the time
+                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                //AudioManager.instance.sfxPlayer(3);
                //add breaking build up noise here? potentially a coroutine
 
-                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
+                if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
                     reduceWeight(toBreak);
@@ -462,11 +462,10 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                //Debug.Log(currHoldTime);
-                currHoldTime += Time.deltaTime; //count the time
+                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                 //AudioManager.instance.sfxPlayer(3);
 
-                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
+                if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
                     reduceWeight(toBreak);
