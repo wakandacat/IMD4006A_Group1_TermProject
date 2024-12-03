@@ -24,7 +24,7 @@ public class Decorate_right : MonoBehaviour
     //get contact point means tha the contact is true
     //assign the contact point coordinates to it
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "castle")
         {
