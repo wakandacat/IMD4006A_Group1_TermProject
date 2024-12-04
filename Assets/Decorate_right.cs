@@ -33,10 +33,6 @@ public class Decorate_right : MonoBehaviour
             {
                 Debug.Log("item is called " + collision.gameObject.name);
                 Debug.Log("Entered this collsionm");
-                foreach (ContactPoint contact in collision.contacts)
-                {
-                    Debug.Log("Contact Point right: " + contact.point);                 
-                }
                 castleCollision = true;
                 Cpoint = collision.contacts[0];
             }
