@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        //text to tell player to place item
+        //text to tell player to place item on castle -> only for the first item
         if (firstItem && GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag && (heldLeft != null || heldRight != null))
         {
             this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Drop item onto sandcastle!";
@@ -184,6 +184,23 @@ public class PlayerController : MonoBehaviour
         {
             this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "";
         }
+
+        //text for when holding breakable item -> only clam
+        if (heldLeft != null)
+        {
+            if (heldLeft.gameObject.name == "clam")
+            {
+                this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Break item!";
+            }
+        } 
+        else if (heldRight != null)
+        {
+            if (heldRight.gameObject.name == "clam")
+            {
+                this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Break item!";
+            }
+        }
+        
 
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
