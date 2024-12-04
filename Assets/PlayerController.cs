@@ -202,16 +202,20 @@ public class PlayerController : MonoBehaviour
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
 
             //determine if -z or +z direction is closest to target and make that the front of the crab
-            //try to only adjust forward direction when not holding continuously and rotating
-            if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f)
+            if (Mathf.Abs(angleToTarget) > 90)
             {
                 if (dirChange == false)
                 {
                     crabVel = Vector3.zero; //reset velocity to zero on direction change
                     dirChange = true;
                 }
-                
-                targetRotate = Quaternion.LookRotation(-moveDirection);
+
+                //if player is not actively turning then swap sides
+                if(Mathf.Abs(leftStick.x) > Mathf.Abs(leftStick.y))
+                {
+                    targetRotate = Quaternion.LookRotation(-moveDirection);
+                }
+
 
             } else
             {
@@ -221,6 +225,7 @@ public class PlayerController : MonoBehaviour
             //for large rotations, rotate first, then move
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
             {
+
                 //calculate the velocity
                 if (moveDirection != Vector3.zero)
                 {
