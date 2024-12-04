@@ -60,10 +60,10 @@ public class animateCrab : MonoBehaviour
     public IEnumerator digAnim()
     {
 
-        //for as long as player is using joystick
+        //for as long as player is holding trigger
         while (true)
         {
-            //get stickMag
+            //get trigger value
             float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
             GameObject clawStart_R = GameObject.Find("Crab").GetComponent<PlayerController>().clawRight;
             GameObject clawStart_L = GameObject.Find("Crab").GetComponent<PlayerController>().clawLeft;
@@ -92,7 +92,7 @@ public class animateCrab : MonoBehaviour
                 {
                     seconds = 0.3f;
                 }
-                else if(triggerVal >= 0.5f && triggerVal < 0.7f)
+                else if(triggerVal >= 0.4f && triggerVal < 0.7f)
                 {
                     seconds = 0.4f;
                 }

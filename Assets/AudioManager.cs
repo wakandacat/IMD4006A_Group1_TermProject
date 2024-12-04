@@ -147,14 +147,14 @@ public class AudioManager : MonoBehaviour
                 //play a single instance of the sfx
                 digSource.PlayOneShot(digSource.clip);
             }
-            else if (triggerVal >= 0.5f && triggerVal < 0.7f)
+            else if (triggerVal >= 0.4f && triggerVal < 0.7f)
             {
                 seconds = 0.5f;
                 //play a single instance of the sfx
                 digSource.PlayOneShot(digSource.clip);
             }
             //slowest
-            else if (triggerVal >= 0.1f && triggerVal < 0.5f)
+            else if (triggerVal >= 0.1f && triggerVal < 0.4f)
             {
                 seconds = 0.6f;
                 //play a single instance of the sfx

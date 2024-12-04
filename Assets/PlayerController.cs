@@ -113,9 +113,12 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
+    //haptics stuff
+    private Gamepad pad;
+
     private void Awake()
     {
-        
+        pad = Gamepad.current;
     }
 
     // Start is called before the first frame update
@@ -168,6 +171,7 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.ambientSource.Play();
         
         StartCoroutine(this.GetComponent<animateCrab>().digAnim());
+        StartCoroutine(this.GetComponent<rumbleBehavior>().digRumble());
         
 
         _rb = GetComponent<Rigidbody>();
@@ -338,15 +342,7 @@ public class PlayerController : MonoBehaviour
 
         //input from controls move the crab in xz plane -> take into account camera rotation here as well
         Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
-        //Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
-
-        // Finding the new claw locator positions
-        //clawLeftStart = (clawLeft.transform.position);
-        //clawRightStart = (clawRight.transform.position);
-
-        //clawLeft.transform.rotation = clawLocator_L.transform.rotation;
-        //clawRight.transform.rotation = clawLocator_R.transform.rotation;
-
+        
         //update external gameobjects to match the internal claw positions
         clawR_grab.transform.position = clawRight.transform.position;
         clawL_grab.transform.position = clawLeft.transform.position;
@@ -495,10 +491,14 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //test rumble here
+            //pad.SetMotorSpeeds(0.05f, 0.1f);
+
         } 
         else
         {
             currHoldTime = 0f;
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
             //AudioManager.instance.sfxSource.Stop();
         }
 
