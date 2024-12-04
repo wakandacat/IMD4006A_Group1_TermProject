@@ -18,6 +18,7 @@ public class WorldManager : MonoBehaviour
     public bool enterFlag = true; //flag for checking if the crab only just entered the home area
     public bool toDelete = false;
     public bool gameStart = true; //dont perform some actions at the very beginning of the game
+    public GameObject sandcastle;
 
     //may be unnecessary but idk
     private void Awake()
@@ -77,6 +78,16 @@ public class WorldManager : MonoBehaviour
 
             // Resetting terrain upon entering the home area.
             terrainScript.resetTerrainHeight();
+
+            //if the player is holding an item then outline the castle
+            if (crab.GetComponent<PlayerController>().heldLeft != null || crab.GetComponent<PlayerController>().heldRight != null)
+            {
+                //outline castle to tell player to place item
+                var outline = sandcastle.gameObject.GetComponent<Outline>();
+
+                outline.OutlineWidth = 5;
+            }
+
         }
 
 
@@ -87,6 +98,11 @@ public class WorldManager : MonoBehaviour
             //Debug.Log("Left");
             enterFlag = false;
             gameStart = false; //its no longer the beginnning of the game so begin functions as usual
+
+            //turn off sandcastle outline if it was on
+            var outline = sandcastle.gameObject.GetComponent<Outline>();
+
+            outline.OutlineWidth = 0;
         }
 
         //only destroy items once
@@ -106,7 +122,7 @@ public class WorldManager : MonoBehaviour
 
     IEnumerator CallDeleteDelay()
     {
-        yield return new WaitForSeconds(1f); // Wait for 1 second
+        yield return new WaitForSeconds(1.5f); // Wait for a bit second to prevent items being deleted in the players claws
         Delete(); // Call the function
     }
 
