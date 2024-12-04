@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     public GameObject droppedItemL;
     public GameObject decorateItemR;
     public GameObject decorateItemL;
+    public bool firstItem = true;
 
     //Booleans
     bool ifpickedUp;
@@ -173,6 +174,34 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //text to tell player to place item on castle -> only for the first item
+        if (firstItem && GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag && (heldLeft != null || heldRight != null))
+        {
+            this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Drop item onto sandcastle!";
+        } 
+        else
+        {
+            this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "";
+        }
+
+        //text for when holding breakable item -> only clam
+        if (heldLeft != null)
+        {
+            if (heldLeft.gameObject.name == "clam")
+            {
+                this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Break item!";
+            }
+        } 
+        else if (heldRight != null)
+        {
+            if (heldRight.gameObject.name == "clam")
+            {
+                this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Break item!";
+            }
+        }
+        
+
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
@@ -202,16 +231,20 @@ public class PlayerController : MonoBehaviour
             float angleToTarget = Vector3.SignedAngle(currentForward, moveDirection, Vector3.up);
 
             //determine if -z or +z direction is closest to target and make that the front of the crab
-            //try to only adjust forward direction when not holding continuously and rotating
-            if (Mathf.Abs(angleToTarget) > 90 && leftStick.magnitude > 0.3f)
+            if (Mathf.Abs(angleToTarget) > 90)
             {
                 if (dirChange == false)
                 {
                     crabVel = Vector3.zero; //reset velocity to zero on direction change
                     dirChange = true;
                 }
-                
-                targetRotate = Quaternion.LookRotation(-moveDirection);
+
+                //if player is not actively turning then swap sides
+                if(Mathf.Abs(leftStick.x) > Mathf.Abs(leftStick.y))
+                {
+                    targetRotate = Quaternion.LookRotation(-moveDirection);
+                }
+
 
             } else
             {
@@ -221,6 +254,7 @@ public class PlayerController : MonoBehaviour
             //for large rotations, rotate first, then move
             if (Mathf.Abs(Mathf.Abs(crab.transform.eulerAngles.y) - Mathf.Abs(targetRotate.eulerAngles.y)) < 40)
             {
+
                 //calculate the velocity
                 if (moveDirection != Vector3.zero)
                 {
@@ -634,8 +668,6 @@ public class PlayerController : MonoBehaviour
             //rightItem.transform.parent = clawR_grab.transform;
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
-
-
             heldRight = rightItem;
             addWeight(heldRight);
 
@@ -643,10 +675,9 @@ public class PlayerController : MonoBehaviour
 
             //play pick up sound
             AudioManager.instance.sfxPlayer(0);
+
         }
-       // Debug.Log("pickedup is" + Rpickedup);
-       // Debug.Log("canPickupR is " + canPickupR);
-       //Debug.Log("this is in the pickupdrop script right item is: " + heldRight);
+
         return Rpickedup;
     }
 
@@ -664,6 +695,16 @@ public class PlayerController : MonoBehaviour
             //leftItem.transform.parent = clawL_grab.transform;
             leftItem.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
+            //if you are in the home then outline the sandcastle
+            if (GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag)
+            {
+                //outline castle to tell player to place item
+                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
+
+                outline.OutlineWidth = 5;
+            }
+
+
             heldLeft = leftItem;
             addWeight(heldLeft);
 
@@ -671,6 +712,7 @@ public class PlayerController : MonoBehaviour
 
             //play pick up sound
             AudioManager.instance.sfxPlayer(0);
+
         }
         //Debug.Log("canPickup is " + canPickupL);
         return Lpickedup;
@@ -694,6 +736,13 @@ public class PlayerController : MonoBehaviour
             decorateItemR.tag = "none";
             decorateItemR.GetComponent<Collider>().enabled = false;
             decorateItemR.GetComponent<Outline>().enabled = false;
+
+            //turn off first item text
+            if (firstItem && heldLeft == null)
+            {
+                firstItem = false;
+
+            }
 
         }
         else
@@ -734,6 +783,21 @@ public class PlayerController : MonoBehaviour
             decorateItemL.tag = "none";
             decorateItemL.GetComponent<Collider>().enabled = false;
             decorateItemL.GetComponent<Outline>().enabled = false;
+
+            //unoutline the castle
+            if (heldRight == null)
+           {
+                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
+
+                outline.OutlineWidth = 0;
+            }
+
+            //turn off first item text
+            if (firstItem && heldRight == null)
+            {
+                firstItem = false;
+
+            }
 
         }
         else
