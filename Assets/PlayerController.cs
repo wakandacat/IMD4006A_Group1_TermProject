@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem footstepPartSystem;
     ParticleSystem.EmissionModule digEmit;
     ParticleSystem.EmissionModule footstepEmit;
+    ParticleSystem.EmissionModule moveEmit;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -154,6 +155,7 @@ public class PlayerController : MonoBehaviour
         footstepPartSystem.Stop();
         digEmit = digPartSystem.emission;
         footstepEmit = footstepPartSystem.emission;
+        moveEmit = movePartSystem.emission;
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
@@ -291,6 +293,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (movePartSystem.isPlaying == false)
                 {
+                    moveEmit.rateOverTime = leftStick.magnitude * 30;
                     movePartSystem.Play();
 
                     // Found advice for changing particle emission here:
@@ -663,7 +666,7 @@ public class PlayerController : MonoBehaviour
            Vector3 clawRItemPos = GameObject.Find("jnt_R_tip").transform.position;
             rightItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
-            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.1f); // <----------- Add offset here
+            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z - 0.2f); // <----------- Add offset here
             rightItem.transform.position = itemRHoldPos;
             //rightItem.transform.parent = clawR_grab.transform;
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
@@ -689,7 +692,7 @@ public class PlayerController : MonoBehaviour
             Vector3 clawLItemPos = GameObject.Find("jnt_L_tip").transform.position;
             leftItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
-            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.1f);
+            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z - 0.2f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
             //leftItem.transform.parent = clawL_grab.transform;
@@ -785,12 +788,12 @@ public class PlayerController : MonoBehaviour
             decorateItemL.GetComponent<Outline>().enabled = false;
 
             //unoutline the castle
-            if (heldRight == null)
-           {
-                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
+            //if (heldRight == null)
+            //{
+            //    var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
 
-                outline.OutlineWidth = 0;
-            }
+            //    outline.OutlineWidth = 0;
+            //}
 
             //turn off first item text
             if (firstItem && heldRight == null)
