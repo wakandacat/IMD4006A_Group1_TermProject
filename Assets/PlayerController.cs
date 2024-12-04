@@ -668,15 +668,6 @@ public class PlayerController : MonoBehaviour
             //rightItem.transform.parent = clawR_grab.transform;
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
-            //if you are in the home then outline the sandcastle
-            if (GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag)
-            {
-                //outline castle to tell player to place item
-                 var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
-
-                outline.OutlineWidth = 5;
-            } 
-
             heldRight = rightItem;
             addWeight(heldRight);
 
@@ -745,14 +736,6 @@ public class PlayerController : MonoBehaviour
             decorateItemR.tag = "none";
             decorateItemR.GetComponent<Collider>().enabled = false;
             decorateItemR.GetComponent<Outline>().enabled = false;
-
-            //unoutline the castle
-            if (heldLeft == null)
-            {
-                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
-
-                outline.OutlineWidth = 0;
-            }
 
             //turn off first item text
             if (firstItem && heldLeft == null)
