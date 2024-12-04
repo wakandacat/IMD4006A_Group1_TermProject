@@ -71,8 +71,6 @@ public class animateCrab : MonoBehaviour
             float seconds = 0.0f;
             float yPos = -0.8f * triggerVal;
 
-            //Debug.Log("rightstick mag is: " + stickMag);
-
             if (triggerVal >= 0.1f)
             {
 
