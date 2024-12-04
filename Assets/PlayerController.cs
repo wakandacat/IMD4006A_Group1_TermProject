@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     public GameObject droppedItemL;
     public GameObject decorateItemR;
     public GameObject decorateItemL;
+    public bool firstItem = true;
 
     //Booleans
     bool ifpickedUp;
@@ -173,6 +174,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //text to tell player to place item
+        if (firstItem && GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag && (heldLeft != null || heldRight != null))
+        {
+            this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "Drop item onto sandcastle!";
+        } 
+        else
+        {
+            this.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "";
+        }
+
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
@@ -655,6 +667,7 @@ public class PlayerController : MonoBehaviour
 
             //play pick up sound
             AudioManager.instance.sfxPlayer(0);
+
         }
 
         return Rpickedup;
@@ -691,6 +704,7 @@ public class PlayerController : MonoBehaviour
 
             //play pick up sound
             AudioManager.instance.sfxPlayer(0);
+
         }
         //Debug.Log("canPickup is " + canPickupL);
         return Lpickedup;
@@ -721,6 +735,13 @@ public class PlayerController : MonoBehaviour
                 var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
 
                 outline.OutlineWidth = 0;
+            }
+
+            //turn off first item text
+            if (firstItem && heldLeft == null)
+            {
+                firstItem = false;
+
             }
 
         }
@@ -769,6 +790,13 @@ public class PlayerController : MonoBehaviour
                 var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
 
                 outline.OutlineWidth = 0;
+            }
+
+            //turn off first item text
+            if (firstItem && heldRight == null)
+            {
+                firstItem = false;
+
             }
 
         }

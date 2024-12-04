@@ -19,6 +19,7 @@ public class WorldManager : MonoBehaviour
     public bool toDelete = false;
     public bool gameStart = true; //dont perform some actions at the very beginning of the game
     public GameObject sandcastle;
+  //  public GameObject placeText;
 
     //may be unnecessary but idk
     private void Awake()
@@ -86,6 +87,7 @@ public class WorldManager : MonoBehaviour
                 var outline = sandcastle.gameObject.GetComponent<Outline>();
 
                 outline.OutlineWidth = 5;
+
             }
 
         }
@@ -103,6 +105,9 @@ public class WorldManager : MonoBehaviour
             var outline = sandcastle.gameObject.GetComponent<Outline>();
 
             outline.OutlineWidth = 0;
+
+            crab.GetComponent<PlayerController>().gameObject.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "";
+
         }
 
         //only destroy items once
