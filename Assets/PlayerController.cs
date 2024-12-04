@@ -65,8 +65,10 @@ public class PlayerController : MonoBehaviour
     public float maxClawDistance;
     public bool dirChange = false;
 
-    private Vector3 clawDrop = new Vector3(0.0f, -0.2f, 0.0f);
-    private Vector3 clawRaise = new Vector3(0.0f, 0.2f, 0.0f);
+    //vectors used to set the claw targets for active/non-active claws
+    private Vector3 defaultClawPos = new Vector3(1.0f, 0.25f, 0.0f);     //resting claw targ should be set to this value
+    private Vector3 activeClawPos_L = new Vector3(1.428f, 0.4f, 0.262f);
+    private Vector3 activeClawPos_R = new Vector3(1.428f, 0.4f, -0.262f);
 
     //break vars
     public float shakeAmount = 1f;
@@ -111,6 +113,10 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
+    private void Awake()
+    {
+        
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -131,18 +137,10 @@ public class PlayerController : MonoBehaviour
         //camera distance from player
         camOffset = Camera.main.transform.position - crab.transform.position;
 
-        if (isLeft) //COME BACK TO THIS
-        {
-            //clawRight.transform.Translate(clawDrop);
-        }
-        else
-        {
-            //clawLeft.transform.Translate(clawDrop);
-        }
-
-        //claw starting positions
-        clawLeftStart = clawLeft.transform.localPosition;
-        clawRightStart = clawRight.transform.localPosition;
+        //set claw starting positions
+        clawLeftStart = defaultClawPos; //start with left down
+        clawRightStart = activeClawPos_R; //start with right active
+        //clawRightStart = clawRight.transform.localPosition; //old code
 
         //locators/grab start position -> these are the gameobjects outside of the crab gameobject
         clawR_grab.transform.position = clawRight.transform.position;
@@ -304,8 +302,8 @@ public class PlayerController : MonoBehaviour
         {
             tiltCam2.Priority = tiltCam.Priority + 1;
         } 
-        //if crab is in a hole then change to digcam
-        else if (crab.transform.position.y <= 2f)
+        //if crab is digging currently, then change to digcam
+        else if (rightTrigger > 0.1f || crab.transform.position.y <= 2.3f)
         {
             if (tiltCam.Priority > tiltCam2.Priority)
             {
@@ -429,10 +427,11 @@ public class PlayerController : MonoBehaviour
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
                // Debug.Log(currHoldTime);
-                currHoldTime += Time.deltaTime; //count the time
+                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                //AudioManager.instance.sfxPlayer(3);
+               //add breaking build up noise here? potentially a coroutine
 
-                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
+                if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
                     reduceWeight(toBreak);
@@ -448,7 +447,6 @@ public class PlayerController : MonoBehaviour
                     Destroy(toBreak);
 
                     //play break nosie
-                    //AudioManager.instance.sfxSource.Stop();
                     AudioManager.instance.sfxPlayer(4);
 
                     //spawn shell top and bottom beside the crab
@@ -464,11 +462,10 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-                //Debug.Log(currHoldTime);
-                currHoldTime += Time.deltaTime; //count the time
+                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                 //AudioManager.instance.sfxPlayer(3);
 
-                if (leftTrigger == 1f && currHoldTime >= holdLength) //broke the object
+                if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
                     reduceWeight(toBreak);
@@ -514,10 +511,19 @@ public class PlayerController : MonoBehaviour
             if (isLeft)
             {
                 terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
+                //animate claw movement applied to left
             }
             else
             {
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+
+                //animate claw movement applied to right
+                Vector3 digPosDown = clawRight.transform.localPosition + new Vector3(0.0f, -0.6f, 0.0f); //should take current claw pos and only make the y value decrease
+                Vector3 digPosUp = clawRight.transform.localPosition + new Vector3(0.0f, 0.4f, 0.0f); //should take current claw pos and only make the y value decrease
+                clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosDown, Time.deltaTime * 1.0f); //lerp down
+                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosUp, Time.deltaTime * 5.0f); //lerp back up?
+                //Debug.Log("Local Pos: " + clawRight.transform.localPosition + ", newDigPos: " + newDigPos);
             }
 
             // Found advice for changing particle emission here:
@@ -529,9 +535,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             digPartSystem.Stop();
+            //may need to reset claw pos here
 
-            //play digging audio --> need to update post alpha
-            //AudioManager.instance.digSource.Play();
         }
 
 
@@ -543,8 +548,8 @@ public class PlayerController : MonoBehaviour
 
         if (!isLeft && clawRight.transform.position.y > -0.5)
         {
-            //clawRight.transform.Translate(clawDrop);
-            //clawLeft.transform.Translate(clawRaise);
+            clawRightStart = defaultClawPos;
+            clawLeftStart = activeClawPos_L;
             AudioManager.instance.sfxPlayer(2);
         }
 
@@ -557,8 +562,8 @@ public class PlayerController : MonoBehaviour
 
         if (isLeft && clawLeft.transform.position.y > -0.5)
         {
-            clawRight.transform.Translate(clawRaise);
-            clawLeft.transform.Translate(clawDrop);
+            clawRightStart = activeClawPos_R;
+            clawLeftStart = defaultClawPos;
 
             AudioManager.instance.sfxPlayer(2);
         }
