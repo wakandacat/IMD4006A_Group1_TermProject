@@ -788,12 +788,12 @@ public class PlayerController : MonoBehaviour
             decorateItemL.GetComponent<Outline>().enabled = false;
 
             //unoutline the castle
-            if (heldRight == null)
-           {
-                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
+            //if (heldRight == null)
+            //{
+            //    var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
 
-                outline.OutlineWidth = 0;
-            }
+            //    outline.OutlineWidth = 0;
+            //}
 
             //turn off first item text
             if (firstItem && heldRight == null)
