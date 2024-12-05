@@ -79,7 +79,8 @@ public class PlayerController : MonoBehaviour
     public item shellBottom;
     public float holdLength = 2f; 
     private float currHoldTime = 0f;
-    public bool isBroken = false;
+    public float leftTrigger = 0.0f;
+    public bool canBreak = false;
 
     //for decorate
     private HomeScript homeScript;
@@ -116,12 +117,10 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
-    //haptics stuff
-    private Gamepad pad;
 
     private void Awake()
     {
-        pad = Gamepad.current;
+     
     }
 
     // Start is called before the first frame update
@@ -172,6 +171,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().breakBuildTimer());
         AudioManager.instance.ambientSource.Play();
         
         StartCoroutine(this.GetComponent<animateCrab>().digAnim());
@@ -447,7 +447,7 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------BREAKING-------------------------------------
 
         //breaking controls ---------> only if a claw is available
-        float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
+        leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
 
         //if crab is holding something breakable in active claw
         if (leftTrigger > 0.1f)
@@ -463,21 +463,17 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
+                canBreak = true;
+
                // Debug.Log(currHoldTime);
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                
-                //the moment the timer has value play once
-                if(currHoldTime >= 0 && currHoldTime < 0.05f)
-                {
-                    AudioManager.instance.sfxPlayer(3);
-                }
-
-
-
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
                     reduceWeight(toBreak);
+
+                    canBreak = false;
 
                     //spawn the pearl in the claw
                     //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
@@ -490,8 +486,8 @@ public class PlayerController : MonoBehaviour
                     Destroy(toBreak);
 
                     //play break noise
-                    AudioManager.instance.sfxSource.Stop();
-                    AudioManager.instance.sfxPlayer(4);
+                    AudioManager.instance.breakBuild.Stop();
+                    AudioManager.instance.sfxPlayer(3);
 
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
@@ -506,13 +502,16 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
+                canBreak = true;
+
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
-                //AudioManager.instance.sfxPlayer(3);
 
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
                     reduceWeight(toBreak);
+
+                    canBreak = false;
 
                     //spawn the pearl in the claw
                     //heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
@@ -525,8 +524,8 @@ public class PlayerController : MonoBehaviour
                     Destroy(toBreak);
 
                     //play break noise
-                    AudioManager.instance.sfxSource.Stop();
-                    AudioManager.instance.sfxPlayer(4);
+                    AudioManager.instance.breakBuild.Stop();
+                    AudioManager.instance.sfxPlayer(3);
 
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
@@ -536,16 +535,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            //test rumble here
-            //pad.SetMotorSpeeds(0.05f, 0.1f);
 
         } 
         else
         {
             currHoldTime = 0f;
-            AudioManager.instance.sfxSource.Stop();
-            //pad.SetMotorSpeeds(0.0f, 0.0f);
-            //AudioManager.instance.sfxSource.Stop();
+            AudioManager.instance.breakBuild.Stop();
         }
 
         //---------------------------------------DIGGING-------------------------------------

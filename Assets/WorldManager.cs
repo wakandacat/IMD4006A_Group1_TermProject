@@ -46,7 +46,7 @@ public class WorldManager : MonoBehaviour
 
         //start the crab at the default position
         crab.transform.position = crabStartPos;
-        Camera.main.transform.position = cameraStartPos;
+        //Camera.main.transform.position = cameraStartPos;
 
         enterFlag = true;
         toDelete = false;

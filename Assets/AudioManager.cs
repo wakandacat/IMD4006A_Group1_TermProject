@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource digSource;   //used exclusively for the digging sound
     public AudioSource armMoveSource; //used exclusively for the arm movement sound
     public AudioSource ambientSource; //used exclusively for the background sounds
+    public AudioSource breakBuild; //used exclusively for the breaking build up sound 
 
     //public bool isLooping = false;
 
@@ -124,6 +125,48 @@ public class AudioManager : MonoBehaviour
 
             //wait for x seconds before re-entering the loop
             yield return new WaitForSeconds(1);
+
+        }
+    }
+
+    //adds sound for as long as the player is moving the claws
+    public IEnumerator breakBuildTimer()
+    {
+
+        //for as long as player is using joystick
+        while (true)
+        {
+            //get break trigger value
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().leftTrigger;
+           //GameObject handR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight;
+            //GameObject handL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;
+            //bool heldR = handR.gameObject.GetComponent<item>().breakable;
+            //bool heldL = handL.gameObject.GetComponent<item>().breakable;
+            bool playBreak = GameObject.Find("Crab").GetComponent<PlayerController>().canBreak;
+
+
+            if (playBreak == true)
+            {
+                //bool heldR = handR.gameObject.GetComponent<item>().breakable;
+                //bool heldL = handL.gameObject.GetComponent<item>().breakable;
+
+                //if (heldR == true || heldL == true)
+                //{
+                    if (triggerVal >= 0.05f)
+                    {
+                        breakBuild.PlayOneShot(breakBuild.clip);
+
+                    }
+                    else
+                    {
+                        breakBuild.Stop();
+                    }
+                //}
+                
+            }
+            
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(0.5f);
 
         }
     }
