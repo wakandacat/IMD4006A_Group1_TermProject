@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+
 
 
 public class PauseMenuControls : MonoBehaviour
@@ -12,6 +14,9 @@ public class PauseMenuControls : MonoBehaviour
     public GameObject pauseMenu;
 
     AudioSource[] audioSources;
+
+    public GameObject ControlsFirstButton, InstructionsFirstButton, GoalFirstButton, ControlsClosedFirst, InstructionsCloseFirst, GoalCloseFirst;
+    public GameObject controlMenu, InstructionsMenu, pausedMenu, GoalMenu;
     void Start()
     {
          audioSources = audioManager.GetComponents<AudioSource>();
@@ -61,5 +66,68 @@ public class PauseMenuControls : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+    }
+
+    public void openControls()
+    {
+        controlMenu.SetActive(true);
+        pausedMenu.SetActive(false);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(ControlsFirstButton);
+    }
+    public void openInstructions()
+    {
+        InstructionsMenu.SetActive(true);
+        controlMenu.SetActive(false);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(InstructionsFirstButton);
+    }
+    public void openGoal()
+    {
+        InstructionsMenu.SetActive(false);
+        GoalMenu.SetActive(true);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(GoalFirstButton);
+
+    }
+    public void closeControls()
+    {
+        controlMenu.SetActive(false);
+        pausedMenu.SetActive(true);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(ControlsClosedFirst);
+
+    }
+    public void closeInstructions()
+    {
+        InstructionsMenu.SetActive(false);
+        pausedMenu.SetActive(true);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(InstructionsCloseFirst);
+    }
+    public void closeGoals()
+    {
+        GoalMenu.SetActive(false);
+        pausedMenu.SetActive(true);
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        //set new selected object
+        EventSystem.current.SetSelectedGameObject(GoalCloseFirst);
     }
 }

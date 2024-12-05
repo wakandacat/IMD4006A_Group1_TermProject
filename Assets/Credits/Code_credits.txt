@@ -9,3 +9,5 @@ Pick and drop script (how i learned the logic!):
 https://discussions.unity.com/t/3d-character-picking-up-item/793187/4
 Tag creation:
 https://discussions.unity.com/t/is-it-possible-to-create-a-tag-programmatically/9882
+UI control Mapping:
+https://www.youtube.com/watch?v=SXBgBmUcTe0
