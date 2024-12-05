@@ -2,4 +2,8 @@ IMD4006A - Texture Credits
 
 Below is a list of the texture images modified and used in the game Crab Cove, created for IMD4006A Advanced Game Development:
 
-- 
+- Stone Texture, used in the making of the textures on the walls and stone ground in the environment.
+Image by <a href="https://pixabay.com/users/alexmercier-4828183/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2147359">Alex Mercier</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2147359">Pixabay</a>
+
+- Wood Texture, used in the making of the texture for the "Crab Home" sign.
+Image by <a href="https://pixabay.com/users/f4mmedia-43645/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=162942">des bate</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=162942">Pixabay</a>
