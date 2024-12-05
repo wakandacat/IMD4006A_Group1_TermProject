@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 
 
 public class PauseMenuControls : MonoBehaviour
 {
-    public static bool pause = false;
+    private bool pause = true;
     public GameObject audioManager;
     // Start is called before the first frame update
     public GameObject pauseMenu;
@@ -17,26 +18,38 @@ public class PauseMenuControls : MonoBehaviour
 
     public GameObject ControlsFirstButton, InstructionsFirstButton, GoalFirstButton, ControlsClosedFirst, InstructionsCloseFirst, GoalCloseFirst;
     public GameObject controlMenu, InstructionsMenu, pausedMenu, GoalMenu;
+
+    PlayerControls UIcontrols;
     void Start()
     {
-         audioSources = audioManager.GetComponents<AudioSource>();
+        audioSources = audioManager.GetComponents<AudioSource>();
         Debug.Log(audioSources.Length);
+
+        UIcontrols = new PlayerControls();
+
+        UIcontrols.MenuControls.Enable();
+
+        UIcontrols.MenuControls.Pause.performed += pauseGameInput;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (pause == false)
-            {
-                unpauseGame();
-            }
-            else
-            {
 
-                pauseGame();
-            }
+    }
+
+    public void pauseGameInput(InputAction.CallbackContext context)
+    {
+        Debug.Log("Pause" + pause);
+        if (pause == false)
+        {
+            unpauseGame();
+        }
+        else
+        {
+            pauseGame();
         }
 
     }
@@ -45,7 +58,6 @@ public class PauseMenuControls : MonoBehaviour
     {
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
-        
 
         
         for(int i=0; i < audioSources.Length; i++)

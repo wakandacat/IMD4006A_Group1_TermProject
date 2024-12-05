@@ -174,8 +174,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UnityEditorInternal.InternalEditorUtility.AddTag("none");
-
         //---------------------------------------BASICMOVEMENT-------------------------------------
 
         //read in the controller inputs
@@ -776,14 +774,6 @@ public class PlayerController : MonoBehaviour
 
       currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
         
-    }
-
-    public void DecorateRight()
-    {
-        if(isLeft && Rpickedup == true)
-        {
-
-        }
     }
 
 
