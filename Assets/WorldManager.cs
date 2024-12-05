@@ -32,7 +32,6 @@ public class WorldManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
 
     // Start is called before the first frame update
@@ -78,7 +77,6 @@ public class WorldManager : MonoBehaviour
 
             // Resetting terrain upon entering the home area.
             terrainScript.resetTerrainHeight();
-
         }
 
 
@@ -89,9 +87,6 @@ public class WorldManager : MonoBehaviour
             //Debug.Log("Left");
             enterFlag = false;
             gameStart = false; //its no longer the beginnning of the game so begin functions as usual
-
-            crab.GetComponent<PlayerController>().gameObject.transform.Find("text").GetChild(0).GetComponent<TextMesh>().text = "";
-
         }
 
         //only destroy items once
@@ -111,7 +106,7 @@ public class WorldManager : MonoBehaviour
 
     IEnumerator CallDeleteDelay()
     {
-        yield return new WaitForSeconds(1.5f); // Wait for a bit second to prevent items being deleted in the players claws
+        yield return new WaitForSeconds(1f); // Wait for 1 second
         Delete(); // Call the function
     }
 
