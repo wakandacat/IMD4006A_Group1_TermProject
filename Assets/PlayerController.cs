@@ -95,6 +95,9 @@ public class PlayerController : MonoBehaviour
     //Booleans
     bool ifpickedUp;
 
+    //rumble vars
+    private float defaultRumble = 0.1f; //!!!!
+    private float rumbleIntensity = 0.0f;
 
     [SerializeField] public Rigidbody _rb;
 
@@ -119,10 +122,11 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
+    private Gamepad pad;
 
     private void Awake()
     {
-     
+        pad = Gamepad.current;
     }
 
     // Start is called before the first frame update
@@ -180,6 +184,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(this.GetComponent<rumbleBehavior>().rumble());        
 
         _rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -622,18 +627,18 @@ public class PlayerController : MonoBehaviour
        // Debug.Log("this is pick up");
         if (!isLeft)
         {
-            Debug.Log("inside the R3 first if");
+            //Debug.Log("inside the R3 first if");
             if (ifpickedUpR == false)
             {
                 ifpickedUpR = pickUpItemRight(clawR_grab);
-                Debug.Log("inside ifpickedUpR == false");
+                //Debug.Log("inside ifpickedUpR == false");
 
             }
             else
             {
                 dropItemR();
                 ifpickedUpR = false;
-                Debug.Log("inside first else");
+                //Debug.Log("inside first else");
 
             }
 
@@ -721,17 +726,20 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemR()
     {
+        rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
+        Debug.Log(rumbleIntensity);
+
         reduceWeight(heldRight);
         droppedItemR = heldRight;
 
         //Debug.Log("right item" + heldRight);
         //homeScript.decorateItem(heldRight);
         decorateItemR = droppedItemR;
-        Debug.Log("decorate Right" + decorateRight.castleCollision);
+        //Debug.Log("decorate Right" + decorateRight.castleCollision);
         if (decorateRight.castleCollision == true)
         {
-            Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
-            Debug.Log("The point is" + decorateRight.Cpoint.point);
+            //Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
+            //Debug.Log("The point is" + decorateRight.Cpoint.point);
             decorateItemR.transform.position = decorateRight.Cpoint.point;
             homeScript.decorateItem(decorateItemR);
             decorateItemR.tag = "none";
@@ -745,14 +753,20 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            //rumble pulse when placing on castle
+            pad.SetMotorSpeeds(0.3f, 0.3f);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
+
         }
         else
         {
             heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
+            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
     
         }
 
-        Debug.Log("we are here here!");
+        //Debug.Log("we are here here!");
         heldRight.transform.parent = null;
         heldRight.GetComponent<Collider>().enabled = true;
         Rpickedup = false;
@@ -768,30 +782,23 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemL()
     {
+        rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
+        Debug.Log(rumbleIntensity);
         reduceWeight(heldLeft);
         droppedItemL = heldLeft;
 
-        //Debug.Log("right item" + heldRight);
-        //homeScript.decorateItem(heldRight);
         decorateItemL = droppedItemL;
-        Debug.Log("decorate Left" + decorateLeft.castleCollision);
+        //Debug.Log("decorate Left" + decorateLeft.castleCollision);
         if (decorateLeft.castleCollision == true)
         {
-            Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
-            Debug.Log("The point is" + decorateLeft.Cpoint.point);
+            //Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
+            //Debug.Log("The point is" + decorateLeft.Cpoint.point);
             decorateItemL.transform.position = decorateLeft.Cpoint.point;
             homeScript.decorateItem(decorateItemL);
             decorateItemL.tag = "none";
             decorateItemL.GetComponent<Collider>().enabled = false;
             decorateItemL.GetComponent<Outline>().enabled = false;
 
-            //unoutline the castle
-            //if (heldRight == null)
-            //{
-            //    var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
-
-            //    outline.OutlineWidth = 0;
-            //}
 
             //turn off first item text
             if (firstItem && heldRight == null)
@@ -800,14 +807,19 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            //rumble pulse when placing on castle
+            pad.SetMotorSpeeds(0.3f, 0.3f);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
+
         }
         else
         {
             heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
-
+            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
         }
 
-        Debug.Log("we are here here!");
+        //Debug.Log("we are here here!");
         heldLeft.transform.parent = null;
         heldLeft.GetComponent<Collider>().enabled = true;
         Lpickedup = false;
