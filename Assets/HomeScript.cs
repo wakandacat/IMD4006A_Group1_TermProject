@@ -37,14 +37,14 @@ public class HomeScript : MonoBehaviour
             //get a bunch of random values
             int currNPC = UnityEngine.Random.Range(0, npcs.Length);
             int currText = UnityEngine.Random.Range(0, NPCText.Length);
-            int currPts = UnityEngine.Random.Range(4, 6); //vary the amount of points needed to spawn the next NPC
+            int currPts = UnityEngine.Random.Range(7, 9); //vary the amount of points needed to spawn the next NPC
             int currMat = UnityEngine.Random.Range(0, NPCMats.Length);
             int currItem = UnityEngine.Random.Range(0, items.Length - 1); 
             float scale = UnityEngine.Random.Range(0.5f, 1.0f);
 
             if (i == 0)  //the very first NPC
             {
-                npcArr.Add(new NPCClass(npcs[currNPC], items[currItem], currPts, NPCPositions[i], textPrefab, NPCText[currText], NPCMats[currMat], scale));
+                npcArr.Add(new NPCClass(npcs[currNPC], items[currItem], 4, NPCPositions[i], textPrefab, NPCText[currText], NPCMats[currMat], scale));
             }
             else if (i == numNPCs - 1) //the very last NPC -> the very last item
             {
