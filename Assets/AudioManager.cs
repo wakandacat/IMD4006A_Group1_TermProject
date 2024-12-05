@@ -91,7 +91,7 @@ public class AudioManager : MonoBehaviour
                 }
                 else if(heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f)
+                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
                     {
                         rattleSource.PlayOneShot(rattleSource.clip);
                     }
@@ -113,7 +113,7 @@ public class AudioManager : MonoBehaviour
                 }
                 else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f)
+                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
                     {
                         rattleSource.PlayOneShot(rattleSource.clip);
                     }
@@ -135,7 +135,7 @@ public class AudioManager : MonoBehaviour
                 }
                 else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f)
+                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
                     {
                         rattleSource.PlayOneShot(rattleSource.clip);
                     }
