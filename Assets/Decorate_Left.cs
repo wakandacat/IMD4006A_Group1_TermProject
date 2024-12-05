@@ -35,10 +35,6 @@ public class Decorate_Left : MonoBehaviour
             {
                 Debug.Log("item is called " + collision.gameObject.name);
                 Debug.Log("Entered this collsionm");
-                foreach (ContactPoint contact in collision.contacts)
-                {
-                    Debug.Log("Contact Point left: " + contact.point);
-                }
                 Cpoint = collision.contacts[0];
                 castleCollision = true;
             }
