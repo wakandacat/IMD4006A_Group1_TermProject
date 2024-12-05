@@ -21005,7 +21005,6 @@ MonoBehaviour:
   clawR_grab: {fileID: 1963102191}
   clawL_grab: {fileID: 1108931052}
   rightTrigger: 0
-  isDigging: 0
   audiomanager: {fileID: 436012129}
   movePartSystem: {fileID: 1586562973}
   digPartSystem: {fileID: 1207096718}
@@ -21034,13 +21033,18 @@ MonoBehaviour:
     type: 3}
   holdLength: 2
   leftTrigger: 0
-  canBreak: 0
-  broken: 0
   droppedItemR: {fileID: 0}
   droppedItemL: {fileID: 0}
   decorateItemR: {fileID: 0}
   decorateItemL: {fileID: 0}
   firstItem: 1
+  canBreak: 0
+  broken: 0
+  isDigging: 0
+  dropRumbleL: 0
+  dropRumbleCL: 0
+  dropRumbleR: 0
+  dropRumbleCR: 0
   _rb: {fileID: 0}
   canPickupR: 0
   canPickupL: 0

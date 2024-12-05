@@ -20,13 +20,9 @@ public class PlayerController : MonoBehaviour
     public GameObject clawR_grab;
     public GameObject clawL_grab;
 
-    //public GameObject clawLocator_R;
-    //public GameObject clawLocator_L;
-
     //digging related vars
     private TerrainEditor terrainScript;
     public float rightTrigger = 0.0f;
-    public bool isDigging = false;
 
     //Audio manager to activate sounds
     public GameObject audiomanager;
@@ -82,8 +78,7 @@ public class PlayerController : MonoBehaviour
     public float holdLength = 2f; 
     private float currHoldTime = 0f;
     public float leftTrigger = 0.0f;
-    public bool canBreak = false;
-    public bool broken = false;
+    
 
     //for decorate
     private HomeScript homeScript;
@@ -99,6 +94,13 @@ public class PlayerController : MonoBehaviour
     //rumble vars
     private float defaultRumble = 0.1f; //!!!!
     private float rumbleIntensity = 0.0f;
+    public bool canBreak = false;
+    public bool broken = false;
+    public bool isDigging = false;
+    public bool dropRumbleL = false; //dropped
+    public bool dropRumbleCL = false; //dropped on castle
+    public bool dropRumbleR = false; //dropped
+    public bool dropRumbleCR = false; //dropped on castle
 
     [SerializeField] public Rigidbody _rb;
 
@@ -123,7 +125,7 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
-    private Gamepad pad;
+    private Gamepad pad; //!!!
 
     private void Awake()
     {
@@ -732,8 +734,10 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemR()
     {
-        rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
-        Debug.Log(rumbleIntensity);
+        //bool to say it got dropped in world space
+        dropRumbleR = true;
+        //rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
+        //Debug.Log(rumbleIntensity);
 
         reduceWeight(heldRight, false);
         droppedItemR = heldRight;
@@ -744,6 +748,8 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("decorate Right" + decorateRight.castleCollision);
         if (decorateRight.castleCollision == true)
         {
+            //bool to say dropped specifically on castle
+            dropRumbleCR = true;
             //Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
             //Debug.Log("The point is" + decorateRight.Cpoint.point);
             decorateItemR.transform.position = decorateRight.Cpoint.point;
@@ -760,15 +766,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //rumble pulse when placing on castle
-            pad.SetMotorSpeeds(0.3f, 0.3f);
-            pad.SetMotorSpeeds(0.0f, 0.0f);
+            //pad.SetMotorSpeeds(0.3f, 0.3f);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
 
         }
         else
         {
             heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
-            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
-            pad.SetMotorSpeeds(0.0f, 0.0f);
+            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
     
         }
 
@@ -788,8 +794,10 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemL()
     {
-        rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
-        Debug.Log(rumbleIntensity);
+        //bool to say it got dropped in world space
+        dropRumbleL = true;
+        //rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
+        //Debug.Log(rumbleIntensity);
         reduceWeight(heldLeft, true);
         droppedItemL = heldLeft;
 
@@ -797,6 +805,9 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("decorate Left" + decorateLeft.castleCollision);
         if (decorateLeft.castleCollision == true)
         {
+            //bool to say dropped specifically on castle
+            dropRumbleCL = true;
+
             //Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
             //Debug.Log("The point is" + decorateLeft.Cpoint.point);
             decorateItemL.transform.position = decorateLeft.Cpoint.point;
@@ -815,15 +826,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //rumble pulse when placing on castle
-            pad.SetMotorSpeeds(0.3f, 0.3f);
-            pad.SetMotorSpeeds(0.0f, 0.0f);
+            //pad.SetMotorSpeeds(0.3f, 0.3f);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
 
         }
         else
         {
             heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
-            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
-            pad.SetMotorSpeeds(0.0f, 0.0f);
+            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
         }
 
         //Debug.Log("we are here here!");
