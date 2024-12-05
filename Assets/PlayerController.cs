@@ -78,7 +78,8 @@ public class PlayerController : MonoBehaviour
     public item shellTop;
     public item shellBottom;
     public float holdLength = 2f; 
-    private float currHoldTime = 0f; 
+    private float currHoldTime = 0f;
+    public bool isBroken = false;
 
     //for decorate
     private HomeScript homeScript;

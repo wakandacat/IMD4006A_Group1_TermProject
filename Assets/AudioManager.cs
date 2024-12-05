@@ -53,7 +53,6 @@ public class AudioManager : MonoBehaviour
     {
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
-        //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
         sfxSource.PlayOneShot(sfxClips[i]);               //play clip
     }
 

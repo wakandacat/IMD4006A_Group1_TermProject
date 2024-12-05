@@ -58,8 +58,8 @@ public class rumbleBehavior : MonoBehaviour
                 else
                 {
                     //slowest speed
-                    lowFreqVal = 0.02f;
-                    highFreqVal = 0.04f;
+                    lowFreqVal = 0.005f;
+                    highFreqVal = 0.01f;
                     seconds = 0.7f;
                 }
               
