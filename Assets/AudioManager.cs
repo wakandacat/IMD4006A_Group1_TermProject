@@ -73,9 +73,26 @@ public class AudioManager : MonoBehaviour
             heldR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight;
             heldL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;
             activeClaw = GameObject.Find("Crab").GetComponent<PlayerController>().isLeft;
+            Debug.Log("activeClaw before if else: " + activeClaw);
 
             //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
-            if (walkMag >= 0.7f)
+            if (clawMag >= 0.01f)
+            {
+                //determine if active has a clam
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true && activeClaw == false)
+                {
+                    Debug.Log("activeClaw in R: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true && activeClaw == true)
+                {
+                    Debug.Log("activeClaw in L: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+                }
+
+            }
+            else if(walkMag >= 0.7f)
             {
                 secondsToWait = 0.3f;
                 //play a single instance of the sfx
@@ -84,17 +101,14 @@ public class AudioManager : MonoBehaviour
                 //if held left or right is clam then rattle
                 if(heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if(activeClaw == false && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
+                        Debug.Log("activeClaw in R: " + activeClaw);
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
+                    
                 }
                 else if(heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
+                        Debug.Log("activeClaw in L: " + activeClaw);
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
                 }
             }
             else if (walkMag >= 0.5f && walkMag < 0.7f)
@@ -106,17 +120,12 @@ public class AudioManager : MonoBehaviour
                 //if held left or right is clam then rattle
                 if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == false && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
                 }
                 else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
+                    
                 }
             }
             else if (walkMag >= 0.1f && walkMag < 0.5f)
@@ -128,22 +137,18 @@ public class AudioManager : MonoBehaviour
                 //if held left or right is clam then rattle
                 if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == false && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
+                    
                 }
                 else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
                 {
-                    if (activeClaw == true && clawMag >= 0.01f || walkMag >= 0.1f)
-                    {
                         rattleSource.PlayOneShot(rattleSource.clip);
-                    }
+                    
                 }
             }
             else
             {
-                secondsToWait = 1.0f;
+                secondsToWait = 0.5f;
                 rattleSource.Stop();
             }
 
