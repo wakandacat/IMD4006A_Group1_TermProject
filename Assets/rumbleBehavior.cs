@@ -45,21 +45,27 @@ public class rumbleBehavior : MonoBehaviour
                 //fastest speed
                 if (triggerVal >= 0.7f)
                 {
-                    lowFreqVal = 0.05f;
-                    highFreqVal = 0.1f;
+                    //lowFreqVal = 0.05f;
+                    //highFreqVal = 0.1f;
+                    lowFreqVal = 0.11f;
+                    highFreqVal = 0.14f;
                     seconds = 0.4f;
                 }
                 else if (triggerVal >= 0.4f && triggerVal < 0.7f)
                 {
-                    lowFreqVal = 0.04f;
-                    highFreqVal = 0.07f;
+                    //lowFreqVal = 0.04f;
+                    //highFreqVal = 0.07f;
+                    lowFreqVal = 0.06f;
+                    highFreqVal = 0.10f;
                     seconds = 0.5f;
                 }
                 else
                 {
                     //slowest speed
-                    lowFreqVal = 0.005f;
-                    highFreqVal = 0.01f;
+                    //lowFreqVal = 0.005f;
+                    //highFreqVal = 0.01f;
+                    lowFreqVal = 0.01f;
+                    highFreqVal = 0.05f;
                     seconds = 0.7f;
                 }
               

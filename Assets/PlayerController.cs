@@ -465,8 +465,14 @@ public class PlayerController : MonoBehaviour
 
                // Debug.Log(currHoldTime);
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
-               //AudioManager.instance.sfxPlayer(3);
-               //add breaking build up noise here? potentially a coroutine
+               
+                //the moment the timer has value play once
+                if(currHoldTime >= 0 && currHoldTime < 0.05f)
+                {
+                    AudioManager.instance.sfxPlayer(3);
+                }
+
+
 
                 if (currHoldTime >= holdLength) //broke the object
                 {
@@ -483,7 +489,8 @@ public class PlayerController : MonoBehaviour
                     //delete the clam
                     Destroy(toBreak);
 
-                    //play break nosie
+                    //play break noise
+                    AudioManager.instance.sfxSource.Stop();
                     AudioManager.instance.sfxPlayer(4);
 
                     //spawn shell top and bottom beside the crab
@@ -517,8 +524,8 @@ public class PlayerController : MonoBehaviour
                     //delete the clam
                     Destroy(toBreak);
 
-                    //play break nosie
-                    //AudioManager.instance.sfxSource.Stop();
+                    //play break noise
+                    AudioManager.instance.sfxSource.Stop();
                     AudioManager.instance.sfxPlayer(4);
 
                     //spawn shell top and bottom beside the crab
@@ -536,6 +543,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             currHoldTime = 0f;
+            AudioManager.instance.sfxSource.Stop();
             //pad.SetMotorSpeeds(0.0f, 0.0f);
             //AudioManager.instance.sfxSource.Stop();
         }
@@ -701,16 +709,6 @@ public class PlayerController : MonoBehaviour
             //leftItem.transform.position = clawLeft.transform.position;
             //leftItem.transform.parent = clawL_grab.transform;
             leftItem.transform.parent = GameObject.Find("jnt_L_tip").transform;
-
-            //if you are in the home then outline the sandcastle
-            if (GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag)
-            {
-                //outline castle to tell player to place item
-                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
-
-                outline.OutlineWidth = 5;
-            }
-
 
             heldLeft = leftItem;
             addWeight(heldLeft);
