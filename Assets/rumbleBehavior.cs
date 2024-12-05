@@ -48,6 +48,7 @@ public class rumbleBehavior : MonoBehaviour
             float defaultIntensity = 0.1f; //speed to multiply by item weight to get speed values
             GameObject heldR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight; //gameobject item being held right -> required to get weight
             GameObject heldL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;  //gameobject item being held left -> required to get weight
+            Debug.Log("Held L: " + heldL + " Held R: " + heldR);
 
             //digging rumble
             if (playDig == true)
@@ -117,43 +118,6 @@ public class rumbleBehavior : MonoBehaviour
             {
                 //this will kill rumble once item is broken
                 gamepad.SetMotorSpeeds(0.0f, 0.0f);
-            }
-            else if(droppedItemL == true) //if you dropped an item from the left claw
-            {
-                //if the item was put on the castle
-                if(casDropL == true)
-                {
-                    //fixed values since gravty should not be affecting these as much as the items falling to the ground
-                    lowFreqVal = 0.2f;
-                    highFreqVal = 0.2f;
-                }
-                else //else it was dropped on the ground
-                {
-                    //get intensity for rumble based on item's weight, low and high will be the same amount
-                    lowFreqVal = defaultIntensity * heldL.gameObject.GetComponent<item>().itemWeight;
-                    highFreqVal = defaultIntensity * heldL.gameObject.GetComponent<item>().itemWeight;
-                }
-
-                gamepad.SetMotorSpeeds(lowFreqVal, highFreqVal);
-                
-            }
-            else if(droppedItemR == true) //if you dropped an item from the right claw
-            {
-                //if the item was put on the castle
-                if (casDropR == true)
-                {
-                    //fixed values since gravty should not be affecting these as much as the items falling to the ground
-                    lowFreqVal = 0.2f;
-                    highFreqVal = 0.2f;
-                }
-                else //else it was dropped on the ground
-                {
-                    //get intensity for rumble based on item's weight, low and high will be the same amount
-                    lowFreqVal = defaultIntensity * heldR.gameObject.GetComponent<item>().itemWeight;
-                    highFreqVal = defaultIntensity * heldR.gameObject.GetComponent<item>().itemWeight;
-                }
-
-                gamepad.SetMotorSpeeds(lowFreqVal, highFreqVal);
             }
             else //if none of these situations are true, kill rumble
             {
