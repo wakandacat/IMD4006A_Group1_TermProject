@@ -650,7 +650,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159336637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622776, y: -0.000000045422883, z: 0.000000015140957, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622773, y: -0.000000086927216, z: 0.000000028975736, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 57.037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7689,6 +7689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outOfBounds: {fileID: 909816512}
+  safetyNet: {fileID: 1975192165}
   homeArea: {fileID: 1777476355}
   crabStartPos: {x: 10, y: 3.1, z: 60}
   cameraStartPos: {x: 10, y: 6, z: 65}
