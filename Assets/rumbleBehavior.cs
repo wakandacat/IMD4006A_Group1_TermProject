@@ -47,9 +47,9 @@ public class rumbleBehavior : MonoBehaviour
                 {
                     //lowFreqVal = 0.05f;
                     //highFreqVal = 0.1f;
-                    lowFreqVal = 0.11f;
-                    highFreqVal = 0.14f;
-                    seconds = 0.4f;
+                    lowFreqVal = 0.12f;
+                    highFreqVal = 0.16f;
+                    seconds = 0.3f;
                 }
                 else if (triggerVal >= 0.4f && triggerVal < 0.7f)
                 {
@@ -65,7 +65,7 @@ public class rumbleBehavior : MonoBehaviour
                     //lowFreqVal = 0.005f;
                     //highFreqVal = 0.01f;
                     lowFreqVal = 0.01f;
-                    highFreqVal = 0.05f;
+                    highFreqVal = 0.04f;
                     seconds = 0.7f;
                 }
               
