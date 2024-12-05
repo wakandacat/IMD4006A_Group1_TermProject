@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.ambientSource.Play();
 
         _rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
