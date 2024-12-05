@@ -17,8 +17,8 @@ public class HomeScript : MonoBehaviour
     public Material[] NPCMats;
     public GameObject textPrefab;
     public GameObject camera;
-    private string[] NPCText = new[] { "What a nice home!", "Oooooo! Fancy!", "Nice place! Here ya go!", "I found this for you!", "You should be mayor!", "Whoa! Cool house!" , "I brought you a housewarming gift!" , "I love your house!", "Welcome to Crab Cove!" };
-    private Vector3[] NPCPositions = new Vector3[] { new Vector3(4f, 2.8f, 52f), new Vector3(20f, 3f, 69f), new Vector3(22f, 3.8f, 79f), new Vector3(8f, 2.9f, 45f), new Vector3(19f, 3f, 49f), new Vector3(14f, 3f, 53f), new Vector3(17f, 3f, 65f), new Vector3(23f, 3f, 61f), new Vector3(27f, 2.9f, 67f), new Vector3(6.5f, 3.8f, 80f) };
+    private string[] NPCText = new[] { "What a nice home!", "Oooooo! Fancy!", "Nice place! Here ya go!", "I found this for you!", "You should be mayor!", "Whoa! Cool house!" , "A housewarming gift!" , "I love your house!", "Welcome to Crab Cove!" };
+    private Vector3[] NPCPositions = new Vector3[] { new Vector3(4f, 2.8f, 52f), new Vector3(20f, 3f, 69f), new Vector3(22f, 3.8f, 79f), new Vector3(8f, 3.0f, 45f), new Vector3(19f, 3f, 49f), new Vector3(14f, 3f, 53f), new Vector3(17f, 3f, 65f), new Vector3(23f, 3f, 61f), new Vector3(27f, 3.0f, 67f), new Vector3(6.5f, 3.8f, 80f) };
 
 
     //total point value on castle
@@ -37,14 +37,14 @@ public class HomeScript : MonoBehaviour
             //get a bunch of random values
             int currNPC = UnityEngine.Random.Range(0, npcs.Length);
             int currText = UnityEngine.Random.Range(0, NPCText.Length);
-            int currPts = UnityEngine.Random.Range(4, 6); //vary the amount of points needed to spawn the next NPC
+            int currPts = UnityEngine.Random.Range(7, 9); //vary the amount of points needed to spawn the next NPC
             int currMat = UnityEngine.Random.Range(0, NPCMats.Length);
             int currItem = UnityEngine.Random.Range(0, items.Length - 1); 
             float scale = UnityEngine.Random.Range(0.5f, 1.0f);
 
             if (i == 0)  //the very first NPC
             {
-                npcArr.Add(new NPCClass(npcs[currNPC], items[currItem], currPts, NPCPositions[i], textPrefab, NPCText[currText], NPCMats[currMat], scale));
+                npcArr.Add(new NPCClass(npcs[currNPC], items[currItem], 4, NPCPositions[i], textPrefab, NPCText[currText], NPCMats[currMat], scale));
             }
             else if (i == numNPCs - 1) //the very last NPC -> the very last item
             {

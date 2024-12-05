@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource digSource;   //used exclusively for the digging sound
     public AudioSource armMoveSource; //used exclusively for the arm movement sound
     public AudioSource ambientSource; //used exclusively for the background sounds
+    public AudioSource breakBuild; //used exclusively for the breaking build up sound 
 
     //public bool isLooping = false;
 
@@ -54,7 +55,6 @@ public class AudioManager : MonoBehaviour
     {
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
-        //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
         sfxSource.PlayOneShot(sfxClips[i]);               //play clip
     }
 
@@ -130,31 +130,76 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    //adds sound for as long as the player is digging
-    public IEnumerator digSoundTimer()
+    //adds sound for as long as the player is moving the claws
+    public IEnumerator breakBuildTimer()
     {
 
         //for as long as player is using joystick
         while (true)
         {
-            //get stickMag
-            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
-            //Debug.Log("rightstick mag is: " + stickMag);
+            //get break trigger value
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().leftTrigger;
+            bool playBreak = GameObject.Find("Crab").GetComponent<PlayerController>().canBreak;
 
-            if (triggerVal >= 0.1f)
+
+            if (playBreak == true)
             {
-                //Debug.Log("digging should play sound");
-                digSource.PlayOneShot(digSource.clip);
+                if (triggerVal >= 0.05f)
+                {
+                    breakBuild.PlayOneShot(breakBuild.clip);
 
+                }
+                else
+                {
+                    breakBuild.Stop();
+                }
+            }
+            
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(0.5f);
+
+        }
+    }
+
+    //adds sound for as long as the player is digging
+    public IEnumerator digSoundTimer()
+    {
+
+        //for as long as player is pressing on the trigger
+        while (true)
+        {
+            //get trigger value for dig
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
+            float seconds = 0.0f;
+
+            //fastest
+            if (triggerVal >= 0.7f)
+            {
+                seconds = 0.4f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
+            }
+            else if (triggerVal >= 0.4f && triggerVal < 0.7f)
+            {
+                seconds = 0.5f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
+            }
+            //slowest
+            else if (triggerVal >= 0.1f && triggerVal < 0.4f)
+            {
+                seconds = 0.6f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
             }
             else
             {
-                //Debug.Log("stop digging sound");
                 digSource.Stop();
+                seconds = 0.4f;
             }
 
             //wait for x seconds before re-entering the loop
-            yield return new WaitForSeconds(1.3f);
+            yield return new WaitForSeconds(seconds);
 
         }
     }
