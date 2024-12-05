@@ -23,24 +23,25 @@ public class AudioManager : MonoBehaviour
 
     private float secondsToWait;
 
+
     private void Awake()
     {
         //if instance doesn't exist, fill with this one else destroy the existing version
         if(instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+           // DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+          //  Destroy(gameObject);
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

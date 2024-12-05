@@ -140,6 +140,7 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerControls();
         controls.Enable();
 
+
         //setup callback function to switch active claws
         //+= refers to adding a callback function
         controls.GamePlay.SwitchToLeft.performed += OnSwitchLeft;
@@ -599,12 +600,13 @@ public class PlayerController : MonoBehaviour
 //toggle the active claw
     public void OnSwitchLeft(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawRight);
         if (!isLeft && clawRight.transform.position.y > -0.5)
         {
             clawRightStart = defaultClawPos;
             clawLeftStart = activeClawPos_L;
             AudioManager.instance.sfxPlayer(2);
+
         }
 
         isLeft = true;
@@ -613,7 +615,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSwitchRight(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawLeft);
         if (isLeft && clawLeft.transform.position.y > -0.5)
         {
             clawRightStart = activeClawPos_R;
@@ -683,7 +685,7 @@ public class PlayerController : MonoBehaviour
            Vector3 clawRItemPos = GameObject.Find("jnt_R_tip").transform.position;
             rightItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
-            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z - 0.2f); // <----------- Add offset here
+            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.2f); // <----------- Add offset here
             rightItem.transform.position = itemRHoldPos;
             //rightItem.transform.parent = clawR_grab.transform;
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
@@ -709,7 +711,7 @@ public class PlayerController : MonoBehaviour
             Vector3 clawLItemPos = GameObject.Find("jnt_L_tip").transform.position;
             leftItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
-            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z - 0.2f);
+            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.2f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
             //leftItem.transform.parent = clawL_grab.transform;
@@ -803,6 +805,7 @@ public class PlayerController : MonoBehaviour
             decorateItemL.GetComponent<Collider>().enabled = false;
             decorateItemL.GetComponent<Outline>().enabled = false;
 
+          
 
             //turn off first item text
             if (firstItem && heldRight == null)
@@ -877,13 +880,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void DecorateRight()
+    void OnDestroy()
     {
-        if(isLeft && Rpickedup == true)
-        {
-
-        }
+        controls.GamePlay.SwitchToLeft.performed -= OnSwitchLeft;
+        controls.GamePlay.SwitchToRight.performed -= OnSwitchRight;
+        controls.GamePlay.GrabDrop.performed -= OnPickDropControls;
     }
-
 
 }
