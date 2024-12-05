@@ -28,17 +28,17 @@ public class CrabClaw : MonoBehaviour
                 //gameObject.GetComponentInParent<PlayerController>().rightItem = other.gameObject;
                 //gameObject.GetComponentInParent<PlayerController>().canPickupR = true;
                 pControllerScript.updateRClawStatus(other.gameObject, true);
-                Debug.Log("item is called " + other.name);
+                //Debug.Log("item is called " + other.name);
                 //Debug.Log("rigth can pick up is " + gameObject.GetComponentInParent<PlayerController>().canPickupR);
 
             }
             else
             {
-                Debug.Log("The gameObject is: " + gameObject.name);
+                //Debug.Log("The gameObject is: " + gameObject.name);
                 //gameObject.GetComponentInParent<PlayerController>().leftItem = other.gameObject;
                 //gameObject.GetComponentInParent<PlayerController>().canPickupL = true;
                 pControllerScript.updateLClawStatus(other.gameObject, true);
-                Debug.Log("item is called " + other.name);
+                //Debug.Log("item is called " + other.name);
                 //Debug.Log("left can pick up is " + gameObject.GetComponentInParent<PlayerController>().canPickupL);
             }
 

@@ -138,31 +138,20 @@ public class AudioManager : MonoBehaviour
         {
             //get break trigger value
             float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().leftTrigger;
-           //GameObject handR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight;
-            //GameObject handL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;
-            //bool heldR = handR.gameObject.GetComponent<item>().breakable;
-            //bool heldL = handL.gameObject.GetComponent<item>().breakable;
             bool playBreak = GameObject.Find("Crab").GetComponent<PlayerController>().canBreak;
 
 
             if (playBreak == true)
             {
-                //bool heldR = handR.gameObject.GetComponent<item>().breakable;
-                //bool heldL = handL.gameObject.GetComponent<item>().breakable;
+                if (triggerVal >= 0.05f)
+                {
+                    breakBuild.PlayOneShot(breakBuild.clip);
 
-                //if (heldR == true || heldL == true)
-                //{
-                    if (triggerVal >= 0.05f)
-                    {
-                        breakBuild.PlayOneShot(breakBuild.clip);
-
-                    }
-                    else
-                    {
-                        breakBuild.Stop();
-                    }
-                //}
-                
+                }
+                else
+                {
+                    breakBuild.Stop();
+                }
             }
             
             //wait for x seconds before re-entering the loop

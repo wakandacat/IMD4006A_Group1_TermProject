@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     //digging related vars
     private TerrainEditor terrainScript;
     public float rightTrigger = 0.0f;
+    public bool isDigging = false;
 
     //Audio manager to activate sounds
     public GameObject audiomanager;
@@ -81,6 +82,7 @@ public class PlayerController : MonoBehaviour
     private float currHoldTime = 0f;
     public float leftTrigger = 0.0f;
     public bool canBreak = false;
+    public bool broken = false;
 
     //for decorate
     private HomeScript homeScript;
@@ -176,6 +178,7 @@ public class PlayerController : MonoBehaviour
         
         StartCoroutine(this.GetComponent<animateCrab>().digAnim());
         StartCoroutine(this.GetComponent<rumbleBehavior>().digRumble());
+        StartCoroutine(this.GetComponent<rumbleBehavior>().breakRumble());
         
 
         _rb = GetComponent<Rigidbody>();
@@ -464,8 +467,9 @@ public class PlayerController : MonoBehaviour
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
                 canBreak = true;
+                broken = false;
 
-               // Debug.Log(currHoldTime);
+                // Debug.Log(currHoldTime);
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
                
                 if (currHoldTime >= holdLength) //broke the object
@@ -474,6 +478,7 @@ public class PlayerController : MonoBehaviour
                     reduceWeight(toBreak);
 
                     canBreak = false;
+                    broken = true;
 
                     //spawn the pearl in the claw
                     //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
@@ -503,6 +508,7 @@ public class PlayerController : MonoBehaviour
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
                 canBreak = true;
+                broken = false;
 
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
 
@@ -512,6 +518,7 @@ public class PlayerController : MonoBehaviour
                     reduceWeight(toBreak);
 
                     canBreak = false;
+                    broken = true;
 
                     //spawn the pearl in the claw
                     //heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
@@ -540,6 +547,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             currHoldTime = 0f;
+            broken = false;
             AudioManager.instance.breakBuild.Stop();
         }
 
@@ -551,23 +559,17 @@ public class PlayerController : MonoBehaviour
         //make the crab dig here
         if (rightTrigger > 0f && crab.transform.position.z < 70)
         {
+            isDigging = true;
 
             if (isLeft)
             {
                 terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
-                //animate claw movement applied to left
             }
             else
             {
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
-                //animate claw movement applied to right
-                //Vector3 digPosDown = clawRight.transform.localPosition + new Vector3(0.0f, -0.6f, 0.0f); //should take current claw pos and only make the y value decrease
-                //Vector3 digPosUp = clawRight.transform.localPosition + new Vector3(0.0f, 0.6f, 0.0f); //should take current claw pos and only make the y value decrease
-                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosDown, Time.deltaTime * 5.0f); //lerp down
-                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosUp, Time.deltaTime * 5.0f); //lerp back up?
-                //Debug.Log("Local Pos: " + clawRight.transform.localPosition + ", newDigPos: " + newDigPos);
             }
 
             // Found advice for changing particle emission here:
@@ -579,6 +581,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             digPartSystem.Stop();
+            isDigging = false;
             //may need to reset claw pos here
 
         }
