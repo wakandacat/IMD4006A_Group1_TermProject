@@ -26,7 +26,7 @@ public class Decorate_Left : MonoBehaviour
     //get contact point means tha the contact is true
     //assign the contact point coordinates to it
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "castle")
         {
@@ -35,10 +35,6 @@ public class Decorate_Left : MonoBehaviour
             {
                 Debug.Log("item is called " + collision.gameObject.name);
                 Debug.Log("Entered this collsionm");
-                foreach (ContactPoint contact in collision.contacts)
-                {
-                    Debug.Log("Contact Point left: " + contact.point);
-                }
                 Cpoint = collision.contacts[0];
                 castleCollision = true;
             }

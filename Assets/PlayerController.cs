@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.ambientSource.Play();
 
         _rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -837,14 +838,6 @@ public class PlayerController : MonoBehaviour
 
       currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
         
-    }
-
-    public void DecorateRight()
-    {
-        if(isLeft && Rpickedup == true)
-        {
-
-        }
     }
 
 

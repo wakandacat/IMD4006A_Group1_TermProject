@@ -154,7 +154,7 @@
             "id": "e9d5396a-cf84-4b01-aca5-c2d20cf440d7",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "28a2d5d1-1de9-4951-bcf8-aeaa7f6bd534",
                     "expectedControlType": "Button",
@@ -167,11 +167,11 @@
                 {
                     "name": "",
                     "id": "3a5a756d-eea0-455e-9955-c5f54f6235a6",
-                    "path": "",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
