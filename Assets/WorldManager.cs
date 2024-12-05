@@ -74,9 +74,13 @@ public class WorldManager : MonoBehaviour
         //---------------------------------SAFETY NET AREA-----------------------------------------
         //always check if the crab goes out of bounds
         //if it does, do a fade to black thing and then move the crab back home
-        if (crab.transform.position.x <= safetyNet.transform.position.x + safetyNet.transform.localScale.x / 2 && crab.transform.position.x >= safetyNet.transform.position.x - safetyNet.transform.localScale.x / 2 && crab.transform.position.z <= safetyNet.transform.position.z + safetyNet.transform.localScale.z / 2 && crab.transform.position.z >= safetyNet.transform.position.z - safetyNet.transform.localScale.z / 2)
+        if (crab.transform.position.x <= safetyNet.transform.position.x + safetyNet.transform.localScale.x / 2 
+            && crab.transform.position.x >= safetyNet.transform.position.x - safetyNet.transform.localScale.x / 2 
+            && crab.transform.position.z <= safetyNet.transform.position.z + safetyNet.transform.localScale.z / 2 
+            && crab.transform.position.z >= safetyNet.transform.position.z - safetyNet.transform.localScale.z / 2
+            && crab.transform.position.y <= safetyNet.transform.position.y + safetyNet.transform.localScale.y / 2)
         {
-            //Debug.Log("Out of bounds");
+            Debug.Log("Out of bounds");
             crab.transform.position = crabStartPos;
            // Camera.main.transform.position = cameraStartPos;
         }
