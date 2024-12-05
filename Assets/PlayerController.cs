@@ -177,9 +177,7 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.ambientSource.Play();
         
         StartCoroutine(this.GetComponent<animateCrab>().digAnim());
-        StartCoroutine(this.GetComponent<rumbleBehavior>().digRumble());
-        StartCoroutine(this.GetComponent<rumbleBehavior>().breakRumble());
-        
+        StartCoroutine(this.GetComponent<rumbleBehavior>().rumble());        
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -397,7 +395,7 @@ public class PlayerController : MonoBehaviour
             clawLeft.transform.Translate(clawMovement, Space.World);
 
             clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
-
+            Debug.Log("Clawsmooth: " + clawSmooth + " clawsmooth with delta: " + clawSmooth * Time.deltaTime);
             ClampClaw(clawLeft, clawLeftStart); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f) //moving the right claw, left claw just follows body
@@ -405,7 +403,7 @@ public class PlayerController : MonoBehaviour
             clawRight.transform.Translate(clawMovement, Space.World);
 
             clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
-
+            Debug.Log("Clawsmooth: " + clawSmooth + " clawsmooth with delta: " + clawSmooth * Time.deltaTime);
             ClampClaw(clawRight, clawRightStart); //clamp into an arc
 
         }
@@ -828,18 +826,21 @@ public class PlayerController : MonoBehaviour
         {          
             //item weight affects movement speed of crab
             currMoveSpeed = currMoveSpeed - heldItem.gameObject.GetComponent<item>().itemWeight;
+            clawSmooth = clawSmooth - 2*heldItem.gameObject.GetComponent<item>().itemWeight;
         }
         else
         {
             currMoveSpeed = baseMoveSpeed;
+            clawSmooth = 20.0f;
         }
     }
 
     public void reduceWeight(GameObject droppedItem)
     {
 
-      currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
-        
+        currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
+        clawSmooth = clawSmooth + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+
     }
 
     public void DecorateRight()
