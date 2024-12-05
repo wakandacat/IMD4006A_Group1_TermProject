@@ -39,16 +39,9 @@ public class rumbleBehavior : MonoBehaviour
             bool playDig = GameObject.Find("Crab").GetComponent<PlayerController>().isDigging; //you are actively digging
             bool playBreak = GameObject.Find("Crab").GetComponent<PlayerController>().canBreak; //object you're holding can break
             bool isBroken = GameObject.Find("Crab").GetComponent<PlayerController>().broken;  //object you were breaking is now broken
-            bool droppedItemL = GameObject.Find("Crab").GetComponent<PlayerController>().dropRumbleL; //dropped in world
-            bool droppedItemR = GameObject.Find("Crab").GetComponent<PlayerController>().dropRumbleR; //dropped in world
-            bool casDropR = GameObject.Find("Crab").GetComponent<PlayerController>().dropRumbleCR; //dropped on castle
-            bool casDropL = GameObject.Find("Crab").GetComponent<PlayerController>().dropRumbleCL; //dropped on castle
             float lowFreqVal = 0.0f;  //speed to set left motor
             float highFreqVal = 0.0f; //speed to set right motor
-            float defaultIntensity = 0.1f; //speed to multiply by item weight to get speed values
-            GameObject heldR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight; //gameobject item being held right -> required to get weight
-            GameObject heldL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;  //gameobject item being held left -> required to get weight
-            Debug.Log("Held L: " + heldL + " Held R: " + heldR);
+
 
             //digging rumble
             if (playDig == true)
