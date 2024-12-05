@@ -115,10 +115,6 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
-    private void Awake()
-    {
-        
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -129,6 +125,7 @@ public class PlayerController : MonoBehaviour
         //instantiate a new input action object and enable it
         controls = new PlayerControls();
         controls.Enable();
+
 
         //setup callback function to switch active claws
         //+= refers to adding a callback function
@@ -583,12 +580,13 @@ public class PlayerController : MonoBehaviour
 //toggle the active claw
     public void OnSwitchLeft(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawRight);
         if (!isLeft && clawRight.transform.position.y > -0.5)
         {
             clawRightStart = defaultClawPos;
             clawLeftStart = activeClawPos_L;
             AudioManager.instance.sfxPlayer(2);
+
         }
 
         isLeft = true;
@@ -597,7 +595,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSwitchRight(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawLeft);
         if (isLeft && clawLeft.transform.position.y > -0.5)
         {
             clawRightStart = activeClawPos_R;
@@ -837,5 +835,11 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    void OnDestroy()
+    {
+        controls.GamePlay.SwitchToLeft.performed -= OnSwitchLeft;
+        controls.GamePlay.SwitchToRight.performed -= OnSwitchRight;
+        controls.GamePlay.GrabDrop.performed -= OnPickDropControls;
+    }
 
 }

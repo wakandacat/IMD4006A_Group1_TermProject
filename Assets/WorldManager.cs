@@ -26,11 +26,11 @@ public class WorldManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
         }
 
     }
@@ -39,6 +39,8 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
+
+        crab = GameObject.Find("Crab").gameObject;
 
         //on start of game, spawn items
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
