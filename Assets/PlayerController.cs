@@ -62,7 +62,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 camOffset;
     private Vector3 clawLeftStart;
     private Vector3 clawRightStart;
-    public float clawSmooth;
+    public float clawSmoothL = 20;
+    public float clawSmoothR = 20;
     public float clawAngle;
     public float maxClawDistance;
     public bool dirChange = false;
@@ -383,10 +384,8 @@ public class PlayerController : MonoBehaviour
 
         //claw movement controls
         rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
+        //Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
 
-        //input from controls move the crab in xz plane -> take into account camera rotation here as well
-        Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
-        
         //update external gameobjects to match the internal claw positions
         clawR_grab.transform.position = clawRight.transform.position;
         clawL_grab.transform.position = clawLeft.transform.position;
@@ -394,26 +393,31 @@ public class PlayerController : MonoBehaviour
         clawR_grab.transform.rotation = clawRight.transform.rotation;
         clawL_grab.transform.rotation = clawLeft.transform.rotation;
 
-        //moving the left claw, right claw just follows body
+        //moving the left claw, right claw just follows body !!!!
         if (isLeft && rightStick.magnitude > 0.1f)
         {
+            //input from controls move the crab in xz plane -> take into account camera rotation here as well
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * clawSmoothL * Time.deltaTime;
             clawLeft.transform.Translate(clawMovement, Space.World);
 
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
-            Debug.Log("Clawsmooth: " + clawSmooth + " clawsmooth with delta: " + clawSmooth * Time.deltaTime);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmoothR * Time.deltaTime);
+            //Debug.Log("ClawsmoothR: " + clawSmoothR + " clawsmoothR with delta: " + clawSmoothR * Time.deltaTime);
             ClampClaw(clawLeft, clawLeftStart); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f) //moving the right claw, left claw just follows body
         {
+            //input from controls move the crab in xz plane -> take into account camera rotation here as well
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * clawSmoothR * Time.deltaTime;
             clawRight.transform.Translate(clawMovement, Space.World);
 
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
-            Debug.Log("Clawsmooth: " + clawSmooth + " clawsmooth with delta: " + clawSmooth * Time.deltaTime);
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmoothL * Time.deltaTime);
+            //Debug.Log("ClawsmoothL: " + clawSmoothL + " clawsmoothL with delta: " + clawSmoothL * Time.deltaTime);
             ClampClaw(clawRight, clawRightStart); //clamp into an arc
 
         }
         else //move both claws with the body when no direct input
         {
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
             clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, 0.3f);
             clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, 0.3f);
         }
@@ -478,7 +482,7 @@ public class PlayerController : MonoBehaviour
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
-                    reduceWeight(toBreak);
+                    reduceWeight(toBreak, true);
 
                     canBreak = false;
                     broken = true;
@@ -488,7 +492,7 @@ public class PlayerController : MonoBehaviour
                     heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_tip").transform.position, Quaternion.identity);
                     heldLeft.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
-                    addWeight(heldLeft);
+                    addWeight(heldLeft, true);
 
                     //delete the clam
                     Destroy(toBreak);
@@ -518,7 +522,7 @@ public class PlayerController : MonoBehaviour
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
-                    reduceWeight(toBreak);
+                    reduceWeight(toBreak, false);
 
                     canBreak = false;
                     broken = true;
@@ -528,7 +532,7 @@ public class PlayerController : MonoBehaviour
                     heldRight = Instantiate(pearl.gameObject, GameObject.Find("jnt_R_tip").transform.position, Quaternion.identity);
                     heldRight.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
-                    addWeight(heldRight);
+                    addWeight(heldRight, false);
 
                     //delete the clam
                     Destroy(toBreak);
@@ -685,7 +689,7 @@ public class PlayerController : MonoBehaviour
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
             heldRight = rightItem;
-            addWeight(heldRight);
+            addWeight(heldRight, false);
 
             Rpickedup = true;
 
@@ -712,7 +716,7 @@ public class PlayerController : MonoBehaviour
             leftItem.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
             heldLeft = leftItem;
-            addWeight(heldLeft);
+            addWeight(heldLeft, true);
 
             Lpickedup = true;
 
@@ -729,7 +733,7 @@ public class PlayerController : MonoBehaviour
         rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
         Debug.Log(rumbleIntensity);
 
-        reduceWeight(heldRight);
+        reduceWeight(heldRight, false);
         droppedItemR = heldRight;
 
         //Debug.Log("right item" + heldRight);
@@ -784,7 +788,7 @@ public class PlayerController : MonoBehaviour
     {
         rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
         Debug.Log(rumbleIntensity);
-        reduceWeight(heldLeft);
+        reduceWeight(heldLeft, true);
         droppedItemL = heldLeft;
 
         decorateItemL = droppedItemL;
@@ -831,27 +835,45 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.sfxPlayer(1);
     }
 
-    public void addWeight(GameObject heldItem)
+    public void addWeight(GameObject heldItem, bool isLeft)
     {
         //move the crab and take into account the weight of any held objects
         if (heldItem != null)
         {          
             //item weight affects movement speed of crab
             currMoveSpeed = currMoveSpeed - heldItem.gameObject.GetComponent<item>().itemWeight;
-            clawSmooth = clawSmooth - 2*heldItem.gameObject.GetComponent<item>().itemWeight;
+
+            if (isLeft)
+            {
+                clawSmoothL = clawSmoothL - 2 * heldItem.gameObject.GetComponent<item>().itemWeight;
+            } 
+            else
+            {
+                clawSmoothR = clawSmoothR - 2 * heldItem.gameObject.GetComponent<item>().itemWeight;
+            }
+
         }
         else
         {
             currMoveSpeed = baseMoveSpeed;
-            clawSmooth = 20.0f;
+            clawSmoothL = 10.0f;
+            clawSmoothR = 10.0f;
         }
     }
 
-    public void reduceWeight(GameObject droppedItem)
+    public void reduceWeight(GameObject droppedItem, bool isLeft)
     {
 
         currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
-        clawSmooth = clawSmooth + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+
+        if (isLeft)
+        {
+            clawSmoothL = clawSmoothL + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+        }
+        else
+        {
+            clawSmoothR = clawSmoothR + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+        }
 
     }
 

@@ -444,7 +444,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159336637}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31622776, y: -0.00000006766625, z: 0.000000022555414, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622773, y: -0.000000026164658, z: 0.00000000872155, w: 0.9486833}
   m_LocalPosition: {x: 7.0000005, y: 6, z: 57.037}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21127,7 +21127,8 @@ MonoBehaviour:
   crabSmooth: 0.2
   camSmooth: 0.1
   isLeft: 0
-  clawSmooth: 20
+  clawSmoothL: 10
+  clawSmoothR: 10
   clawAngle: 65
   maxClawDistance: 1.1
   dirChange: 0
@@ -21710,6 +21711,7 @@ MonoBehaviour:
   - {fileID: 5209355059052111864, guid: d0957818860c51e4baefbfedaa7e3efe, type: 3}
   - {fileID: 8173959341749892883, guid: e56f3a7447113ef4bb45d40a9e2e8ba8, type: 3}
   - {fileID: 2800305168493862567, guid: dd6cc8fe3229832488a1b2aa8d0f3c87, type: 3}
+  - {fileID: 1778216747759210784, guid: b6677dad8363e824aab48e28bba09e01, type: 3}
   NPCMats:
   - {fileID: 2100000, guid: 6a657ef8fbbc2794992161467498e3bc, type: 2}
   - {fileID: 2100000, guid: c731dd8f458f7ff4eb1ac3699df82755, type: 2}
@@ -22288,7 +22290,7 @@ PrefabInstance:
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.83
+      value: 12.46
       objectReference: {fileID: 0}
     - target: {fileID: 8421811555431623603, guid: 9f906535ea3969e4c8c357e6aefc16ff,
         type: 3}
