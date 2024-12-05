@@ -20,9 +20,6 @@ public class PlayerController : MonoBehaviour
     public GameObject clawR_grab;
     public GameObject clawL_grab;
 
-    //public GameObject clawLocator_R;
-    //public GameObject clawLocator_L;
-
     //digging related vars
     private TerrainEditor terrainScript;
     public float rightTrigger = 0.0f;
@@ -61,7 +58,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 camOffset;
     private Vector3 clawLeftStart;
     private Vector3 clawRightStart;
-    public float clawSmooth;
+    public float clawSmoothL = 20;
+    public float clawSmoothR = 20;
     public float clawAngle;
     public float maxClawDistance;
     public bool dirChange = false;
@@ -78,7 +76,9 @@ public class PlayerController : MonoBehaviour
     public item shellTop;
     public item shellBottom;
     public float holdLength = 2f; 
-    private float currHoldTime = 0f; 
+    private float currHoldTime = 0f;
+    public float leftTrigger = 0.0f;
+    
 
     //for decorate
     private HomeScript homeScript;
@@ -91,6 +91,16 @@ public class PlayerController : MonoBehaviour
     //Booleans
     bool ifpickedUp;
 
+    //rumble vars
+    private float defaultRumble = 0.1f; //!!!!
+    private float rumbleIntensity = 0.0f;
+    public bool canBreak = false;
+    public bool broken = false;
+    public bool isDigging = false;
+    public bool dropRumbleL = false; //dropped
+    public bool dropRumbleCL = false; //dropped on castle
+    public bool dropRumbleR = false; //dropped
+    public bool dropRumbleCR = false; //dropped on castle
 
     [SerializeField] public Rigidbody _rb;
 
@@ -115,9 +125,11 @@ public class PlayerController : MonoBehaviour
     Decorate_right decorateRight;
     Decorate_Left decorateLeft;
 
+    private Gamepad pad; //!!!
+
     private void Awake()
     {
-        
+        pad = Gamepad.current;
     }
 
     // Start is called before the first frame update
@@ -129,6 +141,7 @@ public class PlayerController : MonoBehaviour
         //instantiate a new input action object and enable it
         controls = new PlayerControls();
         controls.Enable();
+
 
         //setup callback function to switch active claws
         //+= refers to adding a callback function
@@ -168,7 +181,11 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(audiomanager.GetComponent<AudioManager>().walkTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().armMoveTimer());
         StartCoroutine(audiomanager.GetComponent<AudioManager>().digSoundTimer());
+        StartCoroutine(audiomanager.GetComponent<AudioManager>().breakBuildTimer());
         AudioManager.instance.ambientSource.Play();
+        
+        StartCoroutine(this.GetComponent<animateCrab>().digAnim());
+        StartCoroutine(this.GetComponent<rumbleBehavior>().rumble());        
 
         _rb = GetComponent<Rigidbody>();
 
@@ -370,17 +387,7 @@ public class PlayerController : MonoBehaviour
 
         //claw movement controls
         rightStick = controls.GamePlay.Claw.ReadValue<Vector2>();
-
-        //input from controls move the crab in xz plane -> take into account camera rotation here as well
-        Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
-        //Vector3 clawMove = clawMovement * baseMoveSpeed * Time.deltaTime;
-
-        // Finding the new claw locator positions
-        //clawLeftStart = (clawLeft.transform.position);
-        //clawRightStart = (clawRight.transform.position);
-
-        //clawLeft.transform.rotation = clawLocator_L.transform.rotation;
-        //clawRight.transform.rotation = clawLocator_R.transform.rotation;
+        //Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
 
         //update external gameobjects to match the internal claw positions
         clawR_grab.transform.position = clawRight.transform.position;
@@ -389,28 +396,33 @@ public class PlayerController : MonoBehaviour
         clawR_grab.transform.rotation = clawRight.transform.rotation;
         clawL_grab.transform.rotation = clawLeft.transform.rotation;
 
-        //moving the left claw, right claw just follows body
+        //moving the left claw, right claw just follows body !!!!
         if (isLeft && rightStick.magnitude > 0.1f)
         {
+            //input from controls move the crab in xz plane -> take into account camera rotation here as well
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * clawSmoothL * Time.deltaTime;
             clawLeft.transform.Translate(clawMovement, Space.World);
 
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
-
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmoothR * Time.deltaTime);
+            //Debug.Log("ClawsmoothR: " + clawSmoothR + " clawsmoothR with delta: " + clawSmoothR * Time.deltaTime);
             ClampClaw(clawLeft, clawLeftStart); //clamp into an arc
         }
         else if (!isLeft && rightStick.magnitude > 0.1f) //moving the right claw, left claw just follows body
         {
+            //input from controls move the crab in xz plane -> take into account camera rotation here as well
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * clawSmoothR * Time.deltaTime;
             clawRight.transform.Translate(clawMovement, Space.World);
 
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
-
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmoothL * Time.deltaTime);
+            //Debug.Log("ClawsmoothL: " + clawSmoothL + " clawsmoothL with delta: " + clawSmoothL * Time.deltaTime);
             ClampClaw(clawRight, clawRightStart); //clamp into an arc
 
         }
         else //move both claws with the body when no direct input
         {
-            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, clawSmooth * Time.deltaTime);
-            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, clawSmooth * Time.deltaTime);
+            Vector3 clawMovement = ((camForward * rightStick.y) + (camRight * rightStick.x)) * currMoveSpeed * Time.deltaTime;
+            clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, clawLeftStart, 0.3f);
+            clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, clawRightStart, 0.3f);
         }
 
         // keep claws close to crab body in an arc
@@ -448,7 +460,7 @@ public class PlayerController : MonoBehaviour
         //---------------------------------------BREAKING-------------------------------------
 
         //breaking controls ---------> only if a claw is available
-        float leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
+        leftTrigger = controls.GamePlay.Dig.ReadValue<float>();
 
         //if crab is holding something breakable in active claw
         if (leftTrigger > 0.1f)
@@ -464,28 +476,33 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawLeftStart + new Vector3(xOffset, yOffset, zOffset);
                 clawLeft.transform.localPosition = Vector3.Lerp(clawLeft.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
-               // Debug.Log(currHoldTime);
-                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
-               //AudioManager.instance.sfxPlayer(3);
-               //add breaking build up noise here? potentially a coroutine
+                canBreak = true;
+                broken = false;
 
+                // Debug.Log(currHoldTime);
+                currHoldTime += (Time.deltaTime * leftTrigger); //count the time
+               
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldLeft.gameObject;
-                    reduceWeight(toBreak);
+                    reduceWeight(toBreak, true);
+
+                    canBreak = false;
+                    broken = true;
 
                     //spawn the pearl in the claw
                     //heldLeft = Instantiate(pearl.gameObject, heldLeft.transform.position, Quaternion.identity);
                     heldLeft = Instantiate(pearl.gameObject, GameObject.Find("jnt_L_tip").transform.position, Quaternion.identity);
                     heldLeft.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
-                    addWeight(heldLeft);
+                    addWeight(heldLeft, true);
 
                     //delete the clam
                     Destroy(toBreak);
 
-                    //play break nosie
-                    AudioManager.instance.sfxPlayer(4);
+                    //play break noise
+                    AudioManager.instance.breakBuild.Stop();
+                    AudioManager.instance.sfxPlayer(3);
 
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawLeft.transform.position.x - 0.5f, 3f, clawLeft.transform.position.z), Quaternion.identity);
@@ -500,27 +517,32 @@ public class PlayerController : MonoBehaviour
                 Vector3 newPos = clawRightStart + new Vector3(xOffset, yOffset, zOffset);
                 clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, newPos, Time.deltaTime * shakeSpeed);
 
+                canBreak = true;
+                broken = false;
+
                 currHoldTime += (Time.deltaTime * leftTrigger); //count the time
-                //AudioManager.instance.sfxPlayer(3);
 
                 if (currHoldTime >= holdLength) //broke the object
                 {
                     GameObject toBreak = heldRight.gameObject;
-                    reduceWeight(toBreak);
+                    reduceWeight(toBreak, false);
+
+                    canBreak = false;
+                    broken = true;
 
                     //spawn the pearl in the claw
                     //heldRight = Instantiate(pearl.gameObject, heldRight.transform.position, Quaternion.identity);
                     heldRight = Instantiate(pearl.gameObject, GameObject.Find("jnt_R_tip").transform.position, Quaternion.identity);
                     heldRight.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
-                    addWeight(heldRight);
+                    addWeight(heldRight, false);
 
                     //delete the clam
                     Destroy(toBreak);
 
-                    //play break nosie
-                    //AudioManager.instance.sfxSource.Stop();
-                    AudioManager.instance.sfxPlayer(4);
+                    //play break noise
+                    AudioManager.instance.breakBuild.Stop();
+                    AudioManager.instance.sfxPlayer(3);
 
                     //spawn shell top and bottom beside the crab
                     Instantiate(shellTop.gameObject, new Vector3(clawRight.transform.position.x - 0.5f, 3f, clawRight.transform.position.z), Quaternion.identity);
@@ -530,11 +552,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+
         } 
         else
         {
             currHoldTime = 0f;
-            //AudioManager.instance.sfxSource.Stop();
+            broken = false;
+            AudioManager.instance.breakBuild.Stop();
         }
 
         //---------------------------------------DIGGING-------------------------------------
@@ -545,23 +569,17 @@ public class PlayerController : MonoBehaviour
         //make the crab dig here
         if (rightTrigger > 0f && crab.transform.position.z < 70)
         {
+            isDigging = true;
 
             if (isLeft)
             {
                 terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
-                //animate claw movement applied to left
             }
             else
             {
                 terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
 
-                //animate claw movement applied to right
-                Vector3 digPosDown = clawRight.transform.localPosition + new Vector3(0.0f, -0.6f, 0.0f); //should take current claw pos and only make the y value decrease
-                Vector3 digPosUp = clawRight.transform.localPosition + new Vector3(0.0f, 0.4f, 0.0f); //should take current claw pos and only make the y value decrease
-                clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosDown, Time.deltaTime * 1.0f); //lerp down
-                //clawRight.transform.localPosition = Vector3.Lerp(clawRight.transform.localPosition, digPosUp, Time.deltaTime * 5.0f); //lerp back up?
-                //Debug.Log("Local Pos: " + clawRight.transform.localPosition + ", newDigPos: " + newDigPos);
             }
 
             // Found advice for changing particle emission here:
@@ -573,6 +591,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             digPartSystem.Stop();
+            isDigging = false;
             //may need to reset claw pos here
 
         }
@@ -583,12 +602,13 @@ public class PlayerController : MonoBehaviour
 //toggle the active claw
     public void OnSwitchLeft(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawRight);
         if (!isLeft && clawRight.transform.position.y > -0.5)
         {
             clawRightStart = defaultClawPos;
             clawLeftStart = activeClawPos_L;
             AudioManager.instance.sfxPlayer(2);
+
         }
 
         isLeft = true;
@@ -597,7 +617,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSwitchRight(InputAction.CallbackContext context)
     {
-
+        Debug.Log("heyo" + clawLeft);
         if (isLeft && clawLeft.transform.position.y > -0.5)
         {
             clawRightStart = activeClawPos_R;
@@ -615,18 +635,18 @@ public class PlayerController : MonoBehaviour
        // Debug.Log("this is pick up");
         if (!isLeft)
         {
-            Debug.Log("inside the R3 first if");
+            //Debug.Log("inside the R3 first if");
             if (ifpickedUpR == false)
             {
                 ifpickedUpR = pickUpItemRight(clawR_grab);
-                Debug.Log("inside ifpickedUpR == false");
+                //Debug.Log("inside ifpickedUpR == false");
 
             }
             else
             {
                 dropItemR();
                 ifpickedUpR = false;
-                Debug.Log("inside first else");
+                //Debug.Log("inside first else");
 
             }
 
@@ -673,7 +693,7 @@ public class PlayerController : MonoBehaviour
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
 
             heldRight = rightItem;
-            addWeight(heldRight);
+            addWeight(heldRight, false);
 
             Rpickedup = true;
 
@@ -699,18 +719,8 @@ public class PlayerController : MonoBehaviour
             //leftItem.transform.parent = clawL_grab.transform;
             leftItem.transform.parent = GameObject.Find("jnt_L_tip").transform;
 
-            //if you are in the home then outline the sandcastle
-            if (GameObject.Find("WorldManager").GetComponent<WorldManager>().enterFlag)
-            {
-                //outline castle to tell player to place item
-                var outline = GameObject.Find("newSandCastle").gameObject.GetComponent<Outline>();
-
-                outline.OutlineWidth = 5;
-            }
-
-
             heldLeft = leftItem;
-            addWeight(heldLeft);
+            addWeight(heldLeft, true);
 
             Lpickedup = true;
 
@@ -724,17 +734,24 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemR()
     {
-        reduceWeight(heldRight);
+        //bool to say it got dropped in world space
+        dropRumbleR = true;
+        //rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
+        //Debug.Log(rumbleIntensity);
+
+        reduceWeight(heldRight, false);
         droppedItemR = heldRight;
 
         //Debug.Log("right item" + heldRight);
         //homeScript.decorateItem(heldRight);
         decorateItemR = droppedItemR;
-        Debug.Log("decorate Right" + decorateRight.castleCollision);
+        //Debug.Log("decorate Right" + decorateRight.castleCollision);
         if (decorateRight.castleCollision == true)
         {
-            Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
-            Debug.Log("The point is" + decorateRight.Cpoint.point);
+            //bool to say dropped specifically on castle
+            dropRumbleCR = true;
+            //Debug.Log("(decorateRight.castleCollision" + decorateRight.castleCollision);
+            //Debug.Log("The point is" + decorateRight.Cpoint.point);
             decorateItemR.transform.position = decorateRight.Cpoint.point;
             homeScript.decorateItem(decorateItemR);
             decorateItemR.tag = "none";
@@ -748,14 +765,20 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            //rumble pulse when placing on castle
+            //pad.SetMotorSpeeds(0.3f, 0.3f);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
+
         }
         else
         {
             heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
+            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
     
         }
 
-        Debug.Log("we are here here!");
+        //Debug.Log("we are here here!");
         heldRight.transform.parent = null;
         heldRight.GetComponent<Collider>().enabled = true;
         Rpickedup = false;
@@ -771,17 +794,22 @@ public class PlayerController : MonoBehaviour
 
     public void dropItemL()
     {
-        reduceWeight(heldLeft);
+        //bool to say it got dropped in world space
+        dropRumbleL = true;
+        //rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
+        //Debug.Log(rumbleIntensity);
+        reduceWeight(heldLeft, true);
         droppedItemL = heldLeft;
 
-        //Debug.Log("right item" + heldRight);
-        //homeScript.decorateItem(heldRight);
         decorateItemL = droppedItemL;
-        Debug.Log("decorate Left" + decorateLeft.castleCollision);
+        //Debug.Log("decorate Left" + decorateLeft.castleCollision);
         if (decorateLeft.castleCollision == true)
         {
-            Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
-            Debug.Log("The point is" + decorateLeft.Cpoint.point);
+            //bool to say dropped specifically on castle
+            dropRumbleCL = true;
+
+            //Debug.Log("(decorateLeft.castleCollision" + decorateLeft.castleCollision);
+            //Debug.Log("The point is" + decorateLeft.Cpoint.point);
             decorateItemL.transform.position = decorateLeft.Cpoint.point;
             homeScript.decorateItem(decorateItemL);
             decorateItemL.tag = "none";
@@ -797,14 +825,19 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            //rumble pulse when placing on castle
+            //pad.SetMotorSpeeds(0.3f, 0.3f);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
+
         }
         else
         {
             heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
-
+            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            //pad.SetMotorSpeeds(0.0f, 0.0f);
         }
 
-        Debug.Log("we are here here!");
+        //Debug.Log("we are here here!");
         heldLeft.transform.parent = null;
         heldLeft.GetComponent<Collider>().enabled = true;
         Lpickedup = false;
@@ -816,26 +849,53 @@ public class PlayerController : MonoBehaviour
         AudioManager.instance.sfxPlayer(1);
     }
 
-    public void addWeight(GameObject heldItem)
+    public void addWeight(GameObject heldItem, bool isLeft)
     {
         //move the crab and take into account the weight of any held objects
         if (heldItem != null)
         {          
             //item weight affects movement speed of crab
             currMoveSpeed = currMoveSpeed - heldItem.gameObject.GetComponent<item>().itemWeight;
+
+            if (isLeft)
+            {
+                clawSmoothL = clawSmoothL - 2 * heldItem.gameObject.GetComponent<item>().itemWeight;
+            } 
+            else
+            {
+                clawSmoothR = clawSmoothR - 2 * heldItem.gameObject.GetComponent<item>().itemWeight;
+            }
+
         }
         else
         {
             currMoveSpeed = baseMoveSpeed;
+            clawSmoothL = 10.0f;
+            clawSmoothR = 10.0f;
         }
     }
 
-    public void reduceWeight(GameObject droppedItem)
+    public void reduceWeight(GameObject droppedItem, bool isLeft)
     {
 
-      currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
-        
+        currMoveSpeed = currMoveSpeed + droppedItem.gameObject.GetComponent<item>().itemWeight;
+
+        if (isLeft)
+        {
+            clawSmoothL = clawSmoothL + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+        }
+        else
+        {
+            clawSmoothR = clawSmoothR + 2 * droppedItem.gameObject.GetComponent<item>().itemWeight;
+        }
+
     }
 
+    void OnDestroy()
+    {
+        controls.GamePlay.SwitchToLeft.performed -= OnSwitchLeft;
+        controls.GamePlay.SwitchToRight.performed -= OnSwitchRight;
+        controls.GamePlay.GrabDrop.performed -= OnPickDropControls;
+    }
 
 }

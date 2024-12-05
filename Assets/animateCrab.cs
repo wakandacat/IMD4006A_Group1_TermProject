@@ -54,28 +54,61 @@ public class animateCrab : MonoBehaviour
             }
 
 
-            //digging animation
-            //if player is pressing on the right trigger
-            //if(pControllerScript.rightTrigger > 0.1f)
-            //{
-            //    //play on active claw
-            //    if (pControllerScript.isLeft == true)
-            //    {
-            //        mAnimator.SetTrigger("isDiggingL");
-            //    }
-            //    else
-            //    {
-            //        mAnimator.SetTrigger("isDiggingR");
-            //    }
-                
-            //}
-            //else
-            //{
-            //    //end digging animation
-            //    mAnimator.SetTrigger("ExitDigging");
-            //}
-
         }
     }
 
+    public IEnumerator digAnim()
+    {
+
+        //for as long as player is holding trigger
+        while (true)
+        {
+            //get trigger value
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
+            GameObject clawStart_R = GameObject.Find("Crab").GetComponent<PlayerController>().clawRight;
+            GameObject clawStart_L = GameObject.Find("Crab").GetComponent<PlayerController>().clawLeft;
+            bool isLeftt = GameObject.Find("Crab").GetComponent<PlayerController>().isLeft;
+            float seconds = 0.0f;
+            float yPos = -0.8f * triggerVal;
+
+            if (triggerVal >= 0.1f)
+            {
+
+                if (isLeftt)
+                {
+                    Vector3 digPosDown = clawStart_L.transform.localPosition + new Vector3(0.0f, yPos, 0.0f);
+                    clawStart_L.transform.localPosition = Vector3.Lerp(clawStart_L.transform.localPosition, digPosDown, 0.5f);
+                }
+                else
+                {
+                    Vector3 digPosDown = clawStart_R.transform.localPosition + new Vector3(0.0f, yPos, 0.0f);
+                    clawStart_R.transform.localPosition = Vector3.Lerp(clawStart_R.transform.localPosition, digPosDown, 0.5f);
+                }
+
+                //fastest speed
+                if(triggerVal >= 0.7f)
+                {
+                    seconds = 0.3f;
+                }
+                else if(triggerVal >= 0.4f && triggerVal < 0.7f)
+                {
+                    seconds = 0.4f;
+                }
+                else if (triggerVal >= 0.1f && triggerVal < 0.5f)
+                {
+                    seconds = 0.5f;
+                }
+                else
+                {
+                    //slowest speed
+                    seconds = 0.5f;
+                }
+
+            }
+            
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(seconds);
+
+        }
+    }
 }
