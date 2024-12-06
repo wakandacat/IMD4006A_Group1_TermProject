@@ -6,8 +6,6 @@ using UnityEngine.Animations.Rigging;
 public class animateCrab : MonoBehaviour
 {
     private Animator mAnimator;
-    public bool isMoving = false;
-    public bool isDigging = false;
     private PlayerController pControllerScript;
 
     // Start is called before the first frame update
