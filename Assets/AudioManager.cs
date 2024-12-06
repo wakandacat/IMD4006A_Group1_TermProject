@@ -17,8 +17,11 @@ public class AudioManager : MonoBehaviour
     public AudioSource digSource;   //used exclusively for the digging sound
     public AudioSource armMoveSource; //used exclusively for the arm movement sound
     public AudioSource ambientSource; //used exclusively for the background sounds
-
-    //public bool isLooping = false;
+    public AudioSource breakBuild; //used exclusively for the breaking build up sound 
+    public AudioSource rattleSource; //used exclusively for rattling pearl sound when moving 
+    public GameObject heldR;
+    public GameObject heldL;
+    public bool activeClaw = false;
 
     private float secondsToWait;
 
@@ -29,11 +32,11 @@ public class AudioManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+           // DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+          //  Destroy(gameObject);
         }
     }
 
@@ -54,7 +57,6 @@ public class AudioManager : MonoBehaviour
     {
         //set sfx
         sfxSource.clip = sfxClips[i];   //load sfx clip based on array index
-        //sfxSource.loop = isLooping;     //set whether it needs to loop,, works but don't know how to stop it
         sfxSource.PlayOneShot(sfxClips[i]);               //play clip
     }
 
@@ -67,22 +69,64 @@ public class AudioManager : MonoBehaviour
         {
             //get walkMag
             float walkMag = GameObject.Find("Crab").GetComponent<PlayerController>().leftStick.magnitude;
-            //Debug.Log("walk mag is: " + walkMag);
+            float clawMag = GameObject.Find("Crab").GetComponent<PlayerController>().rightStick.magnitude;
+            heldR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight;
+            heldL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;
+            activeClaw = GameObject.Find("Crab").GetComponent<PlayerController>().isLeft;
+            Debug.Log("activeClaw before if else: " + activeClaw);
 
             //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
-            if(walkMag >= 0.7f)
+            if (clawMag >= 0.01f)
+            {
+                //determine if active has a clam
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true && activeClaw == false)
+                {
+                    Debug.Log("activeClaw in R: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true && activeClaw == true)
+                {
+                    Debug.Log("activeClaw in L: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+                }
+
+            }
+            else if(walkMag >= 0.7f)
             {
                 secondsToWait = 0.3f;
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
-                //sfxSource.PlayOneShot(sfxClips[5]);
+
+                //if held left or right is clam then rattle
+                if(heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        Debug.Log("activeClaw in R: " + activeClaw);
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
+                else if(heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        Debug.Log("activeClaw in L: " + activeClaw);
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                }
             }
             else if (walkMag >= 0.5f && walkMag < 0.7f)
             {
                 secondsToWait = 0.5f;
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
-                //sfxSource.PlayOneShot(sfxClips[5]);
+
+                //if held left or right is clam then rattle
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
             }
             else if (walkMag >= 0.1f && walkMag < 0.5f)
             {
@@ -90,11 +134,22 @@ public class AudioManager : MonoBehaviour
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
 
-                //sfxSource.PlayOneShot(sfxClips[5]);
+                //if held left or right is clam then rattle
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
             }
             else
             {
-                secondsToWait = 1.0f;
+                secondsToWait = 0.5f;
+                rattleSource.Stop();
             }
 
             //wait for x seconds before re-entering the loop
@@ -130,31 +185,76 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    //adds sound for as long as the player is digging
-    public IEnumerator digSoundTimer()
+    //adds sound for as long as the player is moving the claws
+    public IEnumerator breakBuildTimer()
     {
 
         //for as long as player is using joystick
         while (true)
         {
-            //get stickMag
-            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
-            //Debug.Log("rightstick mag is: " + stickMag);
+            //get break trigger value
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().leftTrigger;
+            bool playBreak = GameObject.Find("Crab").GetComponent<PlayerController>().canBreak;
 
-            if (triggerVal >= 0.1f)
+
+            if (playBreak == true)
             {
-                //Debug.Log("digging should play sound");
-                digSource.PlayOneShot(digSource.clip);
+                if (triggerVal >= 0.05f)
+                {
+                    breakBuild.PlayOneShot(breakBuild.clip);
 
+                }
+                else
+                {
+                    breakBuild.Stop();
+                }
+            }
+            
+            //wait for x seconds before re-entering the loop
+            yield return new WaitForSeconds(0.5f);
+
+        }
+    }
+
+    //adds sound for as long as the player is digging
+    public IEnumerator digSoundTimer()
+    {
+
+        //for as long as player is pressing on the trigger
+        while (true)
+        {
+            //get trigger value for dig
+            float triggerVal = GameObject.Find("Crab").GetComponent<PlayerController>().rightTrigger;
+            float seconds = 0.0f;
+
+            //fastest
+            if (triggerVal >= 0.7f)
+            {
+                seconds = 0.4f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
+            }
+            else if (triggerVal >= 0.4f && triggerVal < 0.7f)
+            {
+                seconds = 0.5f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
+            }
+            //slowest
+            else if (triggerVal >= 0.1f && triggerVal < 0.4f)
+            {
+                seconds = 0.6f;
+                //play a single instance of the sfx
+                digSource.PlayOneShot(digSource.clip);
             }
             else
             {
-                //Debug.Log("stop digging sound");
                 digSource.Stop();
+                seconds = 0.4f;
             }
 
             //wait for x seconds before re-entering the loop
-            yield return new WaitForSeconds(1.3f);
+            yield return new WaitForSeconds(seconds);
 
         }
     }

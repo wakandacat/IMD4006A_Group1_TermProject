@@ -11,6 +11,7 @@ public class WorldManager : MonoBehaviour
     private SpawnItems itemSpawnScript;
     private TerrainEditor terrainScript;
     public GameObject outOfBounds;
+    public GameObject safetyNet;
     public GameObject homeArea;
     public Vector3 crabStartPos;
     public Vector3 cameraStartPos;
@@ -26,11 +27,11 @@ public class WorldManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
         }
 
     }
@@ -40,13 +41,15 @@ public class WorldManager : MonoBehaviour
     {
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
 
+        crab = GameObject.Find("Crab").gameObject;
+
         //on start of game, spawn items
         itemSpawnScript = GameObject.Find("ItemSpawner").GetComponent<SpawnItems>();
         itemSpawnScript.spawnItemsFunc();
 
         //start the crab at the default position
         crab.transform.position = crabStartPos;
-        Camera.main.transform.position = cameraStartPos;
+        //Camera.main.transform.position = cameraStartPos;
 
         enterFlag = true;
         toDelete = false;
@@ -65,7 +68,21 @@ public class WorldManager : MonoBehaviour
         {
             //Debug.Log("Out of bounds");
             crab.transform.position = crabStartPos;
-            Camera.main.transform.position = cameraStartPos;
+           // Camera.main.transform.position = cameraStartPos;
+        }
+
+        //---------------------------------SAFETY NET AREA-----------------------------------------
+        //always check if the crab goes out of bounds
+        //if it does, do a fade to black thing and then move the crab back home
+        if (crab.transform.position.x <= safetyNet.transform.position.x + safetyNet.transform.localScale.x / 2 
+            && crab.transform.position.x >= safetyNet.transform.position.x - safetyNet.transform.localScale.x / 2 
+            && crab.transform.position.z <= safetyNet.transform.position.z + safetyNet.transform.localScale.z / 2 
+            && crab.transform.position.z >= safetyNet.transform.position.z - safetyNet.transform.localScale.z / 2
+            && crab.transform.position.y <= safetyNet.transform.position.y + safetyNet.transform.localScale.y / 2)
+        {
+            Debug.Log("Out of bounds");
+            crab.transform.position = crabStartPos;
+           // Camera.main.transform.position = cameraStartPos;
         }
 
         //---------------------------------HOME AREA-----------------------------------------

@@ -16,6 +16,10 @@ public class NPCClass : MonoBehaviour
     private Material material;
     private float scale;
 
+    //private GameObject endingS = ;
+
+    EndScreen endScreen = GameObject.Find("EndScreen").GetComponent<EndScreen>();
+
 
     //constructor
     public NPCClass(GameObject npcModel, GameObject item, int ptsToSpawn, Vector3 spawnPos, GameObject text, string textDesc, Material mat, float scale)
@@ -28,6 +32,8 @@ public class NPCClass : MonoBehaviour
         this.textDesc = textDesc;
         this.material = mat;
         this.scale = scale;
+
+
     }
 
     public void spawnNPC()
@@ -45,6 +51,7 @@ public class NPCClass : MonoBehaviour
             newItem.tag = "specialitem";
             this.text = Instantiate(text, new Vector3(spawnPos.x, spawnPos.y + 1.5f, spawnPos.z), text.transform.rotation);
             this.text.transform.GetChild(0).GetComponent<TextMesh>().text = textDesc;
+            endScreen.npcCounter++;
             hasSpawned = true;
         }
     }

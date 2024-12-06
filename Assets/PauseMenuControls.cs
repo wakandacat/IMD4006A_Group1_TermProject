@@ -76,6 +76,7 @@ public class PauseMenuControls : MonoBehaviour
     }
     public void returnToMainMenu()
     {
+
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
@@ -141,5 +142,10 @@ public class PauseMenuControls : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         //set new selected object
         EventSystem.current.SetSelectedGameObject(GoalCloseFirst);
+    }
+
+     void OnDestroy()
+    {
+        UIcontrols.MenuControls.Pause.performed -= pauseGameInput;
     }
 }
