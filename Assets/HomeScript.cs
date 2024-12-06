@@ -18,7 +18,7 @@ public class HomeScript : MonoBehaviour
     public GameObject textPrefab;
     public GameObject camera;
     private string[] NPCText = new[] { "What a nice home!", "Oooooo! Fancy!", "Nice place! Here ya go!", "I found this for you!", "You should be mayor!", "Whoa! Cool house!" , "A housewarming gift!" , "I love your house!", "Welcome to Crab Cove!" };
-    private Vector3[] NPCPositions = new Vector3[] { new Vector3(4f, 2.8f, 52f), new Vector3(20f, 3f, 69f), new Vector3(22f, 3.8f, 79f), new Vector3(8f, 3.0f, 45f), new Vector3(19f, 3f, 49f), new Vector3(14f, 3f, 53f), new Vector3(17f, 3f, 65f), new Vector3(23f, 3f, 61f), new Vector3(27f, 3.0f, 67f), new Vector3(6.5f, 3.8f, 80f) };
+    private Vector3[] NPCPositions = new Vector3[] { new Vector3(7.08f, 3.58f, 89.3f), new Vector3(12.1f, 3.82f, 94.05f), new Vector3(13f, 3.8f, 82.25f), new Vector3(18f, 3.8f, 88.5f), new Vector3(23.65f, 3.8f, 95f), new Vector3(28f, 3.8f, 86f), new Vector3(33f, 3.8f, 94f), new Vector3(35.75f, 3.8f, 80.5f), new Vector3(40.5f, 3.8f, 96.85f), new Vector3(44.05f, 3.8f, 87.8f) };
 
     //total point value on castle
     int totalPts = 0;
