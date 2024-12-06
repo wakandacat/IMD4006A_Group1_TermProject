@@ -75,6 +75,12 @@ public class PauseMenuControls : MonoBehaviour
     {        
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
+
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            audioSources[i].Play();
+            Debug.Log("HELLO");
+        }
         pause = true;
     }
     public void returnToMainMenu()
