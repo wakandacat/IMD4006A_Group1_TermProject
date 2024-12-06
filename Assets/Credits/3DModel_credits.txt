@@ -6,3 +6,13 @@ Below is a list of the 3D models modified and used in the game Crab Cove, create
 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 - Assortment of collectible item models: "By the Sea Side - hand painted shells" (https://skfb.ly/onZXM) by Shareen 
 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+
+Props:
+Stones: https://assetstore.unity.com/packages/3d/props/low-poly-stones-298380
+Seaweed: https://sketchfab.com/3d-models/seaweed-m-79d9def1072346b8afd18e3fb3a27bdb
+Beach Toys (Bucket): https://sketchfab.com/3d-models/beach-toys-for-sand-builders-collection-152ddd66e49d4cbea2a3d30b8f4fe60c#download
+
+Environment shaders:
+Water: https://assetstore.unity.com/packages/2d/textures-materials/water/simple-water-shader-urp-191449
+Skybox: https://polyhaven.com/a/spiaggia_di_mondello
