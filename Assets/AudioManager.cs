@@ -18,8 +18,10 @@ public class AudioManager : MonoBehaviour
     public AudioSource armMoveSource; //used exclusively for the arm movement sound
     public AudioSource ambientSource; //used exclusively for the background sounds
     public AudioSource breakBuild; //used exclusively for the breaking build up sound 
-
-    //public bool isLooping = false;
+    public AudioSource rattleSource; //used exclusively for rattling pearl sound when moving 
+    public GameObject heldR;
+    public GameObject heldL;
+    public bool activeClaw = false;
 
     private float secondsToWait;
 
@@ -67,22 +69,64 @@ public class AudioManager : MonoBehaviour
         {
             //get walkMag
             float walkMag = GameObject.Find("Crab").GetComponent<PlayerController>().leftStick.magnitude;
-            //Debug.Log("walk mag is: " + walkMag);
+            float clawMag = GameObject.Find("Crab").GetComponent<PlayerController>().rightStick.magnitude;
+            heldR = GameObject.Find("Crab").GetComponent<PlayerController>().heldRight;
+            heldL = GameObject.Find("Crab").GetComponent<PlayerController>().heldLeft;
+            activeClaw = GameObject.Find("Crab").GetComponent<PlayerController>().isLeft;
+            Debug.Log("activeClaw before if else: " + activeClaw);
 
             //check for the magnitude applied to joystick, decrase secondsToWait as the magnitude increases
-            if(walkMag >= 0.7f)
+            if (clawMag >= 0.01f)
             {
-                secondsToWait = 0.3f;
+                //determine if active has a clam
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true && activeClaw == false)
+                {
+                    Debug.Log("activeClaw in R: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true && activeClaw == true)
+                {
+                    Debug.Log("activeClaw in L: " + activeClaw);
+                    rattleSource.PlayOneShot(rattleSource.clip);
+                }
+
+            }
+            else if(walkMag >= 0.7f)
+            {
+                secondsToWait = 0.33f;
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
-                //sfxSource.PlayOneShot(sfxClips[5]);
+
+                //if held left or right is clam then rattle
+                if(heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        Debug.Log("activeClaw in R: " + activeClaw);
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
+                else if(heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        Debug.Log("activeClaw in L: " + activeClaw);
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                }
             }
             else if (walkMag >= 0.5f && walkMag < 0.7f)
             {
                 secondsToWait = 0.5f;
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
-                //sfxSource.PlayOneShot(sfxClips[5]);
+
+                //if held left or right is clam then rattle
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
             }
             else if (walkMag >= 0.1f && walkMag < 0.5f)
             {
@@ -90,11 +134,22 @@ public class AudioManager : MonoBehaviour
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
 
-                //sfxSource.PlayOneShot(sfxClips[5]);
+                //if held left or right is clam then rattle
+                if (heldR != null && heldR.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
+                else if (heldL != null && heldL.gameObject.GetComponent<item>().breakable == true)
+                {
+                        rattleSource.PlayOneShot(rattleSource.clip);
+                    
+                }
             }
             else
             {
-                secondsToWait = 1.0f;
+                secondsToWait = 0.5f;
+                rattleSource.Stop();
             }
 
             //wait for x seconds before re-entering the loop

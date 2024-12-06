@@ -557,6 +557,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             currHoldTime = 0f;
+            canBreak = false;
             broken = false;
             AudioManager.instance.breakBuild.Stop();
         }
@@ -736,7 +737,7 @@ public class PlayerController : MonoBehaviour
     {
         //bool to say it got dropped in world space
         dropRumbleR = true;
-        //rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
+        rumbleIntensity = defaultRumble * heldRight.gameObject.GetComponent<item>().itemWeight;
         //Debug.Log(rumbleIntensity);
 
         reduceWeight(heldRight, false);
@@ -766,15 +767,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //rumble pulse when placing on castle
-            //pad.SetMotorSpeeds(0.3f, 0.3f);
-            //pad.SetMotorSpeeds(0.0f, 0.0f);
+            pad.SetMotorSpeeds(0.3f, 0.3f);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
 
         }
         else
         {
             heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
-            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
-            //pad.SetMotorSpeeds(0.0f, 0.0f);
+            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
     
         }
 
@@ -796,7 +797,7 @@ public class PlayerController : MonoBehaviour
     {
         //bool to say it got dropped in world space
         dropRumbleL = true;
-        //rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
+        rumbleIntensity = defaultRumble * heldLeft.gameObject.GetComponent<item>().itemWeight;
         //Debug.Log(rumbleIntensity);
         reduceWeight(heldLeft, true);
         droppedItemL = heldLeft;
@@ -826,15 +827,15 @@ public class PlayerController : MonoBehaviour
             }
 
             //rumble pulse when placing on castle
-            //pad.SetMotorSpeeds(0.3f, 0.3f);
-            //pad.SetMotorSpeeds(0.0f, 0.0f);
+            pad.SetMotorSpeeds(0.3f, 0.3f);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
 
         }
         else
         {
             heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
-            //pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
-            //pad.SetMotorSpeeds(0.0f, 0.0f);
+            pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+            pad.SetMotorSpeeds(0.0f, 0.0f);
         }
 
         //Debug.Log("we are here here!");
