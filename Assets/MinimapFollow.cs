@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MinimapFollow : MonoBehaviour
 {
-    //https://www.youtube.com/watch?v=lPSj41cNbtU
+    //Minimap Script and how to: https://www.youtube.com/watch?v=lPSj41cNbtU
     // Start is called before the first frame update
     [SerializeField] private Transform player;
     void Start()

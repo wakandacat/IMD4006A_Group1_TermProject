@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class EndScreen : MonoBehaviour
 {
+    //UI script: https://www.youtube.com/watch?v=DX7HyN7oJjE&t=368s, https://www.youtube.com/watch?v=MNUYe0PWNNs
+    //Controls Mapping: https://www.youtube.com/watch?v=SXBgBmUcTe0
+
     public GameObject EndScreenFirstButton;
     public GameObject EndScreenPanel;
     private int numNPCs = 10;

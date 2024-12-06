@@ -693,6 +693,7 @@ public class PlayerController : MonoBehaviour
         canPickupL = canPickup;
     }
 
+    //https://discussions.unity.com/t/3d-character-picking-up-item/793187/4 was initially based off this but was heavily modified with the help of the Professor
     public bool pickUpItemRight(GameObject clawR_grab)
     {
         if (Rpickedup == false && canPickupR == true)

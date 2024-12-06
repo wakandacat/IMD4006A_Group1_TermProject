@@ -6,6 +6,10 @@ using UnityEngine.EventSystems;
 
 public class MenuControls : MonoBehaviour
 {
+    //Drop Shadow Script: https://pastebin.com/YGeaZwG3
+    //UI script: https://www.youtube.com/watch?v=DX7HyN7oJjE&t=368s, https://www.youtube.com/watch?v=MNUYe0PWNNs
+    //Controls Mapping: https://www.youtube.com/watch?v=SXBgBmUcTe0
+
     public GameObject ControlsFirstButton, InstructionsFirstButton, GoalFirstButton, ControlsClosedFirst, InstructionsCloseFirst, GoalCloseFirst;
     public GameObject controlMenu, InstructionsMenu, MainMenu, GoalMenu;
     // Start is called before the first frame update

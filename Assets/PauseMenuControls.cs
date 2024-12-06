@@ -9,6 +9,9 @@ using UnityEngine.InputSystem;
 
 public class PauseMenuControls : MonoBehaviour
 {
+    //UI script: https://www.youtube.com/watch?v=DX7HyN7oJjE&t=368s, https://www.youtube.com/watch?v=MNUYe0PWNNs
+    //Controls Mapping: https://www.youtube.com/watch?v=SXBgBmUcTe0
+
     private bool pause = true;
     public GameObject audioManager;
     // Start is called before the first frame update
