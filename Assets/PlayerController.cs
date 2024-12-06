@@ -28,12 +28,14 @@ public class PlayerController : MonoBehaviour
     public GameObject audiomanager;
 
     //particle systems and particle control variables
-    public ParticleSystem movePartSystem;
+    public ParticleSystem movePartSystemR;
+    public ParticleSystem movePartSystemL;
     public ParticleSystem digPartSystem;
     public ParticleSystem footstepPartSystem;
     ParticleSystem.EmissionModule digEmit;
     ParticleSystem.EmissionModule footstepEmit;
-    ParticleSystem.EmissionModule moveEmit;
+    ParticleSystem.EmissionModule moveEmitR;
+    ParticleSystem.EmissionModule moveEmitL;
 
     //input action asset that reads controller inputs
     PlayerControls controls;
@@ -164,11 +166,13 @@ public class PlayerController : MonoBehaviour
         currMoveSpeed = baseMoveSpeed;
 
         // Stopping the particle system by default
-        movePartSystem.Stop();
+        movePartSystemR.Stop();
+        movePartSystemL.Stop();
         footstepPartSystem.Stop();
         digEmit = digPartSystem.emission;
         footstepEmit = footstepPartSystem.emission;
-        moveEmit = movePartSystem.emission;
+        moveEmitR = movePartSystemR.emission;
+        moveEmitL = movePartSystemL.emission;
 
         // Reminder on how to do this came from: https://youtu.be/gFwf_T8_8po?si=knchWQ0Sk1b1Lmna
         terrainScript = GameObject.FindGameObjectWithTag("TerrManager").GetComponent<TerrainEditor>();
@@ -309,25 +313,32 @@ public class PlayerController : MonoBehaviour
             // Playing the particle system
             if (crab.transform.position.z < 70)
             {
-                if (movePartSystem.isPlaying == false)
-                {
-                    moveEmit.rateOverTime = leftStick.magnitude * 30;
-                    movePartSystem.Play();
+                if (movePartSystemR.isPlaying == false && dirChange == false)
+                {              
+                    moveEmitR.rateOverTime = leftStick.magnitude * 30;
+                    movePartSystemR.Play();
 
-                    // Found advice for changing particle emission here:
-                    // https://discussions.unity.com/t/how-do-you-change-a-particle-systems-emission-rate-over-time-in-script/775702/2
-                    footstepEmit.rateOverTime = 10 - (leftStick.magnitude * 5);
-                    footstepPartSystem.Play();
                 }
+                else if (movePartSystemL.isPlaying == false && dirChange == true)
+                {
+                    moveEmitL.rateOverTime = leftStick.magnitude * 30;
+                    movePartSystemL.Play();
+
+                }
+                // Found advice for changing particle emission here:
+                // https://discussions.unity.com/t/how-do-you-change-a-particle-systems-emission-rate-over-time-in-script/775702/2
+                footstepEmit.rateOverTime = 10 - (leftStick.magnitude * 5);
+                footstepPartSystem.Play();
             }
         }
         else
         {
 
             // Stopping the particle system when the movement stops
-            if (movePartSystem.isPlaying == true)
+            if (movePartSystemR.isPlaying == true || movePartSystemL.isPlaying == true)
             {
-                movePartSystem.Stop();
+                movePartSystemR.Stop();
+                movePartSystemL.Stop();
                 footstepPartSystem.Stop();
             }
 
@@ -574,12 +585,14 @@ public class PlayerController : MonoBehaviour
 
             if (isLeft)
             {
-                terrainScript.digTerrain(clawLeft.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+                //terrainScript.digTerrain(clawLeft.gameObject.transform.position, rightTrigger);
+                terrainScript.digTerrain(GameObject.Find("jnt_L_tip").transform.position, rightTrigger);
 
             }
             else
             {
-                terrainScript.digTerrain(clawRight.gameObject.transform.position, crab.gameObject.transform.rotation, rightTrigger);
+                //terrainScript.digTerrain(clawRight.gameObject.transform.position, rightTrigger);
+                terrainScript.digTerrain(GameObject.Find("jnt_R_tip").transform.position, rightTrigger);
 
             }
 
@@ -688,7 +701,7 @@ public class PlayerController : MonoBehaviour
            Vector3 clawRItemPos = GameObject.Find("jnt_R_tip").transform.position;
             rightItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemRHoldPos = new Vector3(clawR_grab.transform.position.x, clawR_grab.transform.position.y + 0.1f, clawR_grab.transform.position.z - 0.2f);
-            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.2f); // <----------- Add offset here
+            Vector3 itemRHoldPos = new Vector3(clawRItemPos.x, clawRItemPos.y + 0.2f, clawRItemPos.z + 0.1f); // <----------- Add offset here
             rightItem.transform.position = itemRHoldPos;
             //rightItem.transform.parent = clawR_grab.transform;
             rightItem.transform.parent = GameObject.Find("jnt_R_tip").transform;
@@ -714,7 +727,7 @@ public class PlayerController : MonoBehaviour
             Vector3 clawLItemPos = GameObject.Find("jnt_L_tip").transform.position;
             leftItem.GetComponent<Collider>().enabled = false;
             //Vector3 itemLHoldPos = new Vector3(clawL_grab.transform.position.x, clawL_grab.transform.position.y + 0.1f, clawL_grab.transform.position.z - 0.2f);
-            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.2f);
+            Vector3 itemLHoldPos = new Vector3(clawLItemPos.x, clawLItemPos.y + 0.2f, clawLItemPos.z + 0.1f);
             leftItem.transform.position = itemLHoldPos;
             //leftItem.transform.position = clawLeft.transform.position;
             //leftItem.transform.parent = clawL_grab.transform;
@@ -773,7 +786,14 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
+            if (crab.transform.position.y >= 3.1f)
+            {
+                heldRight.transform.position = new Vector3(heldRight.transform.position.x, crab.transform.position.y, heldRight.transform.position.z);
+            }
+            else
+            {
+                heldRight.transform.position = new Vector3(heldRight.transform.position.x, 2.9f, heldRight.transform.position.z);
+            }
             pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
             pad.SetMotorSpeeds(0.0f, 0.0f);
     
@@ -833,7 +853,15 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
+            if (crab.transform.position.y >= 3.1f)
+            {
+                heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, crab.transform.position.y, heldLeft.transform.position.z);
+            }
+            else
+            {
+                heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
+            }
+            //heldLeft.transform.position = new Vector3(heldLeft.transform.position.x, 2.9f, heldLeft.transform.position.z);
             pad.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
             pad.SetMotorSpeeds(0.0f, 0.0f);
         }
