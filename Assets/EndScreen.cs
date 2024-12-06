@@ -8,7 +8,7 @@ public class EndScreen : MonoBehaviour
 {
     public GameObject EndScreenFirstButton;
     public GameObject EndScreenPanel;
-    private int numNPCs = 1;
+    private int numNPCs = 10;
 
     public int npcCounter = 0;
     private bool isFinished = false;
