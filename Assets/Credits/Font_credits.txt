@@ -1,2 +1,6 @@
+IMD4006A - Font Credits
+
+Below is a list of the Fonts and used in the game Crab Cove, created for IMD4006A Advanced Game Development:
+
 Font from:
 https://www.1001fonts.com/halo-dek-font.html
