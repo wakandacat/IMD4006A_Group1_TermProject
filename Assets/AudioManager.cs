@@ -94,7 +94,7 @@ public class AudioManager : MonoBehaviour
             }
             else if(walkMag >= 0.7f)
             {
-                secondsToWait = 0.3f;
+                secondsToWait = 0.33f;
                 //play a single instance of the sfx
                 walkSource.PlayOneShot(walkSource.clip);
 
