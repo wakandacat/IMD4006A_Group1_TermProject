@@ -1,13 +1,11 @@
-Drop Shadow Script:
-https://pastebin.com/YGeaZwG3
-UI script:
-https://www.youtube.com/watch?v=DX7HyN7oJjE&t=368s
+IMD4006A - Code Credits
+
+Below is a list of the codes modified and used in the game Crab Cove, created for IMD4006A Advanced Game Development:
+
+
+Drop Shadow Script: https://pastebin.com/YGeaZwG3
+UI script: https://www.youtube.com/watch?v=DX7HyN7oJjE&t=368s 
 https://www.youtube.com/watch?v=MNUYe0PWNNs
-Minimap script and how to:
-https://www.youtube.com/watch?v=lPSj41cNbtU
-Pick and drop script (how i learned the logic!):
-https://discussions.unity.com/t/3d-character-picking-up-item/793187/4
-Tag creation:
-https://discussions.unity.com/t/is-it-possible-to-create-a-tag-programmatically/9882
-UI control Mapping:
-https://www.youtube.com/watch?v=SXBgBmUcTe0
+Minimap script and how to: https://www.youtube.com/watch?v=lPSj41cNbtU
+Pick and drop script (how i learned the logic!): https://discussions.unity.com/t/3d-character-picking-up-item/793187/4
+UI control Mapping: https://www.youtube.com/watch?v=SXBgBmUcTe0
