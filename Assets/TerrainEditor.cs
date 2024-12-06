@@ -90,7 +90,7 @@ public class TerrainEditor : MonoBehaviour
         
     }
 
-    public void digTerrain(Vector3 crabPos, Quaternion crabRot, float triggerInput)
+    public void digTerrain(Vector3 crabPos, float triggerInput)
     {
         // check if the crab is in their home area
         digDisabled = worldScript.getHomeStatus();
